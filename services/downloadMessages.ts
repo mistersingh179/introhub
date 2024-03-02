@@ -1,39 +1,12 @@
 import prisma from "@/prismaClient";
-import { User } from "@prisma/client";
-import {fromUnixTime, isBefore} from "date-fns";
-import {google} from "googleapis";
+import { Account, Prisma } from "@prisma/client";
+import getGmailObject from "@/services/helpers/getGmailObject";
+import MessageCreateManyInput = Prisma.MessageCreateManyInput;
 
-type DownloadMessages = (user: User) => Promise<void>;
+type DownloadMessages = (account: Account) => Promise<void>;
 
-const downloadMessages: DownloadMessages = async (user: User) => {
-  const account = await prisma.account.findFirstOrThrow({
-    where: {
-      userId: user.id,
-      provider: 'google',
-    }
-  });
-
-  const accessToken = account.access_token!;
-  const expiresAt = account.expires_at!;
-
-  const now = new Date();
-  const expAt = fromUnixTime(expiresAt);
-  if (isBefore(expAt, now)) {
-    console.error("token expired on: " + expAt + " and right now is: " + now);
-    console.error("Aborting!");
-    return;
-  } else {
-    console.error(
-      "token will expire at: " + expAt + " and right now is: " + now,
-    );
-  }
-
-  const gmail = google.gmail({
-    version: "v1",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+const downloadMessages: DownloadMessages = async (account: Account) => {
+  const gmail = await getGmailObject(account);
 
   const { data: messagesData } = await gmail.users.messages.list({
     userId: "me",
@@ -42,8 +15,21 @@ const downloadMessages: DownloadMessages = async (user: User) => {
     includeSpamTrash: false,
   });
 
-  console.log("messagesData: ");
-  console.log(messagesData);
+  const messagesPayload: MessageCreateManyInput[] = [];
+  for (const item of messagesData.messages || []) {
+    messagesPayload.push({
+      userId: account.userId,
+      id: item.id as string,
+      threadId: item.threadId!,
+    });
+  }
+
+  const result = await prisma.message.createMany({
+    data: messagesPayload,
+    skipDuplicates: true,
+  });
+
+  console.log("messages insert result: ", result.count);
 };
 
 export default downloadMessages;
@@ -53,8 +39,11 @@ if (require.main === module) {
     const user = await prisma.user.findFirstOrThrow({
       where: {
         email: "sandeep@brandweaver.ai",
-      }
+      },
+      include: {
+        accounts: true,
+      },
     });
-    await downloadMessages(user);
+    await downloadMessages(user.accounts[0]);
   })();
 }
