@@ -6,15 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "worker": "tsx bull/runAllWorkers.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.4.0",
     "@prisma/client": "^5.10.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "bullmq": "^5.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
+    "dotenv": "^16.4.5",
     "email-addresses": "^5.0.0",
     "googleapis": "^133.0.0",
     "lucide-react": "^0.343.0",

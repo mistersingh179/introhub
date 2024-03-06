@@ -3,44 +3,66 @@ import getGmailObject from "@/services/helpers/getGmailObject";
 import prisma from "@/prismaClient";
 import { gmail_v1 } from "googleapis";
 import Schema$MessagePartHeader = gmail_v1.Schema$MessagePartHeader;
-import downloadMessages from "@/services/downloadMessages";
-import {ParsedMailbox, parseOneAddress} from "email-addresses";
+import { ParsedMailbox, parseOneAddress } from "email-addresses";
 
-type DownloadMetaData = (message: Message, account: Account) => Promise<void>;
+export type DownloadMetaDataInput = {
+  messageId: string;
+  account: Account;
+};
 
-const downloadMetaData: DownloadMetaData = async (
-  message: Message,
-  account: Account,
-) => {
+type DownloadMetaData = (input: DownloadMetaDataInput) => Promise<void>;
+
+const downloadMetaData: DownloadMetaData = async (input) => {
+  const { messageId } = input;
+  const account = await prisma.account.findFirstOrThrow({
+    where: {
+      id: input.account.id
+    }
+  })
   const gmail = await getGmailObject(account);
   const {
-    data: { internalDate, payload },
+    data: { internalDate, payload }, status, statusText
   } = await gmail.users.messages.get({
     userId: "me",
-    id: message.id,
+    id: messageId,
     format: "metadata",
   });
-  console.log(internalDate);
+  console.log("messages get: ", status, statusText);
+  // console.log("internalDate: ", internalDate);
   if (!payload?.headers) {
     console.log("no headers found on this message");
     return;
   }
   const { headers } = payload;
-  console.log(headers);
+  // console.log(headers);
   const subject = getHeaderValue(headers, "Subject");
   const deliveredTo = getHeaderValue(headers, "Delivered-To");
-  const fromValue = getHeaderValue(headers, "From");
-  const fromAddress = (parseOneAddress(fromValue) as ParsedMailbox | null)?.address || "";
-  console.log(subject, deliveredTo, fromValue, fromAddress);
+  const gmailMessageId = getHeaderValue(headers, "Message-ID");
+  const fromObj = parseEmail(getHeaderValue(headers, "From"));
+  const replyToObj = parseEmail(getHeaderValue(headers, "Reply-To"));
+  const receivedAt = internalDate ? new Date(Number(internalDate)) : undefined;
+
+  console.log(
+    subject,
+    deliveredTo,
+    fromObj,
+    replyToObj,
+    receivedAt
+  );
 
   await prisma.message.update({
     data: {
       subject,
       deliveredTo,
-      from: fromAddress,
+      fromName: fromObj.name,
+      fromAddress: fromObj.address,
+      replyToName: replyToObj.name,
+      replyToAddress: replyToObj.address,
+      gmailMessageId: gmailMessageId,
+      receivedAt: receivedAt
     },
     where: {
-      id: message.id,
+      id: messageId,
     },
   });
 };
@@ -53,6 +75,13 @@ const getHeaderValue = (
 ) => {
   const item = headers.find((x) => x.name === headerName);
   return item?.value || "";
+};
+
+const parseEmail = (headerValue: string) => {
+  return {
+    address: (parseOneAddress(headerValue) as ParsedMailbox)?.address || "",
+    name: (parseOneAddress(headerValue) as ParsedMailbox)?.name || ""
+  }
 };
 
 if (require.main === module) {
@@ -70,6 +99,9 @@ if (require.main === module) {
         },
       },
     });
-    await downloadMetaData(user.messages[0], user.accounts[0]);
+    await downloadMetaData({
+      messageId: user.messages[0].id,
+      account: user.accounts[0],
+    });
   })();
 }
