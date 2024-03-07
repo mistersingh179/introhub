@@ -3,7 +3,11 @@ import getGmailObject from "@/services/helpers/getGmailObject";
 import prisma from "@/prismaClient";
 import { gmail_v1 } from "googleapis";
 import Schema$MessagePartHeader = gmail_v1.Schema$MessagePartHeader;
-import { ParsedMailbox, parseOneAddress } from "email-addresses";
+import {
+  parseAddressList,
+  ParsedMailbox,
+  parseOneAddress,
+} from "email-addresses";
 
 export type DownloadMetaDataInput = {
   messageId: string;
@@ -16,12 +20,14 @@ const downloadMetaData: DownloadMetaData = async (input) => {
   const { messageId } = input;
   const account = await prisma.account.findFirstOrThrow({
     where: {
-      id: input.account.id
-    }
-  })
+      id: input.account.id,
+    },
+  });
   const gmail = await getGmailObject(account);
   const {
-    data: { internalDate, payload }, status, statusText
+    data: { internalDate, payload },
+    status,
+    statusText,
   } = await gmail.users.messages.get({
     userId: "me",
     id: messageId,
@@ -40,15 +46,10 @@ const downloadMetaData: DownloadMetaData = async (input) => {
   const gmailMessageId = getHeaderValue(headers, "Message-ID");
   const fromObj = parseEmail(getHeaderValue(headers, "From"));
   const replyToObj = parseEmail(getHeaderValue(headers, "Reply-To"));
+  const toObj = parseEmail(getHeaderValue(headers, "To"));
   const receivedAt = internalDate ? new Date(Number(internalDate)) : undefined;
 
-  console.log(
-    subject,
-    deliveredTo,
-    fromObj,
-    replyToObj,
-    receivedAt
-  );
+  console.log(subject, deliveredTo, fromObj, replyToObj, receivedAt);
 
   await prisma.message.update({
     data: {
@@ -58,8 +59,10 @@ const downloadMetaData: DownloadMetaData = async (input) => {
       fromAddress: fromObj.address,
       replyToName: replyToObj.name,
       replyToAddress: replyToObj.address,
+      toName: toObj.name,
+      toAddress: toObj.address,
       gmailMessageId: gmailMessageId,
-      receivedAt: receivedAt
+      receivedAt: receivedAt,
     },
     where: {
       id: messageId,
@@ -78,10 +81,21 @@ const getHeaderValue = (
 };
 
 const parseEmail = (headerValue: string) => {
-  return {
-    address: (parseOneAddress(headerValue) as ParsedMailbox)?.address || "",
-    name: (parseOneAddress(headerValue) as ParsedMailbox)?.name || ""
+  const address = "";
+  const name = "";
+  if (headerValue) {
+    const addresses = parseAddressList(headerValue);
+    if (addresses && addresses[0]) {
+      return {
+        address: (addresses[0] as ParsedMailbox).address,
+        name: (addresses[0] as ParsedMailbox).name,
+      };
+    }
   }
+  return {
+    address,
+    name,
+  };
 };
 
 if (require.main === module) {

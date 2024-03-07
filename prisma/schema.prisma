@@ -82,6 +82,8 @@ model Message {
   fromAddress    String?
   replyToName    String?
   replyToAddress String?
+  toAddress      String?
+  toName         String?
   deliveredTo    String?
   subject        String?
   gmailMessageId String?
@@ -90,8 +92,10 @@ model Message {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId, createdAt])
-  @@index([userId, threadId])
-  @@index([userId, receivedAt])
+  @@index([userId])
+  @@index([receivedAt])
   @@index([fromAddress])
+  @@index([toAddress])
+  @@index([fromAddress, toAddress])
+  @@index([deliveredTo, fromAddress])
 }
