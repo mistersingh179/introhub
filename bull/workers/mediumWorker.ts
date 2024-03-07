@@ -8,14 +8,12 @@ import {
 import downloadMessages, {
   DownloadMessagesInput,
 } from "@/services/downloadMessages";
-import { Account, User } from "@prisma/client";
 import downloadMetaData, {
   DownloadMetaDataInput,
 } from "@/services/downloadMetaData";
 import setupDownloadMessages from "@/services/setupDownloadMessages";
-import accquireLock from "@/services/helpers/accquireLock";
-import { addMilliseconds, getTime } from "date-fns";
 import { randomInt } from "node:crypto";
+import processRateLimitedRequest from "@/services/processRateLimitedRequest";
 
 const queueName = "medium";
 
@@ -32,24 +30,24 @@ const mediumWorker: Worker<
       case "downloadMessages": {
         const input = data as DownloadMessagesInput;
         const key = `googleapi:account:${input.account.id}`;
-        const gotALock = await accquireLock(key, 20);
-        if (gotALock) {
+        const goodToGo = await processRateLimitedRequest(key);
+        if (goodToGo) {
           return await downloadMessages(input);
         } else {
-          console.log("*** unable to get lock. moving job to delay! ***")
-          await job.moveToDelayed(Date.now() + randomInt(20, 50), token);
+          console.log("*** unable to get lock. moving job to delay! ***");
+          await job.moveToDelayed(Date.now() + randomInt(1000, 2000), token);
           throw new DelayedError();
         }
       }
       case "downloadMetaData": {
         const input = data as DownloadMetaDataInput;
         const key = `googleapi:account:${input.account.id}`;
-        const gotALock = await accquireLock(key, 20);
-        if (gotALock) {
+        const goodToGo = await processRateLimitedRequest(key);
+        if (goodToGo) {
           return await downloadMetaData(input);
         } else {
-          console.log("*** unable to get lock. moving job to delay!")
-          await job.moveToDelayed(Date.now() + randomInt(20, 50), token);
+          console.log("*** unable to get lock. moving job to delay!");
+          await job.moveToDelayed(Date.now() + randomInt(1000, 2000), token);
           throw new DelayedError();
         }
       }
@@ -62,7 +60,7 @@ const mediumWorker: Worker<
   },
   {
     connection: redisClient,
-    concurrency: 5,
+    concurrency: 50,
     autorun: false,
     metrics: {
       maxDataPoints: MetricsTime.TWO_WEEKS,
@@ -70,10 +68,7 @@ const mediumWorker: Worker<
   },
 );
 
-const keyName = (job: Job) => {
-
-}
-
+const keyName = (job: Job) => {};
 
 mediumWorker.on("error", (err) => {
   console.log("medium worker has an error: ", err);

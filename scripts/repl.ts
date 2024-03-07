@@ -1,13 +1,5 @@
 import prisma from "../prismaClient";
-import downloadMessages from "@/services/downloadMessages";
-import mediumQueue, { mediumQueueEvents } from "@/bull/queues/mediumQueue";
-import { Prisma } from "@prisma/client";
-import { formatISO, fromUnixTime, subHours } from "date-fns";
-import MediumQueue from "@/bull/queues/mediumQueue";
-import { ParsedMailbox, parseOneAddress } from "email-addresses";
-import highQueue from "@/bull/queues/highQueue";
-import { randomInt } from "node:crypto";
-import getGmailObject from "@/services/helpers/getGmailObject";
+import redisClient from "@/lib/redisClient";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -19,9 +11,10 @@ prisma.$on("query", (e) => {
 const MY_GOOGLE_API_KEY = "AIzaSyCCiO10EMimJzYb5qSbrxtbiCxAwo-131U";
 
 (async () => {
+
   const user = await prisma.user.findFirstOrThrow({
     where: {
-      email: ""
+      email: "",
     },
     include: {
       accounts: true,
@@ -30,7 +23,7 @@ const MY_GOOGLE_API_KEY = "AIzaSyCCiO10EMimJzYb5qSbrxtbiCxAwo-131U";
       },
     },
   });
-  console.log('user: ', user);
+  console.log("user: ", user);
 })();
 
 export {};

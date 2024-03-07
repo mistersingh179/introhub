@@ -22,6 +22,7 @@ const getMyContacts: GetMyContacts = async (user) => {
     },
     where: {
       userId: user.id,
+      replyToAddress: ''
     },
   });
   const contacts: Contact[] = result
