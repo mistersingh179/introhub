@@ -3,10 +3,12 @@ import {
   DownloadMessagesInput,
   DownloadMessagesOutput,
 } from "@/services/downloadMessages";
+import {User} from "@prisma/client";
 
 export type MediumInputDataType =
   | DownloadMessagesInput
   | DownloadMetaDataInput
+  | User
   | null;
 
 export type MediumOutputDataType =
@@ -18,4 +20,6 @@ export type MediumOutputDataType =
 export type MediumJobNames =
   | "downloadMessages"
   | "downloadMetaData"
-  | "setupDownloadMessages";
+  | "downloadMessagesForAllAccounts"
+  | "buildContacts"
+  | "buildContactsForAllUsers";

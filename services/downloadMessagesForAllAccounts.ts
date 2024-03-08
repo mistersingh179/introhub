@@ -1,9 +1,9 @@
 import prisma from "@/prismaClient";
 import mediumQueue from "@/bull/queues/mediumQueue";
 
-type SetupDownloadMessages = () => Promise<void>;
+type DownloadMessagesForAllAccounts = () => Promise<void>;
 
-const setupDownloadMessages: SetupDownloadMessages = async () => {
+const downloadMessagesForAllAccounts: DownloadMessagesForAllAccounts = async () => {
   const accounts = await prisma.account.findMany();
   for (const account of accounts) {
     const jobObj = await mediumQueue.add("downloadMessages", {
@@ -14,4 +14,4 @@ const setupDownloadMessages: SetupDownloadMessages = async () => {
   }
 };
 
-export default setupDownloadMessages
+export default downloadMessagesForAllAccounts

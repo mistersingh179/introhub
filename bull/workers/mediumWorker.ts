@@ -11,9 +11,12 @@ import downloadMessages, {
 import downloadMetaData, {
   DownloadMetaDataInput,
 } from "@/services/downloadMetaData";
-import setupDownloadMessages from "@/services/setupDownloadMessages";
+import downloadMessagesForAllAccounts from "@/services/downloadMessagesForAllAccounts";
 import { randomInt } from "node:crypto";
 import processRateLimitedRequest from "@/services/processRateLimitedRequest";
+import {User} from "@prisma/client";
+import buildContacts from "@/services/buildContacts";
+import buildContactsForAllUsers from "@/services/buildContactsForAllUsers";
 
 const queueName = "medium";
 
@@ -51,8 +54,15 @@ const mediumWorker: Worker<
           throw new DelayedError();
         }
       }
-      case "setupDownloadMessages": {
-        return await setupDownloadMessages();
+      case "downloadMessagesForAllAccounts": {
+        return await downloadMessagesForAllAccounts();
+      }
+      case "buildContacts": {
+        const input = data as User;
+        return await buildContacts(input);
+      }
+      case "buildContactsForAllUsers": {
+        return await buildContactsForAllUsers();
       }
       default:
         console.error("got unknown job!");
