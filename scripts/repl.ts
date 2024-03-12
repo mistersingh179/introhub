@@ -1,6 +1,6 @@
 import prisma from "../prismaClient";
 import redisClient from "@/lib/redisClient";
-import { Message, Prisma } from "@prisma/client";
+import { Contact, Message, Prisma, User } from "@prisma/client";
 import {
   parseAddressList,
   ParsedMailbox,
@@ -8,6 +8,7 @@ import {
 } from "email-addresses";
 import mediumWorker from "@/bull/workers/mediumWorker";
 import mediumQueue from "@/bull/queues/mediumQueue";
+import ContactOrderByWithRelationInput = Prisma.ContactOrderByWithRelationInput;
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -19,9 +20,13 @@ prisma.$on("query", (e) => {
 const MY_GOOGLE_API_KEY = "AIzaSyCCiO10EMimJzYb5qSbrxtbiCxAwo-131U";
 
 (async () => {
-  const user = await prisma.user.findFirstOrThrow();
-  const jobObj = await mediumQueue.add("buildContacts", user);
-  console.log(jobObj);
+  const sql = Prisma.sql`select distinct on ("Contact".email) U.*, "Contact".*
+                         from "Contact"
+                                  inner join public."User" U on U.id = "Contact"."userId"
+                         order by "Contact".email ASC, "receivedCount" DESC;
+  `
+  const contacts = await prisma.$queryRaw<(User & Contact)[]>(sql);
+  console.log(contacts[0])
 })();
 
 export {};

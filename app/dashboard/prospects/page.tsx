@@ -10,30 +10,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Contact, User } from "@prisma/client";
-
-type ContactWithUser = Contact & {
-  user: User;
-};
+import { Contact, Prisma, User } from "@prisma/client";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 
 export default async function Prospects() {
   const session = (await auth()) as Session;
-  const contacts: ContactWithUser[] = await prisma.contact.findMany({
-    where: {
-      user: {
-        email: session.user?.email || "",
-      },
-    },
-    include: {
-      user: true,
-    },
-    take: 10
-  });
+  const sql = Prisma.sql`
+      select distinct on (email) "Contact".*, U.email as "userEmail", U.image as "userImage"
+      from "Contact"
+               inner join public."User" U on U.id = "Contact"."userId"
+      order by email ASC, "receivedCount" DESC;
+  `;
+  const prospects = await prisma.$queryRaw<(ContactWithUserInfo)[]>(sql);
   return (
     <>
       <h1 className={"text-2xl my-4"}>Prospects</h1>
       <Table>
-        <TableCaption>Your Contacts</TableCaption>
+        <TableCaption>Prospects</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Email</TableHead>
@@ -44,8 +37,8 @@ export default async function Prospects() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {contacts.map((contact) => {
-            return <ProspectRow contact={contact} />;
+          {prospects.map((prospect) => {
+            return <ProspectRow key={prospect.id} prospect={prospect} />;
           })}
         </TableBody>
       </Table>
@@ -53,19 +46,24 @@ export default async function Prospects() {
   );
 }
 
+type ContactWithUserInfo = Contact & { userEmail: string, userImage: string}
+
 type ProspectRowProps = {
-  contact: ContactWithUser;
+  prospect: ContactWithUserInfo
 };
 const ProspectRow = (props: ProspectRowProps) => {
-  const { contact } = props;
+  const { prospect } = props;
   return (
     <>
-      <TableRow key={contact.email}>
-        <TableCell>{contact.email}</TableCell>
-        <TableCell>{contact.sentCount}</TableCell>
-        <TableCell>{contact.receivedCount}</TableCell>
-        <TableCell>{contact.sentReceivedRatio.toFixed(2)}</TableCell>
-        <TableCell>{contact.user.email}</TableCell>
+      <TableRow key={prospect.email}>
+        <TableCell>{prospect.email}</TableCell>
+        <TableCell>{prospect.sentCount}</TableCell>
+        <TableCell>{prospect.receivedCount}</TableCell>
+        <TableCell>{prospect.sentReceivedRatio.toFixed(2)}</TableCell>
+        <TableCell><Avatar>
+          <AvatarImage src={prospect.userImage} title={prospect.userEmail} />
+          {/*<AvatarFallback>X</AvatarFallback>*/}
+        </Avatar></TableCell>
       </TableRow>
     </>
   );
