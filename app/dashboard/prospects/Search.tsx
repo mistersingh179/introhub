@@ -2,7 +2,9 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { debounce } from "lodash";
+
+/*import { debounce } from "lodash";*/
+
 import { useCallback } from "react";
 
 type SearchProps = {
@@ -31,11 +33,11 @@ export default function Search(props: SearchProps) {
     pathname,
     replace,
   ]);
-  const handleSearchDebounced = debounce(handleSearchMemoized, 500, {
-    maxWait: 5000,
-    trailing: true,
-    leading: false,
-  });
+  // const handleSearchDebounced = debounce(handleSearchMemoized, 500, {
+  //   maxWait: 5000,
+  //   trailing: true,
+  //   leading: false,
+  // });
 
   return (
     <>
@@ -43,7 +45,7 @@ export default function Search(props: SearchProps) {
         type="email"
         placeholder={placeholder}
         onChange={(e) => {
-          handleSearchDebounced(e.target.value);
+          handleSearchMemoized(e.target.value);
         }}
         defaultValue={searchParams.get("query")?.toString()}
       />
