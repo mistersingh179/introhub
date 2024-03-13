@@ -92,12 +92,12 @@ const ProspectRow = (props: ProspectRowProps) => {
   return (
     <>
       <TableRow key={prospect.email}>
-        <TableCell>{prospect.email}</TableCell>
-        <TableCell>{prospect.sentCount}</TableCell>
-        <TableCell>{prospect.receivedCount}</TableCell>
-        <TableCell>{prospect.sentReceivedRatio.toFixed(2)}</TableCell>
-        <TableCell>
-          <Avatar>
+        <TableCell className={'p-2'}>{prospect.email}</TableCell>
+        <TableCell className={'p-2'}>{prospect.sentCount}</TableCell>
+        <TableCell className={'p-2'}>{prospect.receivedCount}</TableCell>
+        <TableCell className={'p-2'}>{prospect.sentReceivedRatio.toFixed(2)}</TableCell>
+        <TableCell className={'p-2'}>
+          <Avatar className={'h-8 w-8'}>
             <AvatarImage src={prospect.userImage} title={prospect.userEmail} />
             {/*<AvatarFallback>X</AvatarFallback>*/}
           </Avatar>
