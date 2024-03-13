@@ -26,7 +26,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.343.0",
     "next": "14.1.0",
-    "next-auth": "^5.0.0-beta.13",
+    "next-auth": "^5.0.0-beta.15",
     "react": "^18",
     "react-dom": "^18",
     "reserved-email-addresses-list": "^2.0.13",
