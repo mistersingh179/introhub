@@ -18,6 +18,7 @@ export default function Search(props: SearchProps) {
   const handleSearch = (term: string) => {
     console.log("*** in handleSearch function ***");
     const params = new URLSearchParams(searchParams);
+    params.set("page", "1"); // setting page to 1 as search param is changing
     if (term) {
       params.set("query", term);
     } else {

@@ -6,13 +6,17 @@ import {
   TableBody,
   TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+
 import { Contact, Prisma } from "@prisma/client";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import Search from "@/app/dashboard/prospects/Search";
+import MyPagination from "@/app/dashboard/prospects/MyPagination";
 
 export default async function Prospects({
   searchParams,
@@ -24,6 +28,8 @@ export default async function Prospects({
 }) {
   const query = searchParams?.query || undefined;
   const currentPage = Number(searchParams?.page) || 1;
+  const itemsPerPage = 10;
+  const recordsToSkip = (currentPage - 1) * itemsPerPage;
 
   console.log("query: ", query, "currentPage: ", currentPage);
 
@@ -39,7 +45,8 @@ export default async function Prospects({
       from "Contact"
                inner join public."User" U on U.id = "Contact"."userId"
       where 1=1 ${filterSql}
-      order by email ASC, "receivedCount" DESC;
+      order by email ASC, "receivedCount" DESC
+      offset ${recordsToSkip} limit ${itemsPerPage};
   `;
   console.log(sql.text, sql.values);
   const prospects = await prisma.$queryRaw<ContactWithUserInfo[]>(sql);
@@ -63,6 +70,13 @@ export default async function Prospects({
             return <ProspectRow key={prospect.id} prospect={prospect} />;
           })}
         </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={5}>
+              <MyPagination />
+            </TableCell>
+          </TableRow>
+        </TableFooter>
       </Table>
     </>
   );
