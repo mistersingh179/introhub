@@ -42,7 +42,7 @@ export default async function Emails() {
         <TableBody>
           {messages.map((message) => {
             return (
-              <MessageRow message={message} />
+              <MessageRow key={message.id} message={message} />
             );
           })}
         </TableBody>

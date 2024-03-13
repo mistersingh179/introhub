@@ -38,7 +38,7 @@ export default async function MyContacts() {
         <TableBody>
           {contacts.map((contact) => {
             return (
-              <ContactRow contact={contact} />
+              <ContactRow key={contact.id} contact={contact} />
             );
           })}
         </TableBody>
