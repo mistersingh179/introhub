@@ -2,8 +2,8 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import _ from "lodash";
-import { useCallback, useEffect } from "react";
+import { debounce } from "lodash";
+import { useCallback } from "react";
 
 type SearchProps = {
   placeholder: string;
@@ -31,7 +31,7 @@ export default function Search(props: SearchProps) {
     pathname,
     replace,
   ]);
-  const handleSearchDebounced = _.debounce(handleSearchMemoized, 500, {
+  const handleSearchDebounced = debounce(handleSearchMemoized, 500, {
     maxWait: 5000,
     trailing: true,
     leading: false,
