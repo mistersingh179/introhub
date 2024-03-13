@@ -21,6 +21,7 @@
     "dotenv": "^16.4.5",
     "email-addresses": "^5.0.0",
     "googleapis": "^133.0.0",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.343.0",
     "next": "14.1.0",
     "next-auth": "^5.0.0-beta.13",
@@ -33,6 +34,7 @@
     "tsx": "^4.7.1"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.0",
     "@types/node": "^20.11.21",
     "@types/react": "^18",
     "@types/react-dom": "^18",

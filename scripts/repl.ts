@@ -20,13 +20,19 @@ prisma.$on("query", (e) => {
 const MY_GOOGLE_API_KEY = "AIzaSyCCiO10EMimJzYb5qSbrxtbiCxAwo-131U";
 
 (async () => {
-  const sql = Prisma.sql`select distinct on ("Contact".email) U.*, "Contact".*
+  const emailTerm = 'istersingh179@gmail.co';
+  // const emailTerm = null;
+  const emailTermWithWild = emailTerm ? "%" + emailTerm + "%" : null;
+  const filterSql = emailTerm
+    ? Prisma.sql`and "Contact".email like ${emailTermWithWild}`
+    : Prisma.sql``;
+  const sql = Prisma.sql`select *
                          from "Contact"
-                                  inner join public."User" U on U.id = "Contact"."userId"
-                         order by "Contact".email ASC, "receivedCount" DESC;
-  `
-  const contacts = await prisma.$queryRaw<(User & Contact)[]>(sql);
-  console.log(contacts[0])
+                         where 1=1 ${filterSql}
+                         order by "Contact".email DESC`;
+
+  const contacts = await prisma.$queryRaw<Contact[]>(sql);
+  console.log("record count: ", contacts.length);
 })();
 
 export {};

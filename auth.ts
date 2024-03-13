@@ -39,7 +39,7 @@ export const {
       return !!params.auth?.user;
     },
     jwt(params) {
-      console.log("*** in jwt callback: ", params);
+      // console.log("*** in jwt callback: ", params);
       const { token } = params;
       return token;
     },
