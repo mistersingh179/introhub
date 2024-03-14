@@ -71,14 +71,16 @@ const mediumWorker: Worker<
   {
     connection: redisClient,
     concurrency: Number(process.env.WORKER_CONCURRENCY_COUNT),
+    limiter: {
+      max: 100,
+      duration: 1000,
+    },
     autorun: false,
     metrics: {
       maxDataPoints: MetricsTime.TWO_WEEKS,
     },
   },
 );
-
-const keyName = (job: Job) => {};
 
 mediumWorker.on("error", (err) => {
   console.log("medium worker has an error: ", err);
@@ -101,6 +103,10 @@ mediumWorker.on("drained", () => {
 
 mediumWorker.on("failed", (job) => {
   console.log("job failed: ", job);
+});
+
+mediumWorker.on("ready", () => {
+  console.log("worker is ready");
 });
 
 export default mediumWorker;
