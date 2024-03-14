@@ -9,6 +9,7 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
+  basePath: '/api/auth',
   trustHost: true,
   debug: false,
   session: {
