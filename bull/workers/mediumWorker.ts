@@ -14,7 +14,7 @@ import downloadMetaData, {
 import downloadMessagesForAllAccounts from "@/services/downloadMessagesForAllAccounts";
 import { randomInt } from "node:crypto";
 import processRateLimitedRequest from "@/services/processRateLimitedRequest";
-import {User} from "@prisma/client";
+import { User } from "@prisma/client";
 import buildContacts from "@/services/buildContacts";
 import buildContactsForAllUsers from "@/services/buildContactsForAllUsers";
 
@@ -70,7 +70,7 @@ const mediumWorker: Worker<
   },
   {
     connection: redisClient,
-    concurrency: 50,
+    concurrency: Number(process.env.WORKER_CONCURRENCY_COUNT),
     autorun: false,
     metrics: {
       maxDataPoints: MetricsTime.TWO_WEEKS,
