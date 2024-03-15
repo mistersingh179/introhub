@@ -32,8 +32,7 @@ const mediumWorker: Worker<
     switch (job.name) {
       case "downloadMessages": {
         const input = data as DownloadMessagesInput;
-        const key = `googleapi:account:${input.account.id}`;
-        const goodToGo = await processRateLimitedRequest(key);
+        const goodToGo = await processRateLimitedRequest(input.account.id, 5);
         if (goodToGo) {
           return await downloadMessages(input);
         } else {
@@ -43,8 +42,7 @@ const mediumWorker: Worker<
       }
       case "downloadMetaData": {
         const input = data as DownloadMetaDataInput;
-        const key = `googleapi:account:${input.account.id}`;
-        const goodToGo = await processRateLimitedRequest(key);
+        const goodToGo = await processRateLimitedRequest(input.account.id, 5);
         if (goodToGo) {
           return await downloadMetaData(input);
         } else {
