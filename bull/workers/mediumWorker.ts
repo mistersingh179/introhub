@@ -37,7 +37,6 @@ const mediumWorker: Worker<
         if (goodToGo) {
           return await downloadMessages(input);
         } else {
-          console.log("*** unable to get lock. moving job to delay! ***");
           await job.moveToDelayed(Date.now() + randomInt(1000, 2000), token);
           throw new DelayedError();
         }
@@ -49,7 +48,6 @@ const mediumWorker: Worker<
         if (goodToGo) {
           return await downloadMetaData(input);
         } else {
-          console.log("*** unable to get lock. moving job to delay!");
           await job.moveToDelayed(Date.now() + randomInt(1000, 2000), token);
           throw new DelayedError();
         }

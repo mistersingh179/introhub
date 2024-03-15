@@ -27,8 +27,10 @@ const processRateLimitedRequest: ProcessRateLimitedRequest = async (
     const newCount = result[0][1];
     console.log(`new count:`, newCount);
     if (Number(newCount) < allowedNumber) {
+      console.log("got lock. count is now: ", newCount)
       return true;
     } else {
+      console.log("*** unable to get lock. count is now: ", newCount)
       return false;
     }
   } else {

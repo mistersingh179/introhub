@@ -1,16 +1,15 @@
 import Redis from "ioredis";
-import { config } from "dotenv";
+import loadEnvVariables from '@/lib/loadEnvVariables';
 
-const result = config({ debug: true });
-if (result.error) {
-  console.log("UNABLE to parse .ENV file!!!", { err: result.error });
-}
+loadEnvVariables();
 
 const REDIS_URL = String(process.env.REDIS_URL) ?? "";
+const DATABASE_URL = String(process.env.DATABASE_URL) ?? "";
 const WORKER_CONCURRENCY_COUNT = Number(process.env.WORKER_CONCURRENCY_COUNT) ?? 0;
 
 console.log("at boot up got REDIS_URL: ", REDIS_URL);
 console.log("at boot up got WORKER_CONCURRENCY_COUNT: ", WORKER_CONCURRENCY_COUNT);
+console.log("at boot up got DATABASE_URL: ", DATABASE_URL);
 
 export const redisClient = new Redis(REDIS_URL, {
   maxRetriesPerRequest: null,

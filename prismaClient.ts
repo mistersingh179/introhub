@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-
-console.log("*** Setting up prismaClient");
+import loadEnvVariables from '@/lib/loadEnvVariables';
+loadEnvVariables();
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
