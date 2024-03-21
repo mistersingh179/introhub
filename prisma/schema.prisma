@@ -51,17 +51,42 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  accounts      Account[]
-  sessions      Session[]
-  messages      Message[]
-  contacts      Contact[]
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                       String         @id @default(cuid())
+  accounts                 Account[]
+  sessions                 Session[]
+  messages                 Message[]
+  contacts                 Contact[]
+  introductionsRequested   Introduction[] @relation("RequestedIntroductions")
+  introductionsFacilitated Introduction[] @relation("FacilitatedIntroductions")
+  name                     String?
+  email                    String?        @unique
+  emailVerified            DateTime?
+  image                    String?
+  createdAt                DateTime       @default(now())
+  updatedAt                DateTime       @updatedAt
+
+  @@index([email])
+}
+
+model Introduction {
+  id                    String  @id @default(cuid())
+  requesterId           String
+  requester             User    @relation("RequestedIntroductions", fields: [requesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  facilitatorId         String
+  facilitator           User    @relation("FacilitatedIntroductions", fields: [facilitatorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  contactId             String
+  contact               Contact @relation(fields: [contactId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  messageForFacilitator String
+  messageForContact     String
+  status                String  @default("draft")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index(requesterId)
+  @@index(facilitatorId)
+  @@index(contactId)
+  @@index(createdAt)
 }
 
 model VerificationToken {
@@ -75,13 +100,14 @@ model VerificationToken {
 }
 
 model Contact {
-  id                String  @id
+  id                String         @id
   userId            String
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  introductions     Introduction[]
   email             String
   sentCount         Int
   receivedCount     Int
-  sentReceivedRatio Decimal @db.Decimal(10, 2)
+  sentReceivedRatio Decimal        @db.Decimal(10, 2)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

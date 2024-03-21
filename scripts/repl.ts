@@ -1,7 +1,5 @@
 import prisma from "../prismaClient";
-import loadEnvVariables from '@/lib/loadEnvVariables';
-import redisClient from "@/lib/redisClient";
-loadEnvVariables();
+import {z, ZodError} from "zod";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -11,9 +9,28 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-  const FOO_BAR = String(process.env.FOO_BAR) ?? "";
-  console.log('FOO_BAR: ', FOO_BAR)
-  await redisClient.get("foo");
+
+  console.log("in repl");
+  await prisma.introduction.findMany({
+    select: {id: true},
+    where: {
+      OR: [
+        {
+          requesterId: {
+            equals: "x",
+          },
+        },
+        {
+          facilitatorId: {
+            equals: "x",
+          },
+        },
+      ],
+    }
+  });
+
+
+
 })();
 
 export {};

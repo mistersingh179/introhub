@@ -12,11 +12,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-
 import { Contact, Prisma } from "@prisma/client";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import Search from "@/app/dashboard/prospects/Search";
-import MyPagination from "@/app/dashboard/prospects/MyPagination";
+import Search from "@/components/Search";
+import MyPagination from "@/components/MyPagination";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import {SquarePen} from "lucide-react";
 
 export default async function Prospects({
   searchParams,
@@ -63,6 +65,7 @@ export default async function Prospects({
             <TableHead>Received Count</TableHead>
             <TableHead>Sent-Received Ratio</TableHead>
             <TableHead>Introducer</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -72,7 +75,7 @@ export default async function Prospects({
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={5}>
+            <TableCell colSpan={6}>
               <MyPagination />
             </TableCell>
           </TableRow>
@@ -92,15 +95,25 @@ const ProspectRow = (props: ProspectRowProps) => {
   return (
     <>
       <TableRow key={prospect.email}>
-        <TableCell className={'p-2'}>{prospect.email}</TableCell>
-        <TableCell className={'p-2'}>{prospect.sentCount}</TableCell>
-        <TableCell className={'p-2'}>{prospect.receivedCount}</TableCell>
-        <TableCell className={'p-2'}>{prospect.sentReceivedRatio.toFixed(2)}</TableCell>
-        <TableCell className={'p-2'}>
-          <Avatar className={'h-8 w-8'}>
+        <TableCell className={"p-2"}>{prospect.email}</TableCell>
+        <TableCell className={"p-2"}>{prospect.sentCount}</TableCell>
+        <TableCell className={"p-2"}>{prospect.receivedCount}</TableCell>
+        <TableCell className={"p-2"}>
+          {prospect.sentReceivedRatio.toFixed(2)}
+        </TableCell>
+        <TableCell className={"p-2"}>
+          <Avatar className={"h-8 w-8"}>
             <AvatarImage src={prospect.userImage} title={prospect.userEmail} />
             {/*<AvatarFallback>X</AvatarFallback>*/}
           </Avatar>
+        </TableCell>
+        <TableCell className={"p-2"}>
+          <Button asChild>
+            <Link href={`/dashboard/introductions/create/${prospect.id}`}>
+              Create Introduction
+              <SquarePen size={18} className={"ml-2"} />
+            </Link>
+          </Button>
         </TableCell>
       </TableRow>
     </>

@@ -15,6 +15,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <NavLink name={"My Emails"} url={"/dashboard/my-emails"} />
           <NavLink name={"My Contacts"} url={"/dashboard/my-contacts"} />
           <NavLink name={"Prospects"} url={"/dashboard/prospects"} />
+          <NavLink name={"Introductions"} url={"/dashboard/introductions"} />
           <NavLink name={"Settings"} url={"/dashboard/settings"} />
           <NavLink name={"Profile"} url={"/dashboard/profile"} />
           <div className={"w-full"}></div>
