@@ -13,9 +13,6 @@ import {
 } from "@/components/ui/table";
 import MyPagination from "@/components/MyPagination";
 import { Contact, Introduction, User } from "@prisma/client";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { TicketCheck, TicketX, X } from "lucide-react";
 import { format } from "date-fns";
 import { IntroStatesKey, IntroStatesWithMeaning } from "@/lib/introStates";
 import {
@@ -24,8 +21,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import IntroApproveForm from "@/app/dashboard/introductions/list/IntroApproveForm";
+import IntroRejectForm from "@/app/dashboard/introductions/list/IntroRejectForm";
+import IntroCancelForm from "@/app/dashboard/introductions/list/IntroCancelForm";
 
-type IntroWithContactFacilitatorAndRequester = Introduction & {
+export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
   facilitator: User;
   requester: User;
@@ -51,7 +51,7 @@ export default async function IntroductionsRequested({
   const itemsPerPage = 10;
   const recordsToSkip = (currentPage - 1) * itemsPerPage;
 
-  const introductionsRequested: IntroWithContactFacilitatorAndRequester[] =
+  const myIntroductions: IntroWithContactFacilitatorAndRequester[] =
     await prisma.introduction.findMany({
       where: {
         OR: [
@@ -78,11 +78,11 @@ export default async function IntroductionsRequested({
       skip: recordsToSkip,
       take: itemsPerPage,
     });
-  console.log("introductionsRequested: ", introductionsRequested);
+  console.log("myIntroductions: ", myIntroductions);
   return (
     <>
       <Table>
-        <TableCaption>Introductions Requested</TableCaption>
+        <TableCaption>My Introductions</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className={"p-2"}>Contact</TableHead>
@@ -96,7 +96,7 @@ export default async function IntroductionsRequested({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {introductionsRequested.map((introduction) => {
+          {myIntroductions.map((introduction) => {
             return (
               <IntroductionRow
                 key={introduction.id}
@@ -178,28 +178,16 @@ const ActionButtons = (props: ActionButtonProps) => {
       <div className={"flex flex-col gap-4"}>
         {introduction.facilitatorId === user.id && (
           <>
-            <Button asChild>
-              <Link href={`#`}>
-                Approve
-                <TicketCheck size={18} className={"ml-2"} />
-              </Link>
-            </Button>
-            <Button asChild>
-              <Link href={`#`}>
-                Reject
-                <TicketX size={18} className={"ml-2"} />
-              </Link>
-            </Button>
+            <IntroApproveForm introduction={introduction} />
+            <IntroRejectForm introduction={introduction} />
           </>
         )}
+
         {introduction.requesterId === user.id && (
-          <Button asChild>
-            <Link href={`#`}>
-              Cancel
-              <X size={18} className={"ml-2"} />
-            </Link>
-          </Button>
-        )}{" "}
+          <>
+            <IntroCancelForm introduction={introduction} />
+          </>
+        )}
       </div>
     </>
   );

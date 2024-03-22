@@ -11,23 +11,16 @@ prisma.$on("query", (e) => {
 (async () => {
 
   console.log("in repl");
-  await prisma.introduction.findMany({
-    select: {id: true},
+  const user = await prisma.user.update({
+    data: {
+      name: 'foo'
+    },
     where: {
-      OR: [
-        {
-          requesterId: {
-            equals: "x",
-          },
-        },
-        {
-          facilitatorId: {
-            equals: "x",
-          },
-        },
-      ],
+      email: 'sandeep@brandweaver.ai',
+      image: null
     }
   });
+  console.log(user);
 
 
 

@@ -1,12 +1,12 @@
 "use client";
 
-import { createIntroductionAction } from "@/app/actions/introductions";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "next/navigation";
 import { useFormState } from "react-dom";
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
 import ErrorMessage from "@/app/dashboard/introductions/create/[contactId]/ErrorMessage";
+import createIntroductionAction from "@/app/actions/introductions/createIntroductionAction";
 
 export default function CreateIntroductionForm() {
   const params = useParams<{ contactId: string }>();

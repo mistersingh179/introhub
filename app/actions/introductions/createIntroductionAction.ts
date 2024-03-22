@@ -1,24 +1,25 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import {z, ZodError} from "zod";
+import {auth} from "@/auth";
+import {Session} from "next-auth";
 import prisma from "@/prismaClient";
+import {IntroStates} from "@/lib/introStates";
+import {revalidatePath} from "next/cache";
+import {redirect} from "next/navigation";
 import { Prisma } from "@prisma/client";
 import IntroductionUncheckedCreateInput = Prisma.IntroductionUncheckedCreateInput;
-import { auth } from "@/auth";
-import { Session } from "next-auth";
-import { IntroStates } from "@/lib/introStates";
-import { z, ZodError } from "zod";
-import sleep from "@/lib/sleep";
 
 const createIntroSchema = z.object({
   messageForFacilitator: z.string().max(5000).min(10),
   messageForContact: z.string().max(5000).min(10),
 });
 
-type CreateIntroFlattenErrorType = z.inferFlattenedErrors<typeof createIntroSchema>;
+type CreateIntroFlattenErrorType = z.inferFlattenedErrors<
+  typeof createIntroSchema
+>;
 
-export async function createIntroductionAction(
+export default async function createIntroductionAction(
   contactId: string,
   prevState: CreateIntroFlattenErrorType | string | undefined,
   formData: FormData,
@@ -61,6 +62,7 @@ export async function createIntroductionAction(
       data: input,
     });
   } catch (e) {
+    console.log("an error occurred!: ", e);
     if (e instanceof ZodError) {
       return e.flatten();
     } else if (e instanceof Error) {
@@ -71,8 +73,6 @@ export async function createIntroductionAction(
   }
 
   console.log("going to revalidated & redirect now");
-  revalidatePath("/dashboard/introductions");
-  redirect("/dashboard/introductions");
+  revalidatePath("/dashboard/introductions/list");
+  redirect("/dashboard/introductions/list");
 }
-
-export const updateIntroduction = async (formData: FormData) => {};

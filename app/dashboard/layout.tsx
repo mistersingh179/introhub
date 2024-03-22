@@ -1,6 +1,7 @@
 import NavLink from "@/components/NavLink";
 import LogoutButton from "@/components/LogoutButton";
 import React from "react";
+import {Toaster} from "@/components/ui/toaster";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -15,13 +16,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <NavLink name={"My Emails"} url={"/dashboard/my-emails"} />
           <NavLink name={"My Contacts"} url={"/dashboard/my-contacts"} />
           <NavLink name={"Prospects"} url={"/dashboard/prospects"} />
-          <NavLink name={"Introductions"} url={"/dashboard/introductions"} />
+          <NavLink name={"Introductions"} url={"/dashboard/introductions/list"} />
           <NavLink name={"Settings"} url={"/dashboard/settings"} />
           <NavLink name={"Profile"} url={"/dashboard/profile"} />
           <div className={"w-full"}></div>
           <LogoutButton />
         </nav>
         <main className={""}>{children}</main>
+        <Toaster />
       </div>
     </div>
   );

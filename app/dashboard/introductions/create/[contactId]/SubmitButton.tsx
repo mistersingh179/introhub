@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
 
@@ -7,5 +9,9 @@ type SubmitButtonProps = {
 export default function SubmitButton(props: SubmitButtonProps) {
   const { label } = props;
   const { pending } = useFormStatus();
-  return <Button disabled={pending}>{label ?? "Submit"}</Button>;
+  return (
+    <Button type={"submit"} disabled={pending}>
+      {label ?? "Submit"}
+    </Button>
+  );
 }
