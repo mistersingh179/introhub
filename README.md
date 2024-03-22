@@ -4,13 +4,12 @@ https://www.googleapis.com/auth/userinfo.email
 https://www.googleapis.com/auth/gmail.metadata 
 https://www.googleapis.com/auth/userinfo.profile
 
-- optimistic update with rollback
-- do auth on action update
 
 wip
 - dark mode
 - show & edit an intro
-
+- Warning: Only plain objects can be passed to Client Components from Server Components. Decimal objects are not supported.
+  {id: ..., userId: ..., email: ..., sentCount: ..., receivedCount: ..., sentReceivedRatio: Decimal, createdAt: ..., updatedAt: ...}
 - allow editing of an intro
 - add expiration on intro
 - connect mister account

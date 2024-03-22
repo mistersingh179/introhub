@@ -2,7 +2,7 @@
 
 import { useToast } from "@/components/ui/use-toast";
 import { IntroStates } from "@/lib/introStates";
-import updateIntroductionAction from "@/app/actions/introductions/updateIntroductionAction";
+import cancelIntroAction from "@/app/actions/introductions/cancelIntroAction";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
 import { useFormState } from "react-dom";
@@ -14,7 +14,7 @@ type IntroApproveFormProps = {
 export default function IntroApproveForm(props: IntroApproveFormProps) {
   const { introduction } = props;
   const [submittedAt, setSubmittedAt] = useState<undefined | number>(undefined);
-  const action = updateIntroductionAction.bind(null, introduction.id);
+  const action = cancelIntroAction.bind(null, introduction.id);
   const [errorMessage, dispatch] = useFormState(action, undefined);
   const { toast } = useToast();
   useEffect(() => {
@@ -32,7 +32,6 @@ export default function IntroApproveForm(props: IntroApproveFormProps) {
   return (
     <>
       <form action={formActionHandler}>
-        <input type={"hidden"} name={"status"} value={IntroStates.cancelled} />
         <SubmitButton label={"Cancel"} />
       </form>
     </>

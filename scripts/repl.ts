@@ -1,5 +1,6 @@
 import prisma from "../prismaClient";
-import {z, ZodError} from "zod";
+import { z, ZodError } from "zod";
+import { IntroStates } from "@/lib/introStates";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -9,21 +10,10 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-
   console.log("in repl");
-  const user = await prisma.user.update({
-    data: {
-      name: 'foo'
-    },
-    where: {
-      email: 'sandeep@brandweaver.ai',
-      image: null
-    }
-  });
-  console.log(user);
-
-
-
+  console.log(typeof IntroStates.rejected);
+  console.log([IntroStates.rejected].length);
+  console.log([IntroStates.rejected, IntroStates.approved].includes("pending approval" as IntroStates));
 })();
 
 export {};

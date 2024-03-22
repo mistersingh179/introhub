@@ -2,11 +2,11 @@
 
 import { useToast } from "@/components/ui/use-toast";
 import { IntroStates } from "@/lib/introStates";
-import updateIntroductionAction from "@/app/actions/introductions/updateIntroductionAction";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
 import { useFormState } from "react-dom";
 import { useEffect, useState } from "react";
+import approveOrRejectIntroAction from "@/app/actions/introductions/approveOrRejectIntroAction";
 
 type IntroApproveFormProps = {
   introduction: IntroWithContactFacilitatorAndRequester;
@@ -14,7 +14,7 @@ type IntroApproveFormProps = {
 export default function IntroApproveForm(props: IntroApproveFormProps) {
   const { introduction } = props;
   const [submittedAt, setSubmittedAt] = useState<undefined | number>(undefined);
-  const action = updateIntroductionAction.bind(null, introduction.id);
+  const action = approveOrRejectIntroAction.bind(null, introduction.id);
   const [errorMessage, dispatch] = useFormState(action, undefined);
   const { toast } = useToast();
   useEffect(() => {
