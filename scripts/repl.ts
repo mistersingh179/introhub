@@ -1,6 +1,7 @@
 import prisma from "../prismaClient";
 import { z, ZodError } from "zod";
 import { IntroStates } from "@/lib/introStates";
+import chalk from "chalk";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -10,10 +11,7 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-  console.log("in repl");
-  console.log(typeof IntroStates.rejected);
-  console.log([IntroStates.rejected].length);
-  console.log([IntroStates.rejected, IntroStates.approved].includes("pending approval" as IntroStates));
+  await prisma.user.findFirstOrThrow();
 })();
 
 export {};

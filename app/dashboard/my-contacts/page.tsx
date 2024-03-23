@@ -58,7 +58,7 @@ const ContactRow = (props: ContactProps) => {
         <TableCell>{contact.email}</TableCell>
         <TableCell>{contact.sentCount}</TableCell>
         <TableCell>{contact.receivedCount}</TableCell>
-        <TableCell>{contact.sentReceivedRatio.toFixed(2)}</TableCell>
+        <TableCell>{(contact.sentReceivedRatio/100)}</TableCell>
       </TableRow>
     </>
   );

@@ -107,7 +107,7 @@ model Contact {
   email             String
   sentCount         Int
   receivedCount     Int
-  sentReceivedRatio Decimal        @db.Decimal(10, 2)
+  sentReceivedRatio Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

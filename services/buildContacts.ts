@@ -26,7 +26,7 @@ const buildContacts: BuildContacts = async (user) => {
                                COALESCE(received_count, 0)          AS received_count,
                                CASE
                                    WHEN COALESCE(received_count, 0) = 0 THEN NULL
-                                   ELSE round((CAST(sent_count AS FLOAT) / received_count)::numeric, 2)
+                                   ELSE round((sent_count::float / received_count) * 100)
                                    END                              AS sent_received_ratio
                         from Sent
                                  full outer join Received ON Sent.email = Received.email

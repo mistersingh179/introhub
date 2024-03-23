@@ -33,7 +33,7 @@ export default async function Prospects({
   const itemsPerPage = 10;
   const recordsToSkip = (currentPage - 1) * itemsPerPage;
 
-  console.log("query: ", query, "currentPage: ", currentPage);
+  console.log("search params query: ", query, "currentPage: ", currentPage);
 
   const session = (await auth()) as Session;
 
@@ -50,7 +50,7 @@ export default async function Prospects({
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
-  console.log(sql.text, sql.values);
+  // console.log(sql.text, sql.values);
   const prospects = await prisma.$queryRaw<ContactWithUserInfo[]>(sql);
   return (
     <>
@@ -99,7 +99,7 @@ const ProspectRow = (props: ProspectRowProps) => {
         <TableCell className={"p-2"}>{prospect.sentCount}</TableCell>
         <TableCell className={"p-2"}>{prospect.receivedCount}</TableCell>
         <TableCell className={"p-2"}>
-          {prospect.sentReceivedRatio.toFixed(2)}
+          {prospect.sentReceivedRatio/100}
         </TableCell>
         <TableCell className={"p-2"}>
           <Avatar className={"h-8 w-8"}>
