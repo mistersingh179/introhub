@@ -12,7 +12,7 @@ export default function ErrorMessage(props: ErrorMessageProps) {
       <AlertCircle className="h-4 w-4" />
       <AlertTitle>{title ?? "Error"}</AlertTitle>
       <AlertDescription>
-        <pre>{description ?? "An error has occurred."}</pre>
+        <div className={'whitespace-pre-wrap'}>{description ?? "An error has occurred."}</div>
       </AlertDescription>
     </Alert>
   );

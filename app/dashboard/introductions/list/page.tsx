@@ -24,6 +24,7 @@ import {
 import IntroApproveForm from "@/app/dashboard/introductions/list/IntroApproveForm";
 import IntroRejectForm from "@/app/dashboard/introductions/list/IntroRejectForm";
 import IntroCancelForm from "@/app/dashboard/introductions/list/IntroCancelForm";
+import UpdateMessageForContactDialog from "@/app/dashboard/introductions/list/UpdateMessaageForContactDialog";
 
 export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
@@ -137,6 +138,7 @@ const IntroductionRow = (props: IntroductionRowProps) => {
         </TableCell>
         <TableCell className={"p-2"}>
           {introduction.messageForContact}
+          <UpdateMessageForContactDialog introduction={introduction} />
         </TableCell>
         <TableCell className={"p-2"}>
           {format(introduction.createdAt, "MM/dd/yyyy")}

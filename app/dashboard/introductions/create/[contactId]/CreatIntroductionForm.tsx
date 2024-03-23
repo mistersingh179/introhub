@@ -17,7 +17,9 @@ export default function CreateIntroductionForm() {
     <>
       <form
         action={dispatch}
-        className={"bg-gray-50 p-4 max-w-2xl flex flex-col gap-4"}
+        className={
+          "bg-gray-50 dark:bg-slate-950 p-4 flex flex-col gap-4"
+        }
       >
         {errorMessage && (
           <ErrorMessage description={JSON.stringify(errorMessage, null, 2)} />
@@ -28,6 +30,7 @@ export default function CreateIntroductionForm() {
             Message For Facilitator
           </Label>
           <Textarea
+            rows={15}
             name="messageForFacilitator"
             id="messageForFacilitator"
             defaultValue="Sunt galataees anhelare bassus, regius visuses."
@@ -37,7 +40,7 @@ export default function CreateIntroductionForm() {
           <Label htmlFor="messageForContact" className={"min-w-48"}>
             Message For Contact
           </Label>
-          <Textarea
+          <Textarea rows={15}
             name="messageForContact"
             id="messageForContact"
             defaultValue="Pius fides aegre tractares medicina est."
