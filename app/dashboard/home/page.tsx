@@ -26,7 +26,7 @@ export default async function Home() {
   return (
     <>
       <h1 className={"text-2xl"}>Home</h1>
-      <pre className={"bg-yellow-50 my-4"}>
+      <pre className={"bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-4"}>
         {JSON.stringify(session, null, 2)}
       </pre>
     </>
