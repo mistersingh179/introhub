@@ -10,12 +10,13 @@ import { redirect } from "next/navigation";
 import { Introduction, Prisma } from "@prisma/client";
 import IntroductionUncheckedUpdateInput = Prisma.IntroductionUncheckedUpdateInput;
 
-export default async function approveOrRejectIntroAction(
+
+export default async function rejectIntroAction(
   introductionId: string,
   prevState: undefined | string,
   formData: FormData,
 ) {
-  console.log("in approveOrRejectIntroAction with: ", introductionId);
+  console.log("in rejectIntroAction with: ", introductionId);
   const session = (await auth()) as Session;
   const user = await prisma.user.findFirstOrThrow({
     where: {
@@ -24,15 +25,9 @@ export default async function approveOrRejectIntroAction(
   });
 
   try {
-    const newStatus = String(formData.get("status")) as IntroStates;
-    const allowsStatusValue = [IntroStates.rejected, IntroStates.approved];
-    if (!allowsStatusValue.includes(newStatus)) {
-      return "invalid status value";
-    }
-
     await prisma.introduction.update({
       data: {
-        status: newStatus,
+        status: IntroStates.rejected
       },
       where: {
         id: introductionId,
@@ -44,7 +39,7 @@ export default async function approveOrRejectIntroAction(
     if (e instanceof Error) {
       return e.message;
     } else {
-      return "unable to approve or reject introduction!";
+      return "unable to reject introduction!";
     }
   }
 

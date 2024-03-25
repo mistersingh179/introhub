@@ -17,6 +17,7 @@ import processRateLimitedRequest from "@/services/processRateLimitedRequest";
 import { User } from "@prisma/client";
 import buildContacts from "@/services/buildContacts";
 import buildContactsForAllUsers from "@/services/buildContactsForAllUsers";
+import sendEmail, {SendEmailInput} from "@/services/sendEmail";
 
 const queueName = "medium";
 
@@ -45,6 +46,16 @@ const mediumWorker: Worker<
         const goodToGo = await processRateLimitedRequest(input.account.id, 5);
         if (goodToGo) {
           return await downloadMetaData(input);
+        } else {
+          await job.moveToDelayed(Date.now() + randomInt(1000, 2000), token);
+          throw new DelayedError();
+        }
+      }
+      case "sendEmail": {
+        const input = data as SendEmailInput;
+        const goodToGo = await processRateLimitedRequest(input.account.id, 100);
+        if (goodToGo) {
+          return await sendEmail(input);
         } else {
           await job.moveToDelayed(Date.now() + randomInt(1000, 2000), token);
           throw new DelayedError();

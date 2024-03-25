@@ -7,7 +7,7 @@
     "build": "next build",
     "vercel-build": "npm ci && prisma generate && prisma migrate deploy && next build",
     "start": "next start",
-    "repl": "tsx scripts/repl.ts",
+    "repl": "tsx  --watch scripts/repl.ts",
     "lint": "next lint",
     "worker": "tsx bull/runAllWorkers.ts",
     "worker-build": "npm ci && prisma generate"

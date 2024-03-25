@@ -1,12 +1,11 @@
 "use client";
 
 import { useToast } from "@/components/ui/use-toast";
-import { IntroStates } from "@/lib/introStates";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
 import { useFormState } from "react-dom";
 import { useEffect, useState } from "react";
-import approveOrRejectIntroAction from "@/app/actions/introductions/approveOrRejectIntroAction";
+import rejectIntroAction from "@/app/actions/introductions/rejectIntroAction";
 
 type IntroApproveFormProps = {
   introduction: IntroWithContactFacilitatorAndRequester;
@@ -14,7 +13,7 @@ type IntroApproveFormProps = {
 export default function IntroApproveForm(props: IntroApproveFormProps) {
   const { introduction } = props;
   const [submittedAt, setSubmittedAt] = useState<undefined | number>(undefined);
-  const action = approveOrRejectIntroAction.bind(null, introduction.id);
+  const action = rejectIntroAction.bind(null, introduction.id);
   const [errorMessage, dispatch] = useFormState(action, undefined);
   const { toast } = useToast();
   useEffect(() => {
@@ -32,7 +31,6 @@ export default function IntroApproveForm(props: IntroApproveFormProps) {
   return (
     <>
       <form action={formActionHandler}>
-        <input type={"hidden"} name={"status"} value={IntroStates.rejected} />
         <SubmitButton label={"Reject"} />
       </form>
     </>
