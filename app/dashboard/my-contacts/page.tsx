@@ -5,26 +5,45 @@ import {
   Table,
   TableBody,
   TableCaption,
-  TableCell,
+  TableCell, TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Contact } from "@prisma/client";
+import MyPagination from "@/components/MyPagination";
+import Search from "@/components/Search";
 
-export default async function MyContacts() {
+export default async function MyContacts({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+}) {
+  const query = searchParams?.query || undefined;
+  const currentPage = Number(searchParams?.page) || 1;
+  const itemsPerPage = 10;
+  const recordsToSkip = (currentPage - 1) * itemsPerPage;
+
   const session = (await auth()) as Session;
   const contacts: Contact[] = await prisma.contact.findMany({
     where: {
       user: {
         email: session.user?.email || "",
       },
+      email: {
+        contains: query,
+      }
     },
-    take: 10
+    take: itemsPerPage,
+    skip: recordsToSkip
   });
   return (
     <>
       <h1 className={"text-2xl my-4"}>My Contacts</h1>
+      <Search placeholder={"filter by email here"} />
       <Table>
         <TableCaption>Your Contacts</TableCaption>
         <TableHeader>
@@ -37,11 +56,16 @@ export default async function MyContacts() {
         </TableHeader>
         <TableBody>
           {contacts.map((contact) => {
-            return (
-              <ContactRow key={contact.id} contact={contact} />
-            );
+            return <ContactRow key={contact.id} contact={contact} />;
           })}
         </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={4}>
+              <MyPagination />
+            </TableCell>
+          </TableRow>
+        </TableFooter>
       </Table>
     </>
   );
@@ -55,10 +79,10 @@ const ContactRow = (props: ContactProps) => {
   return (
     <>
       <TableRow key={contact.email}>
-        <TableCell>{contact.email}</TableCell>
-        <TableCell>{contact.sentCount}</TableCell>
-        <TableCell>{contact.receivedCount}</TableCell>
-        <TableCell>{(contact.sentReceivedRatio/100)}</TableCell>
+        <TableCell className={"p-2"}>{contact.email}</TableCell>
+        <TableCell className={"p-2"}>{contact.sentCount}</TableCell>
+        <TableCell className={"p-2"}>{contact.receivedCount}</TableCell>
+        <TableCell className={"p-2"}>{contact.sentReceivedRatio / 100}</TableCell>
       </TableRow>
     </>
   );

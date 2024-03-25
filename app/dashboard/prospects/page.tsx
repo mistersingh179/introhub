@@ -33,8 +33,6 @@ export default async function Prospects({
   const itemsPerPage = 10;
   const recordsToSkip = (currentPage - 1) * itemsPerPage;
 
-  console.log("search params query: ", query, "currentPage: ", currentPage);
-
   const session = (await auth()) as Session;
 
   const emailTermWithWild = query ? "%" + query + "%" : null;

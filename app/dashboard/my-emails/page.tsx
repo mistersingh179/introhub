@@ -6,27 +6,54 @@ import {
   TableBody,
   TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {Contact, Message} from "@prisma/client";
+import { Contact, Message } from "@prisma/client";
+import MyPagination from "@/components/MyPagination";
+import Search from "@/components/Search";
 
-export default async function Emails() {
+export default async function Emails({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+}) {
+  const query = searchParams?.query || undefined;
+  const currentPage = Number(searchParams?.page) || 1;
+  const itemsPerPage = 10;
+  const recordsToSkip = (currentPage - 1) * itemsPerPage;
+
   const session = (await auth()) as Session;
-  const emails = await prisma
-
   const messages: Message[] = await prisma.message.findMany({
     where: {
       user: {
         email: session.user?.email || "",
       },
+      OR: query ? [
+        {
+          fromAddress: {
+            contains: query,
+          },
+        },
+        {
+          toAddress: {
+            contains: query,
+          },
+        },
+      ] : undefined,
     },
-    take: 10
+    take: itemsPerPage,
+    skip: recordsToSkip,
   });
   return (
     <>
       <h1 className={"text-2xl my-4"}>My Emails</h1>
+      <Search placeholder={"filter by email here"} />
       <Table>
         <TableCaption>My Emails</TableCaption>
         <TableHeader>
@@ -41,11 +68,16 @@ export default async function Emails() {
         </TableHeader>
         <TableBody>
           {messages.map((message) => {
-            return (
-              <MessageRow key={message.id} message={message} />
-            );
+            return <MessageRow key={message.id} message={message} />;
           })}
         </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={6}>
+              <MyPagination />
+            </TableCell>
+          </TableRow>
+        </TableFooter>
       </Table>
     </>
   );
@@ -59,12 +91,14 @@ const MessageRow = (props: MessageProps) => {
   return (
     <>
       <TableRow key={message.gmailMessageId}>
-        <TableCell>{message.fromAddress}</TableCell>
-        <TableCell>{message.deliveredTo}</TableCell>
-        <TableCell>{message.toAddress}</TableCell>
-        <TableCell>{message.replyToAddress}</TableCell>
-        <TableCell>{message.subject}</TableCell>
-        <TableCell>{message.receivedAt?.toString()}</TableCell>
+        <TableCell className={"p-2"}>{message.fromAddress}</TableCell>
+        <TableCell className={"p-2"}>{message.deliveredTo}</TableCell>
+        <TableCell className={"p-2"}>{message.toAddress}</TableCell>
+        <TableCell className={"p-2"}>{message.replyToAddress}</TableCell>
+        <TableCell className={"p-2"}>{message.subject}</TableCell>
+        <TableCell className={"p-2"}>
+          {message.receivedAt?.toString()}
+        </TableCell>
       </TableRow>
     </>
   );
