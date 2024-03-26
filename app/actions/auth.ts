@@ -11,6 +11,6 @@ export async function signOutAction() {
 export async function signInWithGoogleAction(formData: FormData) {
   console.log("in signInWithGoogle");
   await signIn("google", {
-    redirectTo: "/dashboard/home",
+    redirectTo: "/dashboard/introductions/list",
   });
 }
