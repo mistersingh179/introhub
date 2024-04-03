@@ -132,6 +132,10 @@ model PersonProfile {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([city])
+  @@index([state])
+  @@index([email])
 }
 
 model PersonExperience {
@@ -145,6 +149,9 @@ model PersonExperience {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([personProfileId])
+  @@index([jobTitle])
 }
 
 model CompanyProfile {
@@ -162,6 +169,7 @@ model CompanyProfile {
   updatedAt DateTime @updatedAt
 
   @@index([website])
+  @@index([industry])
   @@index([linkedInUrl])
 }
 

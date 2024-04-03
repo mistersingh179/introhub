@@ -20,6 +20,7 @@ import Link from "next/link";
 import { SquarePen } from "lucide-react";
 import { buildS3ImageUrl } from "@/lib/url";
 import FiltersForm from "@/app/dashboard/prospects/FiltersForm";
+import sleep from "@/lib/sleep";
 
 type ProspectsSearchParams = {
   query?: string;
@@ -27,7 +28,9 @@ type ProspectsSearchParams = {
   selectedStates?: string | string[];
   selectedJobTitles?: string | string[];
   selectedIndustries?: string | string[];
+  selectedCategories?: string | string[];
   selectedEmail?: string;
+  selectedWebsite?: string;
   page?: string | string[];
 };
 
@@ -56,7 +59,9 @@ type GetSelectedFilterValues = (
   selectedStates: string[] | undefined;
   selectedJobTitles: string[] | undefined;
   selectedIndustries: string[] | undefined;
+  selectedCategories: string[] | undefined;
   selectedEmail: string | undefined;
+  selectedWebsite: string | undefined;
 };
 
 const getSelectedFilterValues: GetSelectedFilterValues = (searchParams) => {
@@ -64,14 +69,18 @@ const getSelectedFilterValues: GetSelectedFilterValues = (searchParams) => {
   const selectedStates = getValueAsArray(searchParams?.selectedStates);
   const selectedJobTitles = getValueAsArray(searchParams?.selectedJobTitles);
   const selectedIndustries = getValueAsArray(searchParams?.selectedIndustries);
+  const selectedCategories = getValueAsArray(searchParams?.selectedCategories);
   const selectedEmail = searchParams?.selectedEmail;
+  const selectedWebsite = searchParams?.selectedWebsite;
 
   const result = {
     selectedCities,
     selectedStates,
     selectedJobTitles,
     selectedIndustries,
+    selectedCategories,
     selectedEmail,
+    selectedWebsite,
   };
 
   console.log("selected: ", result);
@@ -90,16 +99,19 @@ const getPaginationValues: GetPaginationValues = (searchParams) => {
   const currentPage = Number(searchParams?.page) || 1;
   const itemsPerPage = 10;
   const recordsToSkip = (currentPage - 1) * itemsPerPage;
-  return { currentPage, itemsPerPage, recordsToSkip };
-};
 
-// todo - we need indexes on things being filtered on
+  const result = { currentPage, itemsPerPage, recordsToSkip };
+
+  console.log("paginated values: ", result);
+  return result;
+};
 
 type GetAllFilterValues = () => Promise<{
   cities: string[];
   states: string[];
   jobTitles: string[];
   industries: string[];
+  categories: string[];
 }>;
 
 const getAllFilterValues: GetAllFilterValues = async () => {
@@ -135,9 +147,18 @@ const getAllFilterValues: GetAllFilterValues = async () => {
     .filter((rec) => rec.industry)
     .map((rec) => rec.industry as string);
 
-  console.log("all filter values: ", cities, states, jobTitles, industries);
+  const categoriesWithCount = await prisma.category.groupBy({
+    by: "name",
+    _count: true,
+  });
+  const categories = categoriesWithCount
+    .filter((rec) => rec.name)
+    .map((rec) => rec.name as string);
 
-  return { cities, states, jobTitles, industries };
+  const result = { cities, states, jobTitles, industries, categories };
+
+  console.log("all filter values: ", result);
+  return result;
 };
 
 export default async function Prospects({
@@ -146,9 +167,11 @@ export default async function Prospects({
   searchParams?: ProspectsSearchParams;
 }) {
   const session = (await auth()) as Session;
+  await sleep(500);
   console.log("*** searchParams ***: ", searchParams);
 
-  const { cities, states, jobTitles, industries } = await getAllFilterValues();
+  const { cities, states, jobTitles, industries, categories } =
+    await getAllFilterValues();
 
   const { recordsToSkip, currentPage, itemsPerPage } =
     getPaginationValues(searchParams);
@@ -158,7 +181,9 @@ export default async function Prospects({
     selectedStates,
     selectedJobTitles,
     selectedEmail,
+    selectedWebsite,
     selectedIndustries,
+    selectedCategories,
   } = getSelectedFilterValues(searchParams);
 
   const cityFilterSql = selectedCities
@@ -177,13 +202,16 @@ export default async function Prospects({
     ? Prisma.sql`and CP."industry" in (${Prisma.join(selectedIndustries)})`
     : Prisma.sql``;
 
-  const selectedCategories = ["analytics", "foo", "bar"];
   const categoriesFilterSql = selectedCategories
     ? Prisma.sql`and CAT."name" in (${Prisma.join(selectedCategories)})`
     : Prisma.sql``;
 
   const emailFilterSql = selectedEmail
     ? Prisma.sql`and C.email like ${"%" + selectedEmail + "%"}`
+    : Prisma.sql``;
+
+  const websiteFilterSql = selectedWebsite
+    ? Prisma.sql`and C.email like ${"%" + selectedWebsite + "%"}`
     : Prisma.sql``;
 
   const sql = Prisma.sql`
@@ -195,7 +223,7 @@ export default async function Prospects({
                left join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
-      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${industryFilterSql} ${categoriesFilterSql}
+      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql}
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
@@ -212,6 +240,7 @@ export default async function Prospects({
         states={states}
         jobTitles={jobTitles}
         industries={industries}
+        categories={categories}
       />
       <Table>
         <TableCaption>Prospects</TableCaption>

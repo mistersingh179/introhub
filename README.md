@@ -12,7 +12,6 @@ https://www.googleapis.com/auth/userinfo.email
 https://www.googleapis.com/auth/gmail.metadata 
 https://www.googleapis.com/auth/userinfo.profile
 
-setup jobs for enriching contacts
 error handling on contact show not available
 make images available only for some time
 how is sandeep@introhub.net work with account for sandeep@brandweaver.ai

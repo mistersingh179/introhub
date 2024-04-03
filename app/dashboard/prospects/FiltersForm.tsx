@@ -3,13 +3,21 @@
 import { useState } from "react";
 import { FancyOption } from "@/components/FancyOption";
 import { FancyMultiSelect } from "@/components/FancyMultiSelect";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
 
 const buildOptions = (values: string[]): FancyOption[] => {
   return values.map((rec) => ({ label: rec, value: rec }));
+};
+
+const addMultiOptionsToParams = (
+  params: URLSearchParams,
+  selectedOptions: FancyOption[],
+  optionsName: string,
+) => {
+  params.delete(optionsName);
+  selectedOptions.forEach((rec) => params.append(optionsName, rec.value));
 };
 
 type FiltersFormProps = {
@@ -17,63 +25,56 @@ type FiltersFormProps = {
   states: string[];
   jobTitles: string[];
   industries: string[];
+  categories: string[];
 };
 
 const FiltersForm = (props: FiltersFormProps) => {
-  const { cities, states, jobTitles, industries } = props;
+  const { cities, states, jobTitles, industries, categories } = props;
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
   const [selectedCities, setSelectedCities] = useState<FancyOption[]>(
-    searchParams
-      .getAll("selectedCities")
-      .map((rec) => ({ label: rec, value: rec })),
+    buildOptions(searchParams.getAll("selectedCities")),
   );
   const [selectedStates, setSelectedStates] = useState<FancyOption[]>(
-    searchParams
-      .getAll("selectedStates")
-      .map((rec) => ({ label: rec, value: rec })),
+    buildOptions(searchParams.getAll("selectedStates")),
   );
   const [selectedJobTitles, setSelectedJobTitles] = useState<FancyOption[]>(
-    searchParams
-      .getAll("selectedJobTitles")
-      .map((rec) => ({ label: rec, value: rec })),
+    buildOptions(searchParams.getAll("selectedJobTitles")),
   );
   const [selectedIndustries, setSelectedIndustries] = useState<FancyOption[]>(
-    searchParams
-      .getAll("selectedIndustries")
-      .map((rec) => ({ label: rec, value: rec })),
+    buildOptions(searchParams.getAll("selectedIndustries")),
+  );
+
+  const [selectedCategories, setSelectedCategories] = useState<FancyOption[]>(
+    buildOptions(searchParams.getAll("selectedCategories")),
   );
 
   const formHandler = (formData: FormData) => {
     console.log("in formHandler: ", formData);
+
     formData.forEach((value, key) => {
       console.log("key: ", key, "value: ", value);
     });
 
     const params = new URLSearchParams(searchParams);
 
-    params.delete("selectedCities");
-    selectedCities.forEach((rec) => params.append("selectedCities", rec.value));
-
-    params.delete("selectedStates");
-    selectedStates.forEach((rec) => params.append("selectedStates", rec.value));
-
-    params.delete("selectedJobTitles");
-    selectedJobTitles.forEach((rec) =>
-      params.append("selectedJobTitles", rec.value),
-    );
-
-    params.delete("selectedIndustries");
-    selectedIndustries.forEach((rec) =>
-      params.append("selectedIndustries", rec.value),
-    );
+    addMultiOptionsToParams(params, selectedCities, "selectedCities");
+    addMultiOptionsToParams(params, selectedStates, "selectedStates");
+    addMultiOptionsToParams(params, selectedJobTitles, "selectedJobTitles");
+    addMultiOptionsToParams(params, selectedIndustries, "selectedIndustries");
+    addMultiOptionsToParams(params, selectedCategories, "selectedCategories");
 
     params.delete("selectedEmail");
     if (formData.get("selectedEmail")) {
       params.set("selectedEmail", formData.get("selectedEmail") as string);
+    }
+
+    params.delete("selectedWebsite");
+    if (formData.get("selectedWebsite")) {
+      params.set("selectedWebsite", formData.get("selectedWebsite") as string);
     }
 
     console.log("params: ", params.toString());
@@ -107,20 +108,32 @@ const FiltersForm = (props: FiltersFormProps) => {
           selected={selectedIndustries}
           setSelected={setSelectedIndustries}
         />
+        <FancyMultiSelect
+          placeholder={"Categories"}
+          options={buildOptions(categories)}
+          selected={selectedCategories}
+          setSelected={setSelectedCategories}
+        />
 
         <div className={"flex flex-row items-center gap-4 whitespace-nowrap"}>
-          <Label htmlFor="email">Email</Label>
           <Input
-            type="text"
+            type="search"
             name="selectedEmail"
             id="email"
             placeholder="customer@company.com"
           />
         </div>
+
+        <div className={"flex flex-row items-center gap-4 whitespace-nowrap"}>
+          <Input
+            type="search"
+            name="selectedWebsite"
+            id="website"
+            placeholder="company.com"
+          />
+        </div>
         <div className={"flex flex-row justify-center"}>
-          {/* todo – disable button on submit */}
-          {/* todo – enable upon change in filters */}
-          <Button className={"max-w-24"}>Apply Filter</Button>
+          <SubmitButton label={"Apply Filter"} />
         </div>
       </div>
     </form>

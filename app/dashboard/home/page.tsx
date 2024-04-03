@@ -7,6 +7,7 @@ import reservedEmailAddressesList from "reserved-email-addresses-list";
 import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
 import md5 from "md5";
 import * as React from "react";
+import HookExp from "@/app/dashboard/home/HookExp";
 
 const roleBasedEmailAddressesList = roleBasedEmailAddressesListTemp as string[];
 
@@ -29,6 +30,7 @@ export default async function Home() {
   return (
     <>
       <h1 className={"text-2xl"}>Home</h1>
+      <HookExp />
       <pre
         className={
           "bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-4"
