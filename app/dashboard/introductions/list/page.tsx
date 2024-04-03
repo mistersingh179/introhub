@@ -22,9 +22,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import IntroApproveForm from "@/app/dashboard/introductions/list/IntroApproveForm";
-import IntroRejectForm from "@/app/dashboard/introductions/list/IntroRejectForm";
 import IntroCancelForm from "@/app/dashboard/introductions/list/IntroCancelForm";
 import UpdateMessageForContactDialog from "@/app/dashboard/introductions/list/UpdateMessaageForContactDialog";
+import IntroRejectDialog from "@/app/dashboard/introductions/list/IntroRejecDialog";
+import { Separator } from "@/components/ui/separator";
 
 export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
@@ -157,6 +158,12 @@ const IntroductionRow = (props: IntroductionRowProps) => {
                     ]
                   }
                 </p>
+                {introduction.rejectionReason && (
+                  <>
+                    <Separator className={"my-2"} />
+                    <p>{introduction.rejectionReason}</p>
+                  </>
+                )}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -181,7 +188,7 @@ const ActionButtons = (props: ActionButtonProps) => {
         {introduction.facilitatorId === user.id && (
           <>
             <IntroApproveForm introduction={introduction} />
-            <IntroRejectForm introduction={introduction} />
+            <IntroRejectDialog introduction={introduction} />
           </>
         )}
 

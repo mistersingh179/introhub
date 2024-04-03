@@ -79,6 +79,7 @@ model Introduction {
   messageForFacilitator String
   messageForContact     String
   status                String  @default("draft")
+  rejectionReason       String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

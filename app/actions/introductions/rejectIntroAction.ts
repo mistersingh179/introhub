@@ -1,15 +1,11 @@
 "use server";
 
-import { z, ZodError } from "zod";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import { IntroStates } from "@/lib/introStates";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { Introduction, Prisma } from "@prisma/client";
-import IntroductionUncheckedUpdateInput = Prisma.IntroductionUncheckedUpdateInput;
-
 
 export default async function rejectIntroAction(
   introductionId: string,
@@ -27,7 +23,8 @@ export default async function rejectIntroAction(
   try {
     await prisma.introduction.update({
       data: {
-        status: IntroStates.rejected
+        status: IntroStates.rejected,
+        rejectionReason: formData.get("rejectionReason")?.toString(),
       },
       where: {
         id: introductionId,
