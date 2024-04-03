@@ -20,8 +20,11 @@ export default async function DashboardLayout({
     },
   });
   const allowedEmails = [
+    "sandeep@introhub.net",
     "sandeep@brandweaver.ai",
     "mistersingh179@gmail.com",
+    "joserodrigofuentes@gmail.com",
+    "rod@introhub.net",
     "rod@brandweaver.ai",
   ];
   let userAllowed = false;

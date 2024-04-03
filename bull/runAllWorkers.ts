@@ -1,11 +1,13 @@
 import mediumWorker from "@/bull/workers/mediumWorker";
 import setupCronJobs from "@/bull/setupCronJobs";
 import highWorker from "@/bull/workers/highWorker";
+import proxyCurlWorker from "@/bull/workers/proxyCurlWorker";
 
 (async () => {
   console.log("starting workers");
   mediumWorker.run();
   highWorker.run();
+  proxyCurlWorker.run();
 
   await setupCronJobs();
 })();

@@ -5,6 +5,8 @@ import reservedEmailAddressesList from "reserved-email-addresses-list";
 
 // @ts-ignore
 import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
+import md5 from "md5";
+import * as React from "react";
 
 const roleBasedEmailAddressesList = roleBasedEmailAddressesListTemp as string[];
 
@@ -23,12 +25,18 @@ export default async function Home() {
       email: session.user?.email ?? "",
     },
   });
+
   return (
     <>
       <h1 className={"text-2xl"}>Home</h1>
-      <pre className={"bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-4"}>
+      <pre
+        className={
+          "bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-4"
+        }
+      >
         {JSON.stringify(session, null, 2)}
       </pre>
+      <pre>{md5("hello world")}</pre>
     </>
   );
 }

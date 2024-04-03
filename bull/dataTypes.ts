@@ -7,6 +7,9 @@ import { User } from "@prisma/client";
 import { SendEmailInput } from "@/services/sendEmail";
 import { gmail_v1 } from "googleapis";
 import Schema$Message = gmail_v1.Schema$Message;
+import { EnrichContactInput } from "@/services/enrichContact";
+
+export type ProxyCurlInputDataType = EnrichContactInput | null;
 
 export type MediumInputDataType =
   | DownloadMessagesInput
@@ -15,12 +18,16 @@ export type MediumInputDataType =
   | User
   | null;
 
+export type ProxyCurlOutputDataType = void;
+
 export type MediumOutputDataType =
   | DownloadMessagesOutput
   | Schema$Message
   | number
   | undefined
   | void;
+
+export type ProxyCurlJobNames = "enrichContact" | "enrichAllContacts";
 
 export type MediumJobNames =
   | "downloadMessages"

@@ -5,7 +5,8 @@ import {
   Table,
   TableBody,
   TableCaption,
-  TableCell, TableFooter,
+  TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -35,10 +36,10 @@ export default async function MyContacts({
       },
       email: {
         contains: query,
-      }
+      },
     },
     take: itemsPerPage,
-    skip: recordsToSkip
+    skip: recordsToSkip,
   });
   return (
     <>
@@ -82,7 +83,9 @@ const ContactRow = (props: ContactProps) => {
         <TableCell className={"p-2"}>{contact.email}</TableCell>
         <TableCell className={"p-2"}>{contact.sentCount}</TableCell>
         <TableCell className={"p-2"}>{contact.receivedCount}</TableCell>
-        <TableCell className={"p-2"}>{contact.sentReceivedRatio / 100}</TableCell>
+        <TableCell className={"p-2"}>
+          {contact.sentReceivedRatio / 100}
+        </TableCell>
       </TableRow>
     </>
   );

@@ -119,6 +119,85 @@ model Contact {
   @@index([sentReceivedRatio])
 }
 
+model PersonProfile {
+  id                String             @id @default(cuid())
+  email             String             @unique
+  personExperiences PersonExperience[]
+  linkedInUrl       String?
+  fullName          String?
+  city              String?
+  country           String?
+  state             String?
+  lastUpdatedAt     DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PersonExperience {
+  id                 String        @id @default(cuid())
+  personProfileId    String
+  personProfile      PersonProfile @relation(fields: [personProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyName        String?
+  companyLinkedInUrl String
+  jobTitle           String?
+  jobDescription     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CompanyProfile {
+  id          String                   @id @default(cuid())
+  categories  CompanyProfileCategory[]
+  linkedInUrl String                   @unique
+  website     String?
+  sizeFrom    Int?
+  sizeTo      Int?
+  size        Int?
+  industry    String?
+  foundedYear Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([website])
+  @@index([linkedInUrl])
+}
+
+model CompanyProfileCategory {
+  companyProfileId String
+  companyProfile   CompanyProfile @relation(fields: [companyProfileId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  categoryId       String
+  category         Category       @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([companyProfileId, categoryId])
+}
+
+model Category {
+  id              String                   @id @default(cuid())
+  name            String                   @unique
+  companyProfiles CompanyProfileCategory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+}
+
+model ReverseEmailLookupEndpoint {
+  email    String @id
+  response Json
+}
+
+model CompanyProfileEndpoint {
+  url      String @id
+  response Json
+}
+
 model Message {
   id             String    @id
   userId         String
@@ -144,4 +223,25 @@ model Message {
   @@index([toAddress])
   @@index([fromAddress, toAddress])
   @@index([deliveredTo, fromAddress])
+}
+
+model Post {
+  id    String    @id @default(cuid())
+  title String    @unique
+  tags  PostTag[]
+}
+
+model Tag {
+  id    String    @id @default(cuid())
+  name  String    @unique
+  posts PostTag[]
+}
+
+model PostTag {
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+  tagId  String
+  tag    Tag    @relation(fields: [tagId], references: [id])
+
+  @@id([postId, tagId])
 }
