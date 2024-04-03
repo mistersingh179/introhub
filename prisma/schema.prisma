@@ -134,6 +134,7 @@ model PersonProfile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([linkedInUrl])
   @@index([city])
   @@index([state])
   @@index([email])

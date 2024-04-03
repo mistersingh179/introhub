@@ -40,7 +40,7 @@ export default async function approveIntroAction(
           contact: true,
         },
       });
-    const personProfile = await prisma.personProfile.findFirst({
+    const personProfile = await prisma.personProfile.findFirstOrThrow({
       where: {
         email: introduction.contact.email,
       },
@@ -53,7 +53,7 @@ export default async function approveIntroAction(
     });
     const sendEmailInput: SendEmailInput = {
       account,
-      subject: `Intro request: ${introduction.requester.name} ${personProfile?.fullName ? "<> " + personProfile.fullName : ""}`,
+      subject: `Intro request: ${personProfile.fullName} <> ${introduction.requester.name}`,
       body: introduction.messageForContact,
       from: introduction.facilitator.email!,
       cc: introduction.requester.email!,

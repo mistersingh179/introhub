@@ -218,9 +218,9 @@ export default async function Prospects({
       select distinct on (C.email) C.*, U.email as "userEmail", U.image as "userImage", CP.website as website
       from "Contact" C
                inner join public."User" U on U.id = C."userId"
-               left join public."PersonProfile" PP on C.email = PP.email
-               left join public."PersonExperience" PE on PP.id = PE."personProfileId"
-               left join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
+               inner join public."PersonProfile" PP on C.email = PP.email and PP."linkedInUrl" is not null
+               inner join public."PersonExperience" PE on PP.id = PE."personProfileId"
+               inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql}
@@ -231,6 +231,8 @@ export default async function Prospects({
   console.log(sql.text, sql.values);
 
   const prospects = await prisma.$queryRaw<ContactWithUserInfo[]>(sql);
+
+  // todo - show contact name along with email
 
   return (
     <>
