@@ -37,7 +37,6 @@ export default async function Home() {
       >
         {JSON.stringify(session, null, 2)}
       </pre>
-      <pre>{md5("hello world")}</pre>
     </>
   );
 }
