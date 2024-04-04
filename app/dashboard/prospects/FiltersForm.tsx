@@ -83,7 +83,23 @@ const FiltersForm = (props: FiltersFormProps) => {
 
   return (
     <form action={formHandler}>
-      <div className={"flex flex-col gap-4 max-w-96 py-4"}>
+      <div className={"flex flex-col gap-4 max-w-96 py-4 px-2"}>
+        <div className={"flex flex-row items-center gap-4 whitespace-nowrap"}>
+          <Input
+            type="search"
+            name="selectedEmail"
+            id="email"
+            placeholder="customer@company.com"
+          />
+        </div>
+        <div className={"flex flex-row items-center gap-4 whitespace-nowrap"}>
+          <Input
+            type="search"
+            name="selectedWebsite"
+            id="website"
+            placeholder="company.com"
+          />
+        </div>
         <FancyMultiSelect
           placeholder={"Cities"}
           options={buildOptions(cities)}
@@ -115,23 +131,6 @@ const FiltersForm = (props: FiltersFormProps) => {
           setSelected={setSelectedCategories}
         />
 
-        <div className={"flex flex-row items-center gap-4 whitespace-nowrap"}>
-          <Input
-            type="search"
-            name="selectedEmail"
-            id="email"
-            placeholder="customer@company.com"
-          />
-        </div>
-
-        <div className={"flex flex-row items-center gap-4 whitespace-nowrap"}>
-          <Input
-            type="search"
-            name="selectedWebsite"
-            id="website"
-            placeholder="company.com"
-          />
-        </div>
         <div className={"flex flex-row justify-center"}>
           <SubmitButton label={"Apply Filter"} />
         </div>

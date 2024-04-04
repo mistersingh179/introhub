@@ -1,26 +1,12 @@
 import prisma from "@/prismaClient";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 import { Contact, Prisma } from "@prisma/client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import MyPagination from "@/components/MyPagination";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { SquarePen } from "lucide-react";
-import { buildS3ImageUrl } from "@/lib/url";
 import FiltersForm from "@/app/dashboard/prospects/FiltersForm";
 import sleep from "@/lib/sleep";
+
+import ProspectsTable from "@/app/dashboard/prospects/ProspectsTable";
 
 type ProspectsSearchParams = {
   query?: string;
@@ -34,7 +20,7 @@ type ProspectsSearchParams = {
   page?: string | string[];
 };
 
-type ContactWithUserInfo = Contact & {
+export type ContactWithUserInfo = Contact & {
   userEmail: string;
   userImage: string;
   website: string;
@@ -218,9 +204,9 @@ export default async function Prospects({
       select distinct on (C.email) C.*, U.email as "userEmail", U.image as "userImage", CP.website as website
       from "Contact" C
                inner join public."User" U on U.id = C."userId"
-               inner join public."PersonProfile" PP on C.email = PP.email and PP."linkedInUrl" is not null
-               inner join public."PersonExperience" PE on PP.id = PE."personProfileId"
-               inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
+               left join public."PersonProfile" PP on C.email = PP.email and PP."linkedInUrl" is not null
+               left join public."PersonExperience" PE on PP.id = PE."personProfileId"
+               left join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql}
@@ -236,99 +222,25 @@ export default async function Prospects({
 
   return (
     <>
-      <h1 className={"text-2xl my-4"}>Prospects</h1>
-      <FiltersForm
-        cities={cities}
-        states={states}
-        jobTitles={jobTitles}
-        industries={industries}
-        categories={categories}
-      />
-      <Table>
-        <TableCaption>Prospects</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead></TableHead>
-            <TableHead></TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Send Count</TableHead>
-            <TableHead>Received Count</TableHead>
-            <TableHead>Sent-Received Ratio</TableHead>
-            <TableHead>Introducer</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {prospects.map((prospect) => {
-            return <ProspectRow key={prospect.id} prospect={prospect} />;
-          })}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={8}>
-              <MyPagination />
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+      <div className={"flex flex-row justify-start items-center gap-4"}>
+        <h1 className={"text-2xl my-4"}>Prospects</h1>
+      </div>
+
+      <div className={"flex flex-row gap-4 items-start"}>
+        <div className={"basis-1/5 mt-2 border p-4"}>
+          <h1>Filters</h1>
+          <FiltersForm
+            cities={cities}
+            states={states}
+            jobTitles={jobTitles}
+            industries={industries}
+            categories={categories}
+          />
+        </div>
+        <div>
+          <ProspectsTable prospects={prospects} />
+        </div>
+      </div>
     </>
   );
 }
-
-type ProspectRowProps = {
-  prospect: ContactWithUserInfo;
-};
-const ProspectRow = (props: ProspectRowProps) => {
-  const { prospect } = props;
-  return (
-    <>
-      <TableRow key={prospect.email}>
-        <TableCell className={"p-2"}>
-          <Avatar className={"h-8 w-8"}>
-            <AvatarImage
-              src={buildS3ImageUrl(prospect.website)}
-              title={prospect.website}
-            />
-            <AvatarFallback>{"W"}</AvatarFallback>
-          </Avatar>
-        </TableCell>
-        <TableCell className={"p-2"}>
-          <Avatar className={"h-8 w-8"}>
-            <AvatarImage
-              src={buildS3ImageUrl(prospect.email)}
-              title={prospect.email}
-            />
-            <AvatarFallback>{"E"}</AvatarFallback>
-          </Avatar>
-        </TableCell>
-        <TableCell className={"p-2"}>
-          <Link
-            href={`/dashboard/prospects/${prospect.id}/`}
-            className={"hover:underline"}
-          >
-            {prospect.email}
-          </Link>
-        </TableCell>
-        <TableCell className={"p-2"}>{prospect.sentCount}</TableCell>
-        <TableCell className={"p-2"}>{prospect.receivedCount}</TableCell>
-        <TableCell className={"p-2"}>
-          {prospect.sentReceivedRatio / 100}
-        </TableCell>
-        <TableCell className={"p-2"}>
-          <Avatar className={"h-8 w-8"}>
-            <AvatarImage src={prospect.userImage} title={prospect.userEmail} />
-            {/*<AvatarFallback>X</AvatarFallback>*/}
-          </Avatar>
-        </TableCell>
-        <TableCell className={"p-2"}>
-          <Button asChild>
-            <Link href={`/dashboard/introductions/create/${prospect.id}`}>
-              Create Introduction
-              <SquarePen size={18} className={"ml-2"} />
-            </Link>
-          </Button>
-        </TableCell>
-      </TableRow>
-    </>
-  );
-};
