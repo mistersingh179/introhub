@@ -15,6 +15,7 @@ import {buildS3ImageUrl} from "@/lib/url";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {SquarePen} from "lucide-react";
+import {getInitials} from "@/app/dashboard/UserProfileImageNav";
 
 const ProspectsTable = ({ prospects }: { prospects: ContactWithUserInfo[] }) => {
   return <Table>
@@ -88,7 +89,7 @@ const ProspectRow = (props: ProspectRowProps) => {
         <TableCell className={"p-2"}>
           <Avatar className={"h-8 w-8"}>
             <AvatarImage src={prospect.userImage} title={prospect.userEmail} />
-            {/*<AvatarFallback>X</AvatarFallback>*/}
+            <AvatarFallback>{getInitials(prospect.userName)}</AvatarFallback>
           </Avatar>
         </TableCell>
         <TableCell className={"p-2"}>

@@ -1,11 +1,11 @@
 import NavLink from "@/components/NavLink";
-import LogoutButton from "@/components/LogoutButton";
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { ModeToggle } from "@/components/MyToggleButton";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
+import UserProfileImageNav from "@/app/dashboard/UserProfileImageNav";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -59,7 +59,8 @@ export default async function DashboardLayout({
           </div>
           <div className={"flex flex-row gap-4 px-4"}>
             <ModeToggle />
-            <LogoutButton />
+            <UserProfileImageNav />
+            {/*<LogoutButton />*/}
           </div>
         </nav>
         <main className={""}>{children}</main>

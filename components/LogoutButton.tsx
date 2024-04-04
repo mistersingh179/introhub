@@ -4,10 +4,10 @@ import {LogOut} from "lucide-react";
 
 const LogoutButton = () => {
   return (
-    <form action={signOutAction}>
-      <Button type={"submit"}>
+    <form action={signOutAction} className={'p-0 m-0'}>
+      <Button type={"submit"} variant={'link'} className={'pl-0 m-0 h-4 w-full'}>
         Logout
-        <LogOut size={18} className={"ml-2"}/>
+        <LogOut size={'16px'} className={"ml-2"}/>
       </Button>
     </form>
   );

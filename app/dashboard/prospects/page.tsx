@@ -23,6 +23,7 @@ type ProspectsSearchParams = {
 export type ContactWithUserInfo = Contact & {
   userEmail: string;
   userImage: string;
+  userName: string;
   website: string;
 };
 
@@ -153,6 +154,11 @@ export default async function Prospects({
   searchParams?: ProspectsSearchParams;
 }) {
   const session = (await auth()) as Session;
+  const user = await prisma.user.findFirstOrThrow({
+    where: {
+      email: session.user?.email ?? "",
+    },
+  });
   await sleep(500);
   console.log("*** searchParams ***: ", searchParams);
 
@@ -201,7 +207,11 @@ export default async function Prospects({
     : Prisma.sql``;
 
   const sql = Prisma.sql`
-      select distinct on (C.email) C.*, U.email as "userEmail", U.image as "userImage", CP.website as website
+      select distinct on (C.email) C.*,
+                                   U.email    as "userEmail",
+                                   U.image    as "userImage",
+                                   U.name     as "userName",
+                                   CP.website as website
       from "Contact" C
                inner join public."User" U on U.id = C."userId"
                inner join public."PersonProfile" PP on C.email = PP.email and PP."linkedInUrl" is not null
@@ -210,6 +220,7 @@ export default async function Prospects({
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql}
+        and C."userId" != ${user.id}
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
