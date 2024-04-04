@@ -33,8 +33,7 @@ export default function IntroRejectDialog(props: IntroRejectDialogProps) {
           <DialogHeader>
             <DialogTitle>Reject Introduction?</DialogTitle>
             <DialogDescription>
-              Use this box to optionally tell the requester why you are not
-              comfortable making this introduction.
+              Please tell the requester why you are rejecting this introduction request.
             </DialogDescription>
           </DialogHeader>
           <IntroRejectForm introduction={introduction} setOpen={setOpen}  />

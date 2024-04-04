@@ -1,6 +1,7 @@
 import prisma from "../prismaClient";
 import { Prisma } from "@prisma/client";
 import {PersonProfileWithExperiences} from "@/app/dashboard/introductions/create/[contactId]/page";
+import {z} from "zod";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -10,17 +11,9 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-  const personProfile: PersonProfileWithExperiences =
-    await prisma.personProfile.findFirstOrThrow({
-      where: {
-        email: 'sandeep@brandweaver.ai',
-      },
-      include: {
-        personExperiences: true,
-      },
-    });
-  const personExperience = personProfile.personExperiences[0];
-  console.log(personExperience);
+  const schema = z.string().min(10);
+  const ans = schema.parse("dfd");
+  console.log(ans);
 })();
 
 export {};
