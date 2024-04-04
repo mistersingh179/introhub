@@ -5,6 +5,7 @@ import reservedEmailAddressesList from "reserved-email-addresses-list";
 
 // @ts-ignore
 import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
+import md5 from "md5";
 import * as React from "react";
 import HookExp from "@/app/dashboard/home/HookExp";
 
@@ -37,6 +38,7 @@ export default async function Home() {
       >
         {JSON.stringify(session, null, 2)}
       </pre>
+      <pre>{md5("hello world")}</pre>
     </>
   );
 }

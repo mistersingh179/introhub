@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
-    "vercel-build": "npm ci && prisma generate && prisma migrate deploy && next build",
+    "vercel-build": "npm ci --include=dev && prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "repl": "tsx  --watch scripts/repl.ts",
     "lint": "next lint",
