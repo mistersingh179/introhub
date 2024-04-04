@@ -7,14 +7,15 @@ import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introdu
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
 import { useFormState } from "react-dom";
 import { useEffect, useState } from "react";
+import canStateChange from "@/services/canStateChange";
 
 type IntroApproveFormProps = {
-  introduction: IntroWithContactFacilitatorAndRequester;
+  intro: IntroWithContactFacilitatorAndRequester;
 };
 export default function IntroApproveForm(props: IntroApproveFormProps) {
-  const { introduction } = props;
+  const { intro } = props;
   const [submittedAt, setSubmittedAt] = useState<undefined | number>(undefined);
-  const action = cancelIntroAction.bind(null, introduction.id);
+  const action = cancelIntroAction.bind(null, intro.id);
   const [errorMessage, dispatch] = useFormState(action, undefined);
   const { toast } = useToast();
   useEffect(() => {
@@ -29,10 +30,14 @@ export default function IntroApproveForm(props: IntroApproveFormProps) {
     setSubmittedAt(Date.now());
     await dispatch(formData);
   };
+  const canChange = canStateChange(
+    intro.status as IntroStates,
+    IntroStates.cancelled,
+  );
   return (
     <>
       <form action={formActionHandler}>
-        <SubmitButton label={"Cancel"} />
+        <SubmitButton label={"Cancel"} beDisabled={!canChange} />
       </form>
     </>
   );

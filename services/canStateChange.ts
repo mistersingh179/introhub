@@ -2,11 +2,6 @@ import { IntroStates } from "@/lib/introStates";
 import { Introduction } from "@prisma/client";
 import prisma from "@/prismaClient";
 
-type CanStateChange = (
-  existingState: IntroStates,
-  newDesiredState: IntroStates,
-) => Promise<boolean>;
-
 // todo
 // when user clicks approve we move to approved or pending credits
 // when user gains more credits, we will take its pending credit ones & move them to approved
@@ -42,7 +37,12 @@ const transitions: Transitions = {
   expired: [],
 };
 
-const canStateChange: CanStateChange = async (
+type CanStateChange = (
+  existingState: IntroStates,
+  newDesiredState: IntroStates,
+) => boolean;
+
+const canStateChange: CanStateChange = (
   existingState,
   newDesiredState,
 ) => {

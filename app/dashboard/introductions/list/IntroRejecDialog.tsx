@@ -14,29 +14,34 @@ import { Pencil } from "lucide-react";
 import UpdateMessageForContactForm from "@/app/dashboard/introductions/list/UpdateMessageForContactForm";
 import { useState } from "react";
 import IntroRejectForm from "@/app/dashboard/introductions/list/IntroRejectForm";
+import canStateChange from "@/services/canStateChange";
+import { IntroStates } from "@/lib/introStates";
 
 type IntroRejectDialogProps = {
-  introduction: IntroWithContactFacilitatorAndRequester;
+  intro: IntroWithContactFacilitatorAndRequester;
 };
 export default function IntroRejectDialog(props: IntroRejectDialogProps) {
-  const { introduction } = props;
+  const { intro } = props;
   const [open, setOpen] = useState(false);
+  const canChange = canStateChange(
+    intro.status as IntroStates,
+    IntroStates.rejected,
+  );
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>
-            Reject
-          </Button>
+          <Button disabled={!canChange}>Reject</Button>
         </DialogTrigger>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>Reject Introduction?</DialogTitle>
             <DialogDescription>
-              Please tell the requester why you are rejecting this introduction request.
+              Please tell the requester why you are rejecting this introduction
+              request.
             </DialogDescription>
           </DialogHeader>
-          <IntroRejectForm introduction={introduction} setOpen={setOpen}  />
+          <IntroRejectForm intro={intro} setOpen={setOpen} />
         </DialogContent>
       </Dialog>
     </>

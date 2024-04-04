@@ -10,15 +10,17 @@ import ErrorMessage from "@/app/dashboard/introductions/create/[contactId]/Error
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import canStateChange from "@/services/canStateChange";
+import { IntroStates } from "@/lib/introStates";
 
 type IntroRejectFormProps = {
-  introduction: IntroWithContactFacilitatorAndRequester;
+  intro: IntroWithContactFacilitatorAndRequester;
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 export default function IntroRejectForm(props: IntroRejectFormProps) {
-  const { introduction, setOpen } = props;
+  const { intro, setOpen } = props;
   const [submittedAt, setSubmittedAt] = useState<undefined | number>(undefined);
-  const action = rejectIntroAction.bind(null, introduction.id);
+  const action = rejectIntroAction.bind(null, intro.id);
   const [errorMessage, dispatch] = useFormState(action, undefined);
   const { toast } = useToast();
   useEffect(() => {
@@ -40,6 +42,10 @@ export default function IntroRejectForm(props: IntroRejectFormProps) {
     setSubmittedAt(Date.now());
     await dispatch(formData);
   };
+  const canChange = canStateChange(
+    intro.status as IntroStates,
+    IntroStates.rejected,
+  );
   const [otherValue, setOtherValue] = useState<string>("");
   const ref = React.createRef<HTMLButtonElement>();
   return (
@@ -108,7 +114,7 @@ export default function IntroRejectForm(props: IntroRejectFormProps) {
           </div>
         </RadioGroup>
         <div className={"w-full flex flex-row justify-end"}>
-          <SubmitButton label={"Reject"} />
+          <SubmitButton label={"Reject"} beDisabled={!canChange} />
         </div>
       </form>
     </>

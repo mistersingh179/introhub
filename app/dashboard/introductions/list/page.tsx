@@ -24,8 +24,8 @@ import {
 import IntroApproveForm from "@/app/dashboard/introductions/list/IntroApproveForm";
 import IntroCancelForm from "@/app/dashboard/introductions/list/IntroCancelForm";
 import UpdateMessageForContactDialog from "@/app/dashboard/introductions/list/UpdateMessaageForContactDialog";
-import IntroRejectDialog from "@/app/dashboard/introductions/list/IntroRejecDialog";
 import { Separator } from "@/components/ui/separator";
+import IntroRejectDialog from "@/app/dashboard/introductions/list/IntroRejecDialog";
 
 export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
@@ -187,14 +187,14 @@ const ActionButtons = (props: ActionButtonProps) => {
       <div className={"flex flex-col gap-4"}>
         {introduction.facilitatorId === user.id && (
           <>
-            <IntroApproveForm introduction={introduction} />
-            <IntroRejectDialog introduction={introduction} />
+            <IntroApproveForm intro={introduction} />
+            <IntroRejectDialog intro={introduction} />
           </>
         )}
 
         {introduction.requesterId === user.id && (
           <>
-            <IntroCancelForm introduction={introduction} />
+            <IntroCancelForm intro={introduction} />
           </>
         )}
       </div>
