@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import { SendEmailInput } from "@/services/sendEmail";
-// import MediumQueue from "@/bull/queues/mediumQueue";
+import MediumQueue from "@/bull/queues/mediumQueue";
 import { goingToChangeIntroStatus } from "@/services/canStateChange";
 
 export default async function approveIntroAction(
@@ -61,9 +61,9 @@ export default async function approveIntroAction(
       cc: introduction.requester.email!,
       to: introduction.contact.email,
     };
-    // const jobObj = await MediumQueue.add("sendEmail", sendEmailInput);
-    // const { name, id } = jobObj;
-    // console.log("scheduled sendEmail job: ", name, id);
+    const jobObj = await MediumQueue.add("sendEmail", sendEmailInput);
+    const { name, id } = jobObj;
+    console.log("scheduled sendEmail job: ", name, id);
   } catch (e) {
     console.log("an error occurred!: ", e);
     if (e instanceof Error) {
