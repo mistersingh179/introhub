@@ -199,11 +199,11 @@ export default async function Prospects({
     : Prisma.sql``;
 
   const emailFilterSql = selectedEmail
-    ? Prisma.sql`and C.email like ${"%" + selectedEmail + "%"}`
+    ? Prisma.sql`and C.email ilike ${"%" + selectedEmail + "%"}`
     : Prisma.sql``;
 
   const websiteFilterSql = selectedWebsite
-    ? Prisma.sql`and C.email like ${"%" + selectedWebsite + "%"}`
+    ? Prisma.sql`and C.email ilike ${"%" + selectedWebsite + "%"}`
     : Prisma.sql``;
 
   const sql = Prisma.sql`

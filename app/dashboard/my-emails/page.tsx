@@ -38,11 +38,13 @@ export default async function Emails({
         {
           fromAddress: {
             contains: query,
+            mode: "insensitive"
           },
         },
         {
           toAddress: {
             contains: query,
+            mode: "insensitive"
           },
         },
       ] : undefined,

@@ -36,6 +36,7 @@ export default async function MyContacts({
       },
       email: {
         contains: query,
+        mode: "insensitive"
       },
     },
     take: itemsPerPage,
