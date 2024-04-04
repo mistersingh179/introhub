@@ -6,10 +6,10 @@ import prisma from "@/prismaClient";
 import { IntroStates } from "@/lib/introStates";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { Prisma } from "@prisma/client";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import { SendEmailInput } from "@/services/sendEmail";
 import MediumQueue from "@/bull/queues/mediumQueue";
+import { goingToChangeIntroStatus } from "@/services/canStateChange";
 
 export default async function approveIntroAction(
   introductionId: string,
@@ -25,6 +25,8 @@ export default async function approveIntroAction(
   });
 
   try {
+    await goingToChangeIntroStatus(introductionId, IntroStates.approved);
+
     const introduction: IntroWithContactFacilitatorAndRequester =
       await prisma.introduction.update({
         data: {

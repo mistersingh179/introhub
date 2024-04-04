@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Introduction, Prisma } from "@prisma/client";
 import IntroductionUncheckedUpdateInput = Prisma.IntroductionUncheckedUpdateInput;
+import {goingToChangeIntroStatus} from "@/services/canStateChange";
 
 
 export default async function cancelIntroAction(
@@ -25,6 +26,8 @@ export default async function cancelIntroAction(
   });
 
   try {
+    await goingToChangeIntroStatus(introductionId, IntroStates.cancelled);
+
     await prisma.introduction.update({
       data: {
         status: IntroStates.cancelled

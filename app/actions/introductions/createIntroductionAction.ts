@@ -11,6 +11,9 @@ import { Prisma } from "@prisma/client";
 import IntroductionUncheckedCreateInput = Prisma.IntroductionUncheckedCreateInput;
 
 const containsPlaceHolderValue = (input: string): boolean => {
+  if (process.env.NODE_ENV === "development") {
+    return true;
+  }
   const regex = new RegExp(/\*\*\[.*]\*\*/g);
   return !regex.test(input);
 };

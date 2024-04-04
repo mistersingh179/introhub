@@ -7,6 +7,7 @@ import { IntroStates } from "@/lib/introStates";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z, ZodError } from "zod";
+import {goingToChangeIntroStatus} from "@/services/canStateChange";
 
 const RejectIntroSchema = z.object({
   rejectionReason: z.string().max(5000).min(20),
@@ -30,6 +31,8 @@ export default async function rejectIntroAction(
   });
 
   try {
+    await goingToChangeIntroStatus(introductionId, IntroStates.rejected);
+
     const { rejectionReason } = RejectIntroSchema.parse({
       rejectionReason: formData.get("rejectionReason"),
     });
