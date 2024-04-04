@@ -1,18 +1,31 @@
 "use server";
 
-import {z, ZodError} from "zod";
-import {auth} from "@/auth";
-import {Session} from "next-auth";
+import { z, ZodError } from "zod";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
 import prisma from "@/prismaClient";
-import {IntroStates} from "@/lib/introStates";
-import {revalidatePath} from "next/cache";
-import {redirect} from "next/navigation";
+import { IntroStates } from "@/lib/introStates";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
 import IntroductionUncheckedCreateInput = Prisma.IntroductionUncheckedCreateInput;
 
+const containsPlaceHolderValue = (input: string): boolean => {
+  const regex = new RegExp(/\*\*\[.*]\*\*/g);
+  return !regex.test(input);
+};
+
 const createIntroSchema = z.object({
-  messageForFacilitator: z.string().max(5000).min(10),
-  messageForContact: z.string().max(5000).min(10),
+  messageForFacilitator: z
+    .string()
+    .max(5000)
+    .min(10)
+    .refine(containsPlaceHolderValue, "Still contains Placeholder values"),
+  messageForContact: z
+    .string()
+    .max(5000)
+    .min(10)
+    .refine(containsPlaceHolderValue, "Still contains Placeholder values"),
 });
 
 type CreateIntroFlattenErrorType = z.inferFlattenedErrors<

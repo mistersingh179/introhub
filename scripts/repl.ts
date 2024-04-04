@@ -1,7 +1,7 @@
 import prisma from "../prismaClient";
 import { Prisma } from "@prisma/client";
-import {PersonProfileWithExperiences} from "@/app/dashboard/introductions/create/[contactId]/page";
-import {z} from "zod";
+import { PersonProfileWithExperiences } from "@/app/dashboard/introductions/create/[contactId]/page";
+import { z } from "zod";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -11,9 +11,8 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-  const schema = z.string().min(10);
-  const ans = schema.parse("dfd");
-  console.log(ans);
+  const regex = new RegExp(/\*\*\[.*]\*\*/g)
+  console.log(regex.test("foo bar **[hi]**"))
 })();
 
 export {};
