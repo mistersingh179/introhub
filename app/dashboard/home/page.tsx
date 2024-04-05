@@ -1,14 +1,12 @@
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
-import reservedEmailAddressesList from "reserved-email-addresses-list";
 
 // @ts-ignore
 import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
-import md5 from "md5";
 import * as React from "react";
-import HookExp from "@/app/dashboard/home/HookExp";
 import getContactStats from "@/services/getContactStats";
+import RefreshStatsForm from "@/app/dashboard/home/RefreshStatsForm";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -21,7 +19,10 @@ export default async function Home() {
 
   return (
     <>
-      <h1 className={"text-2xl"}>Home</h1>
+      <div className={"flex flex-row items-center gap-2"}>
+        <h1 className={"text-2xl"}>Home</h1>
+        <RefreshStatsForm />
+      </div>
       <pre
         className={
           "bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-4"

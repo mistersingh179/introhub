@@ -15,12 +15,14 @@ export type ContactStats = {
 
 const keyName = "getContactStats";
 
-type GetContactStats = () => Promise<ContactStats>;
-const getContactStats: GetContactStats = async () => {
-  const ans = await redisClient.get(keyName);
-  if (ans) {
-    console.log("returning cached data")
-    return JSON.parse(ans) as ContactStats;
+type GetContactStats = (fetchLatest?: boolean) => Promise<ContactStats>;
+const getContactStats: GetContactStats = async (fetchLatest) => {
+  if (!fetchLatest) {
+    const ans = await redisClient.get(keyName);
+    if (ans) {
+      console.log("returning cached data");
+      return JSON.parse(ans) as ContactStats;
+    }
   }
 
   const contactsCount = await prisma.contact.count();
@@ -94,11 +96,11 @@ const getContactStats: GetContactStats = async () => {
   // console.log(result);
 
   console.log("saving to cache");
-  await RedisClient.set(keyName, JSON.stringify(result), "EX", 24*60*60);
+  await RedisClient.set(keyName, JSON.stringify(result), "EX", 24 * 60 * 60);
   return result;
 };
 
-export default getContactStats
+export default getContactStats;
 
 if (require.main === module) {
   (async () => {
