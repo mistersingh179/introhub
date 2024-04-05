@@ -22,7 +22,7 @@ const copyImageUrlToS3: CopyImageUrlToS3 = async (url, fileName) => {
     },
   });
 
-  const bucketName = `introhub`;
+  const bucketName = process.env.BUCKET_NAME;
 
   try {
     const fileAlreadyExists = await s3Client.send(
