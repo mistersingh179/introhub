@@ -1,23 +1,15 @@
-import {DelayedError, Job, MetricsTime, Worker} from "bullmq";
+import { DelayedError, Job, MetricsTime, Worker } from "bullmq";
 import redisClient from "@/lib/redisClient";
-import {addMilliseconds, addSeconds, getTime} from "date-fns";
+import { addMilliseconds, addSeconds, getTime } from "date-fns";
 import accquireLock from "@/services/helpers/accquireLock";
+import {ProxyCurlError} from "@/services/helpers/proxycurl/ProxyCurlError";
 
 const queueName = "high";
 const highWorker = new Worker(
   queueName,
   async (job, token) => {
-    const gotALock = await accquireLock("foo", 1000);
-    if(gotALock){
-      console.log("doing work in highWorker")
-    }else{
-      console.log("delaying job");
-      const now = new Date();
-      const futureDate = getTime(addMilliseconds(now, 1000));
-      await job.moveToDelayed(futureDate, token);
-      console.log("job has been moved to delay");
-      throw new DelayedError()
-    }
+    console.log("in high worker");
+    throw new ProxyCurlError("oops is the message", {foo: "bar"});
   },
   {
     connection: redisClient,
