@@ -42,11 +42,12 @@ type CanStateChange = (
   newDesiredState: IntroStates,
 ) => boolean;
 
-const canStateChange: CanStateChange = (
-  existingState,
-  newDesiredState,
-) => {
-  console.log(existingState, newDesiredState, transitions[existingState].includes(newDesiredState))
+const canStateChange: CanStateChange = (existingState, newDesiredState) => {
+  console.log(
+    existingState,
+    newDesiredState,
+    transitions[existingState].includes(newDesiredState),
+  );
   return transitions[existingState].includes(newDesiredState);
 };
 
@@ -59,7 +60,7 @@ export const goingToChangeIntroStatus = async (
       id: introductionId,
     },
   });
-  const doIt = await canStateChange(intro.status as IntroStates, newDesiredState);
+  const doIt = canStateChange(intro.status as IntroStates, newDesiredState);
   if (!doIt) {
     throw new Error(
       `Intro State can not be changed from ${intro.status} to ${newDesiredState}`,

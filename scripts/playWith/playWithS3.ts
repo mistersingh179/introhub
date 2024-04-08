@@ -16,29 +16,41 @@ import {
   console.log(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
 
   const s3Client = new S3Client({
-    region: "us-east-1",
+    region: "us-east-2",
     credentials: {
       accessKeyId: AWS_ACCESS_KEY_ID!,
       secretAccessKey: AWS_SECRET_ACCESS_KEY!,
     },
   });
 
-  const bucketName = `introhub`;
+  const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
+
+  const resp = await fetch("https://foobarmelbourne.com/wp-content/uploads/2022/05/Foo-Bar-Logo-Transparent-e1654266641596.png");
+  const arrayBuffer = await resp.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
 
   // const result = await s3Client.send(
   //   new PutObjectCommand({
   //     Bucket: bucketName,
-  //     Key: "my-first-object.html",
-  //     Body: "Hello JavaScript SDK!",
-  //     ContentType: 'text/html'
+  //     Key: "foo-bar/foo.png",
+  //     Body: buffer,
   //   }),
+  // );
+
+  // console.log("result: ", result);
+
+  // await s3Client.send(
+  //   new DeleteObjectCommand({
+  //     Bucket: bucketName,
+  //     Key: "abc.png"
+  //   })
   // );
 
   try{
     const result = await s3Client.send(
       new HeadObjectCommand({
         Bucket: bucketName,
-        Key: "foobar@gmail.com",
+        Key: "foo-bar/foo.png",
       }),
     );
 

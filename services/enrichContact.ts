@@ -35,7 +35,9 @@ const enrichContact: EnrichContact = async (input) => {
   const personData = await emailLookupApiReponse(contact.email);
   const experiences = personData.profile?.experiences ?? [];
   const profileUrl = personData.profile?.profile_pic_url ?? null;
-  const curExperiences = experiences.filter((exp: any) => exp.ends_at === null);
+  const curExperiences = experiences.filter((exp: any) => {
+    return exp.company_linkedin_profile_url !== null && exp.ends_at === null;
+  });
 
   console.log("personData: ", personData);
   await prisma.personProfile.create({
@@ -58,8 +60,8 @@ const enrichContact: EnrichContact = async (input) => {
     },
   });
 
-  if(profileUrl){
-    await copyImageUrlToS3(profileUrl, md5(contact.email));
+  if (profileUrl) {
+    await copyImageUrlToS3(profileUrl, 'avatar', `${md5(contact.email)}`);
   }
 
   for (const exp of curExperiences) {
@@ -104,10 +106,18 @@ const enrichContact: EnrichContact = async (input) => {
       },
     });
 
-    if(companyLogoUrl && companyData.website){
-      await copyImageUrlToS3(companyLogoUrl, md5(companyData.website))
-    }else{
-      console.log("skipping copyImageUrlToS3 as missing data: ", companyLogoUrl, companyData.website);
+    if (companyLogoUrl && companyData.website) {
+      await copyImageUrlToS3(
+        companyLogoUrl,
+        "logo",
+        `${md5(companyData.website)}`,
+      );
+    } else {
+      console.log(
+        "skipping copyImageUrlToS3 as missing data: ",
+        companyLogoUrl,
+        companyData.website,
+      );
     }
   }
 };
@@ -115,13 +125,14 @@ const enrichContact: EnrichContact = async (input) => {
 export default enrichContact;
 
 if (require.main === module) {
-  (async () => {
-    const contact = await prisma.contact.findFirstOrThrow({
-      where: {
-        email: "sandeep@brandweaver.ai",
-      },
-    });
-    const ans = await enrichContact({ contact });
-    console.log("ans: ", ans);
-  })();
 }
+(async () => {
+  const contact = await prisma.contact.findFirstOrThrow({
+    where: {
+      email: "sandeep45@gmail.com",
+    },
+  });
+  console.log(contact);
+  const ans = await enrichContact({ contact });
+  console.log("ans: ", ans);
+})();

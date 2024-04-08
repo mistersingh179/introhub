@@ -1,8 +1,4 @@
-import prisma from "../prismaClient";
-import { Prisma } from "@prisma/client";
-import { PersonProfileWithExperiences } from "@/app/dashboard/introductions/create/[contactId]/page";
-import { z } from "zod";
-import { randomUUID } from "node:crypto";
+import prisma from "../../prismaClient";
 
 // @ts-ignore
 prisma.$on("query", (e) => {

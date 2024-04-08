@@ -7,44 +7,50 @@ import {
   TableFooter,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 import MyPagination from "@/components/MyPagination";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {buildS3ImageUrl} from "@/lib/url";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { buildS3ImageUrl } from "@/lib/url";
 import Link from "next/link";
-import {Button} from "@/components/ui/button";
-import {SquarePen} from "lucide-react";
-import {getInitials} from "@/app/dashboard/UserProfileImageNav";
+import { Button } from "@/components/ui/button";
+import { SquarePen } from "lucide-react";
+import { getInitials } from "@/app/dashboard/UserProfileImageNav";
 
-const ProspectsTable = ({ prospects }: { prospects: ContactWithUserInfo[] }) => {
-  return <Table>
-    <TableCaption>Prospects</TableCaption>
-    <TableHeader>
-      <TableRow>
-        <TableHead></TableHead>
-        <TableHead></TableHead>
-        <TableHead>Email</TableHead>
-        <TableHead>Send Count</TableHead>
-        <TableHead>Received Count</TableHead>
-        <TableHead>Sent-Received Ratio</TableHead>
-        <TableHead>Introducer</TableHead>
-        <TableHead>Actions</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      {prospects.map((prospect) => {
-        return <ProspectRow key={prospect.id} prospect={prospect} />;
-      })}
-    </TableBody>
-    <TableFooter>
-      <TableRow>
-        <TableCell colSpan={8}>
-          <MyPagination />
-        </TableCell>
-      </TableRow>
-    </TableFooter>
-  </Table>;
+const ProspectsTable = ({
+  prospects,
+}: {
+  prospects: ContactWithUserInfo[];
+}) => {
+  return (
+    <Table>
+      <TableCaption>Prospects</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead></TableHead>
+          <TableHead></TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Send Count</TableHead>
+          <TableHead>Received Count</TableHead>
+          <TableHead>Sent-Received Ratio</TableHead>
+          <TableHead>Introducer</TableHead>
+          <TableHead>Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {prospects.map((prospect) => {
+          return <ProspectRow key={prospect.id} prospect={prospect} />;
+        })}
+      </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TableCell colSpan={8}>
+            <MyPagination />
+          </TableCell>
+        </TableRow>
+      </TableFooter>
+    </Table>
+  );
 };
 
 type ProspectRowProps = {
@@ -58,7 +64,7 @@ const ProspectRow = (props: ProspectRowProps) => {
         <TableCell className={"p-2"}>
           <Avatar className={"h-8 w-8"}>
             <AvatarImage
-              src={buildS3ImageUrl(prospect.website)}
+              src={buildS3ImageUrl("logo", prospect.website)}
               title={prospect.website}
             />
             <AvatarFallback>{"W"}</AvatarFallback>
@@ -67,7 +73,7 @@ const ProspectRow = (props: ProspectRowProps) => {
         <TableCell className={"p-2"}>
           <Avatar className={"h-8 w-8"}>
             <AvatarImage
-              src={buildS3ImageUrl(prospect.email)}
+              src={buildS3ImageUrl("avatar", prospect.email)}
               title={prospect.email}
             />
             <AvatarFallback>{"E"}</AvatarFallback>

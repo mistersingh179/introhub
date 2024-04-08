@@ -8,32 +8,39 @@ import fs from "fs";
 import prisma from "@/prismaClient";
 import getGmailObject from "@/services/helpers/getGmailObject";
 
-type CopyImageUrlToS3 = (url: string, fileName: string) => Promise<void>;
-const copyImageUrlToS3: CopyImageUrlToS3 = async (url, fileName) => {
+type CopyImageUrlToS3 = (
+  url: string,
+  dirName: string,
+  fileName: string,
+) => Promise<void>;
+const copyImageUrlToS3: CopyImageUrlToS3 = async (url, dirName, fileName) => {
   const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env;
 
-  console.log("will copy image from: ", url, " to s3: ", fileName);
+  console.log("will copy image from: ", url, " to s3: ", dirName, fileName);
 
   const s3Client = new S3Client({
-    region: "us-east-1",
+    region: "us-east-2",
     credentials: {
       accessKeyId: AWS_ACCESS_KEY_ID!,
       secretAccessKey: AWS_SECRET_ACCESS_KEY!,
     },
   });
 
-  const bucketName = process.env.BUCKET_NAME;
+  const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
+
+  const key = `${dirName}/${fileName}`;
+  console.log("key: ", key);
 
   try {
     const fileAlreadyExists = await s3Client.send(
       new HeadObjectCommand({
         Bucket: bucketName,
-        Key: fileName,
+        Key: key,
       }),
     );
-    if(fileAlreadyExists){
-      console.log("skipping as file already exists: ", fileName);
-      return
+    if (fileAlreadyExists) {
+      console.log("skipping as file already exists: ", key);
+      return;
     }
   } catch (err) {
     if (err instanceof NotFound) {
@@ -58,7 +65,7 @@ const copyImageUrlToS3: CopyImageUrlToS3 = async (url, fileName) => {
   const result = await s3Client.send(
     new PutObjectCommand({
       Bucket: bucketName,
-      Key: fileName,
+      Key: key,
       Body: buffer,
       ContentType: contentType,
     }),
@@ -74,6 +81,7 @@ if (require.main === module) {
     try {
       await copyImageUrlToS3(
         "https://thealphadollar.me/img/posts/foobar/foobar.png",
+        "test",
         "abc.png",
       );
     } catch (err) {

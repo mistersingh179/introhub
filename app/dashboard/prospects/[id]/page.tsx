@@ -48,11 +48,11 @@ export default async function ShowContact({
       <h1 className={"text-2xl my-2"}>Show Prospect</h1>
       <div className={'flex flex-row gap-8'}>
         <Avatar>
-          <AvatarImage src={buildS3ImageUrl(personProfile.email)} title={'X'} />
+          <AvatarImage src={buildS3ImageUrl('avatar', personProfile.email)} title={'X'} />
           <AvatarFallback>X</AvatarFallback>
         </Avatar>
         <Avatar>
-          <AvatarImage src={buildS3ImageUrl(companyProfiles?.[0]?.website ?? "")} title={'X'} />
+          <AvatarImage src={buildS3ImageUrl('logo', companyProfiles?.[0]?.website ?? "")} title={'X'} />
           <AvatarFallback>X</AvatarFallback>
         </Avatar>
       </div>
