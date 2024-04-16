@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import MediumQueue from "@/bull/queues/mediumQueue";
 
-export const doAuthCheck = (request: NextRequest): undefined | NextResponse => {
+const doAuthCheck = (request: NextRequest): undefined | NextResponse => {
   const providedAuthToken = request.headers.get("Authorization");
   console.log("providedAuthToken: ", providedAuthToken);
 
