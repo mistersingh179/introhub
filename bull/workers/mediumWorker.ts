@@ -18,6 +18,7 @@ import { User } from "@prisma/client";
 import buildContacts from "@/services/buildContacts";
 import buildContactsForAllUsers from "@/services/buildContactsForAllUsers";
 import sendEmail, {SendEmailInput} from "@/services/sendEmail";
+import onBoardUser, {OnBoardUserInput} from "@/services/onBoardUser";
 
 const queueName = "medium";
 
@@ -70,6 +71,10 @@ const mediumWorker: Worker<
       }
       case "buildContactsForAllUsers": {
         return await buildContactsForAllUsers();
+      }
+      case "onBoardUser" : {
+        const input = data as OnBoardUserInput;
+        return await onBoardUser(input);
       }
       default:
         console.error("got unknown job!");

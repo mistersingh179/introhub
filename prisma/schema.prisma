@@ -56,6 +56,7 @@ model User {
   sessions                 Session[]
   messages                 Message[]
   contacts                 Contact[]
+  profile                  Profile?
   introductionsRequested   Introduction[] @relation("RequestedIntroductions")
   introductionsFacilitated Introduction[] @relation("FacilitatedIntroductions")
   name                     String?
@@ -66,6 +67,12 @@ model User {
   updatedAt                DateTime       @updatedAt
 
   @@index([email])
+}
+
+model Profile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Introduction {
@@ -199,13 +206,17 @@ model Category {
 }
 
 model ReverseEmailLookupEndpoint {
-  email    String @id
-  response Json
+  email     String   @id
+  response  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model CompanyProfileEndpoint {
-  url      String @id
-  response Json
+  url       String   @id
+  response  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Message {

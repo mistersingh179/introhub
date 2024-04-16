@@ -8,6 +8,7 @@ import { SendEmailInput } from "@/services/sendEmail";
 import { gmail_v1 } from "googleapis";
 import Schema$Message = gmail_v1.Schema$Message;
 import { EnrichContactInput } from "@/services/enrichContact";
+import {OnBoardUserInput} from "@/services/onBoardUser";
 
 export type ProxyCurlInputDataType = EnrichContactInput | null;
 
@@ -16,6 +17,7 @@ export type MediumInputDataType =
   | DownloadMetaDataInput
   | SendEmailInput
   | User
+  | OnBoardUserInput
   | null;
 
 export type ProxyCurlOutputDataType = void;
@@ -35,4 +37,5 @@ export type MediumJobNames =
   | "sendEmail"
   | "downloadMessagesForAllAccounts"
   | "buildContacts"
-  | "buildContactsForAllUsers";
+  | "buildContactsForAllUsers"
+  | "onBoardUser";

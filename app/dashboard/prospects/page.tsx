@@ -159,7 +159,7 @@ export default async function Prospects({
       email: session.user?.email ?? "",
     },
   });
-  await sleep(500);
+  // await sleep(500);
   console.log("*** searchParams ***: ", searchParams);
 
   const { cities, states, jobTitles, industries, categories } =

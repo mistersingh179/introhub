@@ -8,12 +8,13 @@ import copyImageUrlToS3 from "@/services/helpers/copyImageUrlToS3";
 import md5 from "md5";
 
 export type EnrichContactInput = {
-  contact: Contact;
+  email: string;
 };
 
 type EnrichContact = (input: EnrichContactInput) => Promise<void>;
 const enrichContact: EnrichContact = async (input) => {
-  const { contact } = input;
+  const { email } = input;
+  console.log("in enrichContact with: ", email);
 
   /*
   1. build person profile - email, linkedInUrl, fullName, city, country & state, lastUpdateAt
@@ -24,15 +25,15 @@ const enrichContact: EnrichContact = async (input) => {
 
   const personProfile = await prisma.personProfile.findFirst({
     where: {
-      email: contact.email,
+      email,
     },
   });
   if (personProfile) {
-    console.log("bailing as personProfile already exists for: ", contact.email);
+    console.log("bailing as personProfile already exists for: ", email);
     return;
   }
 
-  const personData = await emailLookupApiReponse(contact.email);
+  const personData = await emailLookupApiReponse(email);
   const experiences = personData.profile?.experiences ?? [];
   const profileUrl = personData.profile?.profile_pic_url ?? null;
   const curExperiences = experiences.filter((exp: any) => {
@@ -42,7 +43,7 @@ const enrichContact: EnrichContact = async (input) => {
   console.log("personData: ", personData);
   await prisma.personProfile.create({
     data: {
-      email: contact.email,
+      email: email,
       linkedInUrl: personData.linkedin_profile_url,
       fullName: personData.profile?.full_name,
       city: personData.profile?.city,
@@ -61,7 +62,7 @@ const enrichContact: EnrichContact = async (input) => {
   });
 
   if (profileUrl) {
-    await copyImageUrlToS3(profileUrl, 'avatar', `${md5(contact.email)}`);
+    await copyImageUrlToS3(profileUrl, "avatar", `${md5(email)}`);
   }
 
   for (const exp of curExperiences) {
@@ -127,12 +128,6 @@ export default enrichContact;
 if (require.main === module) {
 }
 (async () => {
-  const contact = await prisma.contact.findFirstOrThrow({
-    where: {
-      email: "sandeep45@gmail.com",
-    },
-  });
-  console.log(contact);
-  const ans = await enrichContact({ contact });
+  const ans = await enrichContact({ email: "kohlijazmine@gmail.com" });
   console.log("ans: ", ans);
 })();

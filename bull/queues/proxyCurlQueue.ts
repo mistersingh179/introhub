@@ -22,7 +22,7 @@ proxyCurlQueue.on("error", (err) => {
   console.log("proxyCurlQueue error: ", err);
 });
 
-export const mediumQueueEvents = new QueueEvents(queueName, {
+export const proxyCurlQueueEvents = new QueueEvents(queueName, {
   connection: redisClient,
 });
 

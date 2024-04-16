@@ -1,0 +1,74 @@
+import ProxyCurlQueue, {
+  proxyCurlQueueEvents,
+} from "@/bull/queues/proxyCurlQueue";
+import MediumQueue, { mediumQueueEvents } from "@/bull/queues/mediumQueue";
+import prisma from "@/prismaClient";
+import proxyCurlQueue from "@/bull/queues/proxyCurlQueue";
+import getContactStats from "@/services/getContactStats";
+
+export type OnBoardUserInput = {
+  userId: string;
+};
+type OnBoardUser = (input: OnBoardUserInput) => Promise<void>;
+
+const onBoardUser: OnBoardUser = async (input) => {
+  const { userId } = input;
+  console.log("in onBoardUser job with: ", userId);
+
+  const user = await prisma.user.findFirstOrThrow({
+    where: {
+      id: userId,
+    },
+    include: {
+      accounts: true,
+    },
+  });
+  const email = user.email!;
+  const account = user.accounts[0];
+
+  await ProxyCurlQueue.add("enrichContact", {
+    email,
+  });
+
+  const downloadMessagesJob = await MediumQueue.add("downloadMessages", {
+    account: account,
+  });
+  await downloadMessagesJob.waitUntilFinished(mediumQueueEvents);
+
+  // using delay to wait for the downloadMetaData job
+  // using priority to run after downloadMetaData job
+  // downloadMetaData job is started by the downloadMessages Job
+
+  // todo - use Queue#getJobs to ensure that downloadMetaData has finished
+  const buildContactsJob = await MediumQueue.add("buildContacts", user, {
+    delay: 60 * 1000,
+    priority: 10,
+  });
+  await buildContactsJob.waitUntilFinished(mediumQueueEvents);
+
+  const contacts = await prisma.contact.findMany({
+    where: {
+      userId: user.id
+    }
+  })
+  for(const contact of contacts){
+    await proxyCurlQueue.add("enrichContact", {email: contact.email})
+  }
+
+};
+
+export default onBoardUser;
+
+if (require.main === module) {
+  (async () => {
+    const user = await prisma.user.findFirstOrThrow({
+      where: {
+        email: "mistersingh179@gmail.com"
+      }
+    })
+    await onBoardUser({
+      userId: user.id
+    });
+    process.exit(0);
+  })();
+}

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import sleep from "@/lib/sleep";
 
 export default async function refreshContactStats(formData: FormData) {
+  // todo - do auth
   await getContactStats(true);
   revalidatePath("/dashboard/home");
   redirect("/dashboard/home");

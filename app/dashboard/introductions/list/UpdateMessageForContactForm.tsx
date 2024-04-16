@@ -49,7 +49,7 @@ export default function UpdateMessageForContactForm(
             name="messageForContact"
             id="messageForContact"
             defaultValue={introduction.messageForContact}
-            rows={20}
+            rows={10}
           />
           <div className={"w-full flex flex-row justify-end"}>
             <SubmitButton label={"Save Changes"} />
