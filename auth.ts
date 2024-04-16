@@ -3,13 +3,26 @@ import Google from "@auth/core/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/prismaClient";
 
+const makeOnboardCall = async (userId: string) => {
+  console.log("going to make fetch call to onboard user: ", userId);
+  const resp = await fetch(`${process.env.BASE_API_URL}/api/users/${userId}/onboard`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${process.env.INTERNAL_API_SECRET}`,
+    }
+  });
+  console.log(await resp.json());
+};
+
 export const {
   handlers: { GET, POST },
   auth,
   signIn,
   signOut,
 } = NextAuth({
-  basePath: '/api/auth',
+  basePath: "/api/auth",
   trustHost: true,
   debug: false,
   session: {
@@ -39,9 +52,13 @@ export const {
     authorized: (params) => {
       return !!params.auth?.user;
     },
-    jwt(params) {
-      // console.log("*** in jwt callback: ", params);
-      const { token } = params;
+    async jwt(params) {
+      console.log("*** in jwt callback: ", params);
+      const { token, trigger, user } = params;
+      if(trigger === "signUp"){
+        console.log("user has just signed up: ", user);
+        await makeOnboardCall(user.id!)
+      }
       return token;
     },
   },
@@ -54,7 +71,7 @@ export const {
         account?.provider &&
         account?.providerAccountId
       ) {
-        console.log("updating account as we have refresh_token")
+        console.log("updating account as we have refresh_token");
         await prisma.account.update({
           data: {
             refresh_token: account.refresh_token,

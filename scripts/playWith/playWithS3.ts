@@ -7,7 +7,7 @@ import {
   paginateListObjectsV2,
   GetObjectCommand,
   HeadObjectCommand,
-  NotFound
+  NotFound,
 } from "@aws-sdk/client-s3";
 
 (async () => {
@@ -25,9 +25,14 @@ import {
 
   const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
 
-  const resp = await fetch("https://foobarmelbourne.com/wp-content/uploads/2022/05/Foo-Bar-Logo-Transparent-e1654266641596.png");
+  const resp = await fetch(
+    "https://introhub-production.s3.us-east-2.amazonaws.com/avatar/fca8b528c5b75b9ba1afb4454a1432d8",
+  );
+  console.log(resp.headers.get("content-type"));
   const arrayBuffer = await resp.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
+
+  console.log(buffer);
 
   // const result = await s3Client.send(
   //   new PutObjectCommand({
@@ -46,26 +51,23 @@ import {
   //   })
   // );
 
-  try{
-    const result = await s3Client.send(
-      new HeadObjectCommand({
-        Bucket: bucketName,
-        Key: "foo-bar/foo.png",
-      }),
-    );
+  // try{
+  //   const result = await s3Client.send(
+  //     new HeadObjectCommand({
+  //       Bucket: bucketName,
+  //       Key: "foo-bar/foo.png",
+  //     }),
+  //   );
 
-    console.log("result: ", result);
-  }catch(err){
-    if(err instanceof NotFound){
-      const e = err as NotFound;
-      console.log("got NotFound error: ", err.$metadata.httpStatusCode);
-    }else{
-      console.log("got unknwon error: ", err);
-    }
-
-
-  }
-
+  // console.log("result: ", result);
+  // }catch(err){
+  //   if(err instanceof NotFound){
+  //     const e = err as NotFound;
+  //     console.log("got NotFound error: ", err.$metadata.httpStatusCode);
+  //   }else{
+  //     console.log("got unknwon error: ", err);
+  //   }
+  // }
 })();
 
 export {};

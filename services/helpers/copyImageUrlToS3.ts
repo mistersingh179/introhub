@@ -81,9 +81,9 @@ if (require.main === module) {
   (async () => {
     try {
       await copyImageUrlToS3(
-        "https://thealphadollar.me/img/posts/foobar/foobar.png",
+        "https://introhub-production.s3.us-east-2.amazonaws.com/avatar/fca8b528c5b75b9ba1afb4454a1432d8",
         "test",
-        "abc.png",
+        "foo.png",
       );
     } catch (err) {
       console.error(err);

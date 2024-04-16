@@ -10,10 +10,19 @@ import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introdu
 import { SendEmailInput } from "@/services/sendEmail";
 import MediumQueue from "@/bull/queues/mediumQueue";
 import { goingToChangeIntroStatus } from "@/services/canStateChange";
+import {z, ZodError} from "zod";
+
+const approveIntroActionSchema = z.object({
+  messageForContact: z.string().max(5000).min(10).optional(),
+});
+
+type ApproveIntroActionFlattenErrorType = z.inferFlattenedErrors<
+  typeof approveIntroActionSchema
+>;
 
 export default async function approveIntroAction(
   introductionId: string,
-  prevState: undefined | string,
+  prevState: ApproveIntroActionFlattenErrorType | undefined | string,
   formData: FormData,
 ) {
   console.log("in approveIntroAction with: ", introductionId);
@@ -27,10 +36,15 @@ export default async function approveIntroAction(
   try {
     await goingToChangeIntroStatus(introductionId, IntroStates.approved);
 
+    const { messageForContact } = approveIntroActionSchema.parse({
+      messageForContact: formData.get("messageForContact") ?? undefined,
+    });
+
     const introduction: IntroWithContactFacilitatorAndRequester =
       await prisma.introduction.update({
         data: {
           status: IntroStates.approved,
+          messageForContact,
         },
         where: {
           id: introductionId,
@@ -66,10 +80,12 @@ export default async function approveIntroAction(
     console.log("scheduled sendEmail job: ", name, id);
   } catch (e) {
     console.log("an error occurred!: ", e);
-    if (e instanceof Error) {
+    if (e instanceof ZodError) {
+      return e.flatten();
+    } else if (e instanceof Error) {
       return e.message;
     } else {
-      return "unable to approve introduction!";
+      return "unable to reject introduction!";
     }
   }
 

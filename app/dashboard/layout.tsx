@@ -35,7 +35,7 @@ export default async function DashboardLayout({
   return (
     <div className={""}>
       <div className={"container mx-auto min-h-dvh p-4 flex flex-col"}>
-        <nav className={"flex flex-row justify-between"}>
+        <nav aria-label={"primary"} className={"flex flex-row justify-between"}>
           <div className={"flex flex-row gap-4 whitespace-nowrap"}>
             <div className={"mr-4 font-bold text-purple-600"}>IntroHub</div>
             {userAllowed && (

@@ -1,10 +1,5 @@
 import prisma from "../prismaClient";
-import { Prisma } from "@prisma/client";
-import { PersonProfileWithExperiences } from "@/app/dashboard/introductions/create/[contactId]/page";
-import { z } from "zod";
-import { randomUUID } from "node:crypto";
-import {ProxyCurlError} from "@/services/helpers/proxycurl/ProxyCurlError";
-import HighQueue from "@/bull/queues/highQueue";
+import redisClient from "@/lib/redisClient";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -13,10 +8,26 @@ prisma.$on("query", (e) => {
   // console.log({ timestamp, params, duration, target });
 });
 
+const makeEnrichApiCall = async (email: string) => {
+  const resp = await fetch(`${process.env.BASE_API_URL}/api/enrich`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${process.env.INTERNAL_API_SECRET}`,
+    },
+    body: JSON.stringify({
+      email,
+    }),
+  });
+  console.log(await resp.json());
+};
+
 (async () => {
-  const jobObj = await HighQueue.add("foo", {});
-  const { name, id } = jobObj;
-  console.log("result of adding job: ", name, id);
+  console.log("hello world");
+  // const ans = await redisClient.get("foo");
+  const ans = await makeEnrichApiCall("sandeep@introhub.net");
+  console.log("ans: ", ans);
 })();
 
 export {};
