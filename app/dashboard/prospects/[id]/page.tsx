@@ -1,6 +1,9 @@
 import prisma from "@/prismaClient";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {buildS3ImageUrl} from "@/lib/url";
+import Link from "next/link";
+import {SquarePen} from "lucide-react";
+import {Button} from "@/components/ui/button";
 
 export default async function ShowContact({
   params,
@@ -55,6 +58,12 @@ export default async function ShowContact({
           <AvatarImage src={buildS3ImageUrl('logo', companyProfiles?.[0]?.website ?? "")} title={'X'} />
           <AvatarFallback>X</AvatarFallback>
         </Avatar>
+        <Button asChild>
+          <Link href={`/dashboard/introductions/create/${id}`}>
+            Create Intro
+            <SquarePen size={18} className={"ml-2"} />
+          </Link>
+        </Button>
       </div>
       <div className={"whitespace-pre-wrap bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-2"}>
         {JSON.stringify(personProfile, null, 2)}
