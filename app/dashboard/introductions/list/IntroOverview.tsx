@@ -53,7 +53,7 @@ const IntroOverview = (props: IntroOverviewProps) => {
           <h2 className={"text-xl mb-2"}> About Prospect </h2>
           <div className={"flex flex-row justify-around"}>
             <ProspectBox
-              intro={intro}
+              contact={intro.contact}
               personExp={contactProfiles.personExp}
               personProfile={contactProfiles.personProfile}
             />

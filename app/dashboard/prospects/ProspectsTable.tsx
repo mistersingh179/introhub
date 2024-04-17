@@ -16,30 +16,49 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SquarePen } from "lucide-react";
 import { getInitials } from "@/app/dashboard/UserProfileImageNav";
+import {
+  CompanyBox,
+  FacilitatorBox,
+  getProfiles,
+  ProspectBox,
+} from "@/app/dashboard/introductions/list/IntroTable";
+import {
+  CompanyUrlToProfile,
+  EmailToProfile,
+} from "@/services/getEmailAndCompanyUrlProfiles";
+import { ContactWithUser } from "@/app/dashboard/introductions/create/[contactId]/page";
 
 const ProspectsTable = ({
   prospects,
+  emailToProfile,
+  companyUrlToProfile,
 }: {
-  prospects: ContactWithUserInfo[];
+  prospects: ContactWithUser[];
+  emailToProfile: EmailToProfile;
+  companyUrlToProfile: CompanyUrlToProfile;
 }) => {
   return (
     <Table>
       <TableCaption>Prospects</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead></TableHead>
-          <TableHead></TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Send Count</TableHead>
-          <TableHead>Received Count</TableHead>
-          <TableHead>Sent-Received Ratio</TableHead>
+          <TableHead>Prospect</TableHead>
+          <TableHead>Company</TableHead>
+          <TableHead>Stats</TableHead>
           <TableHead>Introducer</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {prospects.map((prospect) => {
-          return <ProspectRow key={prospect.id} prospect={prospect} />;
+          return (
+            <ProspectRow
+              key={prospect.id}
+              prospect={prospect}
+              emailToProfile={emailToProfile}
+              companyUrlToProfile={companyUrlToProfile}
+            />
+          );
         })}
       </TableBody>
       <TableFooter>
@@ -54,54 +73,58 @@ const ProspectsTable = ({
 };
 
 type ProspectRowProps = {
-  prospect: ContactWithUserInfo;
+  prospect: ContactWithUser;
+  emailToProfile: EmailToProfile;
+  companyUrlToProfile: CompanyUrlToProfile;
 };
 const ProspectRow = (props: ProspectRowProps) => {
-  const { prospect } = props;
+  const { prospect, emailToProfile, companyUrlToProfile } = props;
+  const contactProfiles = getProfiles(
+    prospect.email,
+    emailToProfile,
+    companyUrlToProfile,
+  );
+  const facilitatorProfiles = getProfiles(
+    prospect.user.email!,
+    emailToProfile,
+    companyUrlToProfile,
+  );
+
+  console.log("facilitatorProfiles: ", facilitatorProfiles);
+
   return (
     <>
       <TableRow key={prospect.email}>
         <TableCell className={"p-2"}>
-          <Avatar className={"h-8 w-8"}>
-            <AvatarImage
-              src={buildS3ImageUrl("logo", prospect.website)}
-              title={prospect.website}
-            />
-            <AvatarFallback>{"W"}</AvatarFallback>
-          </Avatar>
+          <ProspectBox
+            contact={prospect}
+            personProfile={contactProfiles.personProfile}
+            personExp={contactProfiles.personExp}
+          />
         </TableCell>
         <TableCell className={"p-2"}>
-          <Avatar className={"h-8 w-8"}>
-            <AvatarImage
-              src={buildS3ImageUrl("avatar", prospect.email)}
-              title={prospect.email}
-            />
-            <AvatarFallback>{"E"}</AvatarFallback>
-          </Avatar>
+          <CompanyBox
+            companyProfile={contactProfiles.companyProfile}
+            personExp={contactProfiles.personExp}
+          />
         </TableCell>
         <TableCell className={"p-2"}>
-          <Link
-            href={`/dashboard/prospects/${prospect.id}/`}
-            className={"hover:underline"}
-          >
-            {prospect.email}
-          </Link>
-        </TableCell>
-        <TableCell className={"p-2"}>{prospect.sentCount}</TableCell>
-        <TableCell className={"p-2"}>{prospect.receivedCount}</TableCell>
-        <TableCell className={"p-2"}>
-          {prospect.sentReceivedRatio / 100}
+          <div className={'flex flex-col whitespace-nowrap'}>
+            <div>Sent: {prospect.sentCount}</div>
+            <div>Received: {prospect.receivedCount}</div>
+            <div>Ratio: {prospect.sentReceivedRatio / 100}</div>
+          </div>
         </TableCell>
         <TableCell className={"p-2"}>
-          <Avatar className={"h-8 w-8"}>
-            <AvatarImage src={prospect.userImage} title={prospect.userEmail} />
-            <AvatarFallback>{getInitials(prospect.userName)}</AvatarFallback>
-          </Avatar>
+          <FacilitatorBox
+            user={prospect.user}
+            personExp={facilitatorProfiles.personExp}
+          />
         </TableCell>
         <TableCell className={"p-2"}>
           <Button asChild>
             <Link href={`/dashboard/introductions/create/${prospect.id}`}>
-              Create Introduction
+              Create Intro
               <SquarePen size={18} className={"ml-2"} />
             </Link>
           </Button>

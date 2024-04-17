@@ -2,11 +2,13 @@ import prisma from "@/prismaClient";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 
-import { Contact, Prisma } from "@prisma/client";
+import { Contact, Prisma, User } from "@prisma/client";
 import FiltersForm from "@/app/dashboard/prospects/FiltersForm";
 import sleep from "@/lib/sleep";
 
 import ProspectsTable from "@/app/dashboard/prospects/ProspectsTable";
+import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
+import { ContactWithUser } from "@/app/dashboard/introductions/create/[contactId]/page";
 
 type ProspectsSearchParams = {
   query?: string;
@@ -207,11 +209,7 @@ export default async function Prospects({
     : Prisma.sql``;
 
   const sql = Prisma.sql`
-      select distinct on (C.email) C.*,
-                                   U.email    as "userEmail",
-                                   U.image    as "userImage",
-                                   U.name     as "userName",
-                                   CP.website as website
+      select distinct on (C.email) C.*
       from "Contact" C
                inner join public."User" U on U.id = C."userId"
                inner join public."PersonProfile" PP on C.email = PP.email and PP."linkedInUrl" is not null
@@ -227,9 +225,39 @@ export default async function Prospects({
 
   console.log(sql.text, sql.values);
 
-  const prospects = await prisma.$queryRaw<ContactWithUserInfo[]>(sql);
+  const prospects = await prisma.$queryRaw<Contact[]>(sql);
 
-  // todo - show contact name along with email
+  const userIds = [...new Set(prospects.map((p) => p.userId))];
+  const users = await prisma.user.findMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+    },
+  });
+  const usersIdHash = users.reduce<Record<string, User>>((acc, cv) => {
+    acc[cv.id] = cv;
+    return acc;
+  }, {});
+  const prospectsWithUser = prospects.reduce<ContactWithUser[]>((acc, cv) => {
+    const p = {
+      ...cv,
+      user: usersIdHash[cv.userId],
+    };
+    acc.push(p);
+    return acc;
+  }, []);
+
+  let emails = prospectsWithUser.reduce<string[]>((acc, prospect) => {
+    acc.push(prospect.email);
+    acc.push(prospect.user.email!);
+    return acc;
+  }, []);
+  emails = [...new Set(emails)];
+  const { emailToProfile, companyUrlToProfile } =
+    await getEmailAndCompanyUrlProfiles(emails);
+
+  console.log("*** prospectsWithUser: ", prospectsWithUser);
 
   return (
     <>
@@ -249,7 +277,11 @@ export default async function Prospects({
           />
         </div>
         <div>
-          <ProspectsTable prospects={prospects} />
+          <ProspectsTable
+            prospects={prospectsWithUser}
+            emailToProfile={emailToProfile}
+            companyUrlToProfile={companyUrlToProfile}
+          />
         </div>
       </div>
     </>
