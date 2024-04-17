@@ -5,7 +5,7 @@ import md5 from "md5";
 export const buildS3ImageUrl = (dirName: string, key:string): string => {
   const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
   if(key){
-    return `https://introhub-development.s3.amazonaws.com/${dirName}/${md5(key)}`
+    return `https://${bucketName}.s3.amazonaws.com/${dirName}/${md5(key)}`
   }else{
     return ``
   }
