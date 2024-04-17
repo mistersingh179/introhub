@@ -44,8 +44,8 @@ const ProspectsTable = ({
         <TableRow>
           <TableHead>Prospect</TableHead>
           <TableHead>Company</TableHead>
-          <TableHead>Stats</TableHead>
           <TableHead>Introducer</TableHead>
+          <TableHead>Stats</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -95,33 +95,33 @@ const ProspectRow = (props: ProspectRowProps) => {
   return (
     <>
       <TableRow key={prospect.email}>
-        <TableCell className={"p-2"}>
+        <TableCell className={""}>
           <ProspectBox
             contact={prospect}
             personProfile={contactProfiles.personProfile}
             personExp={contactProfiles.personExp}
           />
         </TableCell>
-        <TableCell className={"p-2"}>
+        <TableCell className={""}>
           <CompanyBox
             companyProfile={contactProfiles.companyProfile}
             personExp={contactProfiles.personExp}
           />
         </TableCell>
-        <TableCell className={"p-2"}>
+        <TableCell className={""}>
+          <FacilitatorBox
+            user={prospect.user}
+            personExp={facilitatorProfiles.personExp}
+          />
+        </TableCell>
+        <TableCell className={""}>
           <div className={'flex flex-col whitespace-nowrap'}>
             <div>Sent: {prospect.sentCount}</div>
             <div>Received: {prospect.receivedCount}</div>
             <div>Ratio: {prospect.sentReceivedRatio / 100}</div>
           </div>
         </TableCell>
-        <TableCell className={"p-2"}>
-          <FacilitatorBox
-            user={prospect.user}
-            personExp={facilitatorProfiles.personExp}
-          />
-        </TableCell>
-        <TableCell className={"p-2"}>
+        <TableCell className={""}>
           <Button asChild>
             <Link href={`/dashboard/introductions/create/${prospect.id}`}>
               Create Intro
