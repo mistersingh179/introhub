@@ -35,6 +35,7 @@ import { buildS3ImageUrl } from "@/lib/url";
 import { getInitials } from "@/app/dashboard/UserProfileImageNav";
 import { Badge } from "@/components/ui/badge";
 import IntroOverviewSheet from "@/app/dashboard/introductions/list/IntroOverviewSheet";
+import Link from "next/link";
 
 const IntroTable = ({
   introductions,
@@ -99,10 +100,10 @@ export const UserAvatar = ({ user }: { user: User }) => {
 
 export const ProspsectAvatar = ({
   prospect,
-  personExp,
+  personProfile,
 }: {
   prospect: Contact;
-  personExp: PersonExperience;
+  personProfile: PersonProfile;
 }) => {
   return (
     <>
@@ -111,7 +112,7 @@ export const ProspsectAvatar = ({
           src={buildS3ImageUrl("avatar", prospect.email ?? "")}
           title={prospect.email ?? ""}
         />
-        <AvatarFallback>{getInitials(personExp.companyName)}</AvatarFallback>
+        <AvatarFallback>{getInitials(personProfile.fullName)}</AvatarFallback>
       </Avatar>
     </>
   );
@@ -188,18 +189,18 @@ export const RequesterBox = ({
   );
 };
 
-const FacilitatorBox = ({
-  intro,
+export const FacilitatorBox = ({
+  user,
   personExp,
 }: {
-  intro: IntroWithContactFacilitatorAndRequester;
+  user: User;
   personExp: PersonExperience;
 }) => {
   return (
     <div className={"flex flex-row gap-2 items-center"}>
-      <UserAvatar user={intro.facilitator} />
+      <UserAvatar user={user} />
       <div className={"flex flex-col gap-2"}>
-        <div>{intro.facilitator.name}</div>
+        <div>{user.name}</div>
         {personExp.jobTitle && (
           <p className={"text-muted-foreground"}>{personExp.jobTitle} </p>
         )}
@@ -209,22 +210,22 @@ const FacilitatorBox = ({
 };
 
 export const ProspectBox = ({
-  intro,
+  contact,
   personProfile,
   personExp,
 }: {
-  intro: IntroWithContactFacilitatorAndRequester;
+  contact: Contact;
   personProfile: PersonProfile;
   personExp: PersonExperience;
 }) => {
   return (
-    <div className={"flex flex-row gap-4 items-center"}>
-      <ProspsectAvatar prospect={intro.contact} personExp={personExp} />
-      <div className={"flex flex-col gap-2"}>
-        <div>{personProfile.fullName} </div>
-        <p className={"text-muted-foreground"}>{personExp.jobTitle} </p>
+      <div className={"flex flex-row gap-4 items-center"}>
+        <ProspsectAvatar prospect={contact} personProfile={personProfile} />
+        <div className={"flex flex-col gap-2"}>
+          <div><Link href={`/dashboard/prospects/${contact.id}`}>{personProfile.fullName}</Link> </div>
+          <p className={"text-muted-foreground"}>{personExp.jobTitle} </p>
+        </div>
       </div>
-    </div>
   );
 };
 
@@ -252,7 +253,7 @@ export const getProfiles = (
   companyUrlToProfile: CompanyUrlToProfile,
 ) => {
   const personProfile = emailToProfile[email];
-  const personExp = personProfile.personExperiences[0] || {};
+  const personExp = personProfile?.personExperiences?.[0] ?? {};
   const companyProfile =
     companyUrlToProfile[personExp.companyLinkedInUrl] || {};
   return { personProfile, personExp, companyProfile };
@@ -307,7 +308,7 @@ const IntroSentRow = ({
 
         <TableCell className={"p-2"}>
           <ProspectBox
-            intro={introduction}
+            contact={introduction.contact}
             personProfile={contactProfiles.personProfile}
             personExp={contactProfiles.personExp}
           />
@@ -322,7 +323,7 @@ const IntroSentRow = ({
 
         <TableCell className={"p-2"}>
           <FacilitatorBox
-            intro={introduction}
+            user={introduction.facilitator}
             personExp={facilitatorProfiles.personExp}
           />
         </TableCell>
