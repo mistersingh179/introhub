@@ -36,9 +36,7 @@ const getEmailAndCompanyUrlProfiles = async (
         },
       },
       include: {
-        personExperiences: {
-          take: 1,
-        },
+        personExperiences: true,
       },
     });
   const emailToProfile = personProfiles.reduce<EmailToProfile>((acc, pp) => {
@@ -46,10 +44,25 @@ const getEmailAndCompanyUrlProfiles = async (
     return acc;
   }, {});
   console.log(emailToProfile);
-  const companyLinkedInUrls = personProfiles
-    .map((pp) => pp.personExperiences[0]?.companyLinkedInUrl)
-    .filter((x) => x);
-  console.log(companyLinkedInUrls);
+
+  const companyLinkedInUrls = [
+    ...new Set(
+      personProfiles.reduce<string[]>((acc, cv) => {
+        for (const pe of cv.personExperiences) {
+          if (pe.companyLinkedInUrl) {
+            acc.push(pe.companyLinkedInUrl);
+          }
+        }
+        return acc;
+      }, []),
+    ),
+  ];
+
+  // const companyLinkedInUrls = personProfiles
+  //   .map((pp) => pp.personExperiences[0]?.companyLinkedInUrl)
+  //   .filter((x) => x);
+
+  console.log("companyLinkedInUrls: ", companyLinkedInUrls);
   const companyProfiles: CompanyProfileWithCategories[] =
     await prisma.companyProfile.findMany({
       where: {
@@ -83,7 +96,9 @@ if (require.main === module) {
     const contacts = await prisma.contact.findMany({
       take: 15,
     });
-    const metaData = await getEmailAndCompanyUrlProfiles(contacts.map((c) => c.email));
+    const metaData = await getEmailAndCompanyUrlProfiles(
+      contacts.map((c) => c.email),
+    );
     console.log("getContactsMetaData: ", metaData);
   })();
 }
