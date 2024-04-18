@@ -77,6 +77,8 @@ const FiltersForm = (props: FiltersFormProps) => {
       params.set("selectedWebsite", formData.get("selectedWebsite") as string);
     }
 
+    params.set("page", "1");
+
     console.log("params: ", params.toString());
     replace(`${pathname}?${params.toString()}`);
   };
