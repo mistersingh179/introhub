@@ -86,7 +86,7 @@ const ProspectRow = (props: ProspectRowProps) => {
     companyUrlToProfile,
   );
 
-  if(!facilitatorProfiles.companyProfile) return <></>
+  if(!facilitatorProfiles?.companyProfile?.linkedInUrl) return <></>
 
   console.log("contactProfiles: ", contactProfiles);
   console.log("facilitatorProfiles: ", facilitatorProfiles);
