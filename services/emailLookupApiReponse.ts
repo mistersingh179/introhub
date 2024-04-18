@@ -4,15 +4,18 @@ import emailLookupByProxyUrl from "@/services/helpers/proxycurl/emailLookupApiCa
 
 const emailLookupApiReponse = async (
   email: string,
+  useCache: boolean = true,
 ): Promise<Record<string, any>> => {
-  const record = await prisma.reverseEmailLookupEndpoint.findFirst({
-    where: {
-      email: email,
-    },
-  });
+  if (useCache) {
+    const record = await prisma.reverseEmailLookupEndpoint.findFirst({
+      where: {
+        email: email,
+      },
+    });
 
-  if (record) {
-    return record.response as Record<string, any>;
+    if (record) {
+      return record.response as Record<string, any>;
+    }
   }
   const data = await emailLookupByProxyUrl(email);
   const newRecord = await prisma.reverseEmailLookupEndpoint.create({
@@ -29,7 +32,7 @@ export default emailLookupApiReponse;
 
 if (require.main === module) {
   (async () => {
-    const ans = await emailLookupApiReponse("sandeep@brandweaver.ai");
+    const ans = await emailLookupApiReponse("rod@introhub.net", false);
     console.log("ans: ", ans.profile.experiences);
   })();
 }
