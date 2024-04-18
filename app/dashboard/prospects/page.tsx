@@ -17,6 +17,7 @@ type ProspectsSearchParams = {
   selectedJobTitles?: string | string[];
   selectedIndustries?: string | string[];
   selectedCategories?: string | string[];
+  selectedUserEmails?: string | string[];
   selectedEmail?: string;
   selectedWebsite?: string;
   page?: string | string[];
@@ -49,6 +50,7 @@ type GetSelectedFilterValues = (
   selectedJobTitles: string[] | undefined;
   selectedIndustries: string[] | undefined;
   selectedCategories: string[] | undefined;
+  selectedUserEmails: string[] | undefined;
   selectedEmail: string | undefined;
   selectedWebsite: string | undefined;
 };
@@ -59,6 +61,7 @@ const getSelectedFilterValues: GetSelectedFilterValues = (searchParams) => {
   const selectedJobTitles = getValueAsArray(searchParams?.selectedJobTitles);
   const selectedIndustries = getValueAsArray(searchParams?.selectedIndustries);
   const selectedCategories = getValueAsArray(searchParams?.selectedCategories);
+  const selectedUserEmails = getValueAsArray(searchParams?.selectedUserEmails);
   const selectedEmail = searchParams?.selectedEmail;
   const selectedWebsite = searchParams?.selectedWebsite;
 
@@ -70,6 +73,7 @@ const getSelectedFilterValues: GetSelectedFilterValues = (searchParams) => {
     selectedCategories,
     selectedEmail,
     selectedWebsite,
+    selectedUserEmails,
   };
 
   console.log("selected: ", result);
@@ -95,15 +99,16 @@ const getPaginationValues: GetPaginationValues = (searchParams) => {
   return result;
 };
 
-type GetAllFilterValues = () => Promise<{
+type GetAllFilterValues = (user: User) => Promise<{
   cities: string[];
   states: string[];
   jobTitles: string[];
   industries: string[];
   categories: string[];
+  userEmails: string[];
 }>;
 
-const getAllFilterValues: GetAllFilterValues = async () => {
+const getAllFilterValues: GetAllFilterValues = async (user) => {
   const citiesWithCount = await prisma.personProfile.groupBy({
     by: "city",
     _count: true,
@@ -144,7 +149,27 @@ const getAllFilterValues: GetAllFilterValues = async () => {
     .filter((rec) => rec.name)
     .map((rec) => rec.name as string);
 
-  const result = { cities, states, jobTitles, industries, categories };
+  const usersWithCount = await prisma.user.groupBy({
+    by: "email",
+    where: {
+      email: {
+        not: user.email,
+      },
+    },
+    _count: true,
+  });
+  const userEmails = usersWithCount
+    .filter((rec) => rec.email)
+    .map((rec) => rec.email as string);
+
+  const result = {
+    cities,
+    states,
+    jobTitles,
+    industries,
+    categories,
+    userEmails,
+  };
 
   console.log("all filter values: ", result);
   return result;
@@ -164,8 +189,8 @@ export default async function Prospects({
   // await sleep(500);
   console.log("*** searchParams ***: ", searchParams);
 
-  const { cities, states, jobTitles, industries, categories } =
-    await getAllFilterValues();
+  const { cities, states, jobTitles, industries, categories, userEmails } =
+    await getAllFilterValues(user);
 
   const { recordsToSkip, currentPage, itemsPerPage } =
     getPaginationValues(searchParams);
@@ -178,6 +203,7 @@ export default async function Prospects({
     selectedWebsite,
     selectedIndustries,
     selectedCategories,
+    selectedUserEmails,
   } = getSelectedFilterValues(searchParams);
 
   const cityFilterSql = selectedCities
@@ -200,6 +226,10 @@ export default async function Prospects({
     ? Prisma.sql`and CAT."name" in (${Prisma.join(selectedCategories)})`
     : Prisma.sql``;
 
+  const userEmailsFilterSql = selectedUserEmails
+    ? Prisma.sql`and U."email" in (${Prisma.join(selectedUserEmails)})`
+    : Prisma.sql``;
+
   const emailFilterSql = selectedEmail
     ? Prisma.sql`and C.email ilike ${"%" + selectedEmail + "%"}`
     : Prisma.sql``;
@@ -217,7 +247,8 @@ export default async function Prospects({
                inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
-      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql}
+      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} \
+            ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql}
         and C."userId" != ${user.id}
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
@@ -274,9 +305,10 @@ export default async function Prospects({
             jobTitles={jobTitles}
             industries={industries}
             categories={categories}
+            userEmails={userEmails}
           />
         </div>
-        <div>
+        <div className={"flex-grow"}>
           <ProspectsTable
             prospects={prospectsWithUser}
             emailToProfile={emailToProfile}
