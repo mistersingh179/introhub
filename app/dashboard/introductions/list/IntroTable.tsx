@@ -105,6 +105,9 @@ export const ProspsectAvatar = ({
   prospect: Contact;
   personProfile: PersonProfile;
 }) => {
+  if (!personProfile.fullName) {
+    return <></>;
+  }
   return (
     <>
       <Avatar className={"h-8 w-8"}>
@@ -125,6 +128,9 @@ export const CompanyLogo = ({
   companyProfile: CompanyProfile;
   personExp: PersonExperience;
 }) => {
+  if (!personExp.companyName) {
+    return <></>;
+  }
   return (
     <>
       <Avatar className={"h-8 w-8"}>
@@ -219,13 +225,17 @@ export const ProspectBox = ({
   personExp: PersonExperience;
 }) => {
   return (
-      <div className={"flex flex-row gap-4 items-center"}>
-        <ProspsectAvatar prospect={contact} personProfile={personProfile} />
-        <div className={"flex flex-col gap-2"}>
-          <div><Link href={`/dashboard/prospects/${contact.id}`}>{personProfile.fullName}</Link> </div>
-          <p className={"text-muted-foreground"}>{personExp.jobTitle} </p>
+    <div className={"flex flex-row gap-4 items-center"}>
+      <ProspsectAvatar prospect={contact} personProfile={personProfile} />
+      <div className={"flex flex-col gap-2"}>
+        <div>
+          <Link href={`/dashboard/prospects/${contact.id}`}>
+            {personProfile.fullName}
+          </Link>{" "}
         </div>
+        <p className={"text-muted-foreground"}>{personExp.jobTitle} </p>
       </div>
+    </div>
   );
 };
 
@@ -247,11 +257,17 @@ export const CompanyBox = ({
   );
 };
 
+export type Profiles = {
+  personProfile: PersonProfile;
+  personExp: PersonExperience;
+  companyProfile: CompanyProfile;
+};
+
 export const getProfiles = (
   email: string,
   emailToProfile: EmailToProfile,
   companyUrlToProfile: CompanyUrlToProfile,
-) => {
+): Profiles => {
   const personProfile = emailToProfile[email];
   const personExp = personProfile?.personExperiences?.[0] ?? {};
   const companyProfile =

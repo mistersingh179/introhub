@@ -14,6 +14,13 @@ import {
 import { Contact } from "@prisma/client";
 import MyPagination from "@/components/MyPagination";
 import Search from "@/components/Search";
+import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
+import {
+  CompanyBox,
+  getProfiles,
+  Profiles,
+  ProspectBox,
+} from "@/app/dashboard/introductions/list/IntroTable";
 
 export default async function MyContacts({
   searchParams,
@@ -36,12 +43,19 @@ export default async function MyContacts({
       },
       email: {
         contains: query,
-        mode: "insensitive"
+        mode: "insensitive",
       },
     },
     take: itemsPerPage,
     skip: recordsToSkip,
   });
+  let emails = contacts.reduce<string[]>((acc, contact) => {
+    acc.push(contact.email);
+    return acc;
+  }, []);
+  emails = [...new Set(emails)];
+  const { emailToProfile, companyUrlToProfile } =
+    await getEmailAndCompanyUrlProfiles(emails);
   return (
     <>
       <h1 className={"text-2xl my-4"}>My Contacts</h1>
@@ -50,15 +64,31 @@ export default async function MyContacts({
         <TableCaption>Your Contacts</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Email</TableHead>
-            <TableHead>Send Count</TableHead>
-            <TableHead>Received Count</TableHead>
-            <TableHead>Sent-Received Ratio</TableHead>
+            <TableHead>Contact</TableHead>
+            <TableHead>Company</TableHead>
+            <TableHead>Stats</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {contacts.map((contact) => {
-            return <ContactRow key={contact.id} contact={contact} />;
+            const contactProfiles = getProfiles(
+              contact.email,
+              emailToProfile,
+              companyUrlToProfile,
+            );
+            if (
+              !contactProfiles.personProfile.linkedInUrl ||
+              !contactProfiles.companyProfile.linkedInUrl
+            ) {
+              return <></>;
+            }
+            return (
+              <ContactRow
+                key={contact.id}
+                contact={contact}
+                contactProfiles={contactProfiles}
+              />
+            );
           })}
         </TableBody>
         <TableFooter>
@@ -75,17 +105,30 @@ export default async function MyContacts({
 
 type ContactProps = {
   contact: Contact;
+  contactProfiles: Profiles;
 };
 const ContactRow = (props: ContactProps) => {
-  const { contact } = props;
+  const { contact, contactProfiles } = props;
+  const { personExp, personProfile, companyProfile } = contactProfiles;
   return (
     <>
       <TableRow key={contact.email}>
-        <TableCell className={"p-2"}>{contact.email}</TableCell>
-        <TableCell className={"p-2"}>{contact.sentCount}</TableCell>
-        <TableCell className={"p-2"}>{contact.receivedCount}</TableCell>
         <TableCell className={"p-2"}>
-          {contact.sentReceivedRatio / 100}
+          <ProspectBox
+            contact={contact}
+            personProfile={personProfile}
+            personExp={personExp}
+          />
+        </TableCell>
+        <TableCell className={"p-2"}>
+          <CompanyBox companyProfile={companyProfile} personExp={personExp} />
+        </TableCell>
+        <TableCell className={"p-2"}>
+          <div className={"flex flex-col whitespace-nowrap"}>
+            <div>Sent: {contact.sentCount}</div>
+            <div>Received: {contact.receivedCount}</div>
+            <div>Ratio: {contact.sentReceivedRatio / 100}</div>
+          </div>
         </TableCell>
       </TableRow>
     </>
