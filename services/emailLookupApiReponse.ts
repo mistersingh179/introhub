@@ -32,7 +32,7 @@ export default emailLookupApiReponse;
 
 if (require.main === module) {
   (async () => {
-    const ans = await emailLookupApiReponse("rod@introhub.net", false);
+    const ans = await emailLookupApiReponse("paul.simko@enhancio.com", false);
     console.log("ans: ", ans.profile.experiences);
   })();
 }
