@@ -8,17 +8,20 @@ import {
   CompanyUrlToProfile,
   EmailToProfile,
 } from "@/services/getEmailAndCompanyUrlProfiles";
-import IntroOverview from "@/app/dashboard/introductions/list/IntroOverview";
+import IntroOverviewWithApproving from "@/app/dashboard/introductions/list/IntroOverviewWithApproving";
 import { useState } from "react";
+import IntroOverviewWithSaving from "@/app/dashboard/introductions/list/IntroOverviewWithSaving";
 
-type IntroOverviewSheetProps = {
+type IntroApproveWithApprovingSheetProps = {
   user: User;
   intro: IntroWithContactFacilitatorAndRequester;
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
 };
 
-const IntroOverviewSheet = (props: IntroOverviewSheetProps) => {
+const IntroOverviewWithApprovingSheet = (
+  props: IntroApproveWithApprovingSheetProps,
+) => {
   const { user, intro, emailToProfile, companyUrlToProfile } = props;
   const [open, setOpen] = useState(false);
   return (
@@ -27,28 +30,16 @@ const IntroOverviewSheet = (props: IntroOverviewSheetProps) => {
         <Button className={"w-fit"}>See More</Button>
       </SheetTrigger>
       <SheetContent className="sm:max-w-[60%] md:max-w-[50%] lg:max-w-[40%]">
-        {/*<SheetHeader>*/}
-        {/*  <SheetTitle>Intro Overview</SheetTitle>*/}
-        {/*  <SheetDescription>*/}
-        {/*    Make changes to the message which your will be sending to the*/}
-        {/*    prospect.*/}
-        {/*  </SheetDescription>*/}
-        {/*</SheetHeader>*/}
-        <IntroOverview
+        <IntroOverviewWithApproving
           user={user}
           intro={intro}
           emailToProfile={emailToProfile}
           companyUrlToProfile={companyUrlToProfile}
           setOpen={setOpen}
         />
-        {/*<SheetFooter>*/}
-        {/*  <SheetClose asChild>*/}
-        {/*    <Button type="submit">Save changes</Button>*/}
-        {/*  </SheetClose>*/}
-        {/*</SheetFooter>*/}
       </SheetContent>
     </Sheet>
   );
 };
 
-export default IntroOverviewSheet;
+export default IntroOverviewWithApprovingSheet;
