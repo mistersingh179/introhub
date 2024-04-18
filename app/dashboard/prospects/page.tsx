@@ -171,7 +171,6 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
     userEmails,
   };
 
-  console.log("all filter values: ", result);
   return result;
 };
 
@@ -288,7 +287,7 @@ export default async function Prospects({
   const { emailToProfile, companyUrlToProfile } =
     await getEmailAndCompanyUrlProfiles(emails);
 
-  console.log("*** prospectsWithUser: ", prospectsWithUser);
+  // console.log("*** prospectsWithUser: ", prospectsWithUser);
 
   return (
     <>

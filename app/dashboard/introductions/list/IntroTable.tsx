@@ -275,6 +275,7 @@ export const getProfiles = (
     emailToProfile,
     companyUrlToProfile,
   ) ?? {}) as PersonExperience;
+
   // personProfile?.personExperiences?.[0] ?? {};
 
   const companyProfile =
