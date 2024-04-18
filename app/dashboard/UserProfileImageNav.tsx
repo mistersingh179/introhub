@@ -31,7 +31,7 @@ export const getInitials = (input: string | null | undefined) => {
     initials = parts[0][0] + parts[1][0];
   }
 
-  return initials.toUpperCase();
+  return initials?.toUpperCase() ?? "-";
 };
 
 const UserProfileImageNav = async () => {
