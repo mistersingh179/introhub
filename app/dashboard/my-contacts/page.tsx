@@ -77,8 +77,8 @@ export default async function MyContacts({
               companyUrlToProfile,
             );
             if (
-              !contactProfiles.personProfile.linkedInUrl ||
-              !contactProfiles.companyProfile.linkedInUrl
+              !contactProfiles.personProfile?.linkedInUrl ||
+              !contactProfiles.companyProfile?.linkedInUrl
             ) {
               return <></>;
             }

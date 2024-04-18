@@ -36,6 +36,7 @@ import { getInitials } from "@/app/dashboard/UserProfileImageNav";
 import { Badge } from "@/components/ui/badge";
 import IntroOverviewSheet from "@/app/dashboard/introductions/list/IntroOverviewSheet";
 import Link from "next/link";
+import getClosestPersonExp from "@/services/helpers/getClosestPersonExp";
 
 const IntroTable = ({
   introductions,
@@ -154,7 +155,7 @@ export const IntroStatusBadge = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <div>
-            <Badge variant={"default"}>
+            <Badge variant={"default"} className={"text-center"}>
               <div>{introduction.status}</div>
             </Badge>
           </div>
@@ -187,9 +188,9 @@ export const RequesterBox = ({
       <UserAvatar user={intro.requester} />
       <div className={"flex flex-col gap-2"}>
         <div>{intro.requester.name} </div>
-        <p className={"text-muted-foreground"}>
-          {personExp?.jobTitle ?? "unknown"}{" "}
-        </p>
+        {personExp?.jobTitle && (
+          <p className={"text-muted-foreground"}>{personExp?.jobTitle}</p>
+        )}
       </div>
     </div>
   );
@@ -269,7 +270,13 @@ export const getProfiles = (
   companyUrlToProfile: CompanyUrlToProfile,
 ): Profiles => {
   const personProfile = emailToProfile[email];
-  const personExp = personProfile?.personExperiences?.[0] ?? {};
+  const personExp = (getClosestPersonExp(
+    email,
+    emailToProfile,
+    companyUrlToProfile,
+  ) ?? {}) as PersonExperience;
+  // personProfile?.personExperiences?.[0] ?? {};
+
   const companyProfile =
     companyUrlToProfile[personExp.companyLinkedInUrl] || {};
   return { personProfile, personExp, companyProfile };
