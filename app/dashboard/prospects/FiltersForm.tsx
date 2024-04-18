@@ -26,10 +26,18 @@ type FiltersFormProps = {
   jobTitles: string[];
   industries: string[];
   categories: string[];
+  userEmails: string[];
 };
 
 const FiltersForm = (props: FiltersFormProps) => {
-  const { cities, states, jobTitles, industries, categories } = props;
+  const {
+    cities,
+    states,
+    jobTitles,
+    industries,
+    categories,
+    userEmails,
+  } = props;
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -51,6 +59,9 @@ const FiltersForm = (props: FiltersFormProps) => {
   const [selectedCategories, setSelectedCategories] = useState<FancyOption[]>(
     buildOptions(searchParams.getAll("selectedCategories")),
   );
+  const [selectedUserEmails, setSelectedUserEmails] = useState<FancyOption[]>(
+    buildOptions(searchParams.getAll("selectedUserEmails")),
+  );
 
   const formHandler = (formData: FormData) => {
     console.log("in formHandler: ", formData);
@@ -66,6 +77,7 @@ const FiltersForm = (props: FiltersFormProps) => {
     addMultiOptionsToParams(params, selectedJobTitles, "selectedJobTitles");
     addMultiOptionsToParams(params, selectedIndustries, "selectedIndustries");
     addMultiOptionsToParams(params, selectedCategories, "selectedCategories");
+    addMultiOptionsToParams(params, selectedUserEmails, "selectedUserEmails");
 
     params.delete("selectedEmail");
     if (formData.get("selectedEmail")) {
@@ -131,6 +143,12 @@ const FiltersForm = (props: FiltersFormProps) => {
           options={buildOptions(categories)}
           selected={selectedCategories}
           setSelected={setSelectedCategories}
+        />
+        <FancyMultiSelect
+          placeholder={"Facilitators"}
+          options={buildOptions(userEmails)}
+          selected={selectedUserEmails}
+          setSelected={setSelectedUserEmails}
         />
 
         <div className={"flex flex-row justify-center"}>
