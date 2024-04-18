@@ -1,4 +1,3 @@
-import { ContactWithUserInfo } from "@/app/dashboard/prospects/page";
 import {
   Table,
   TableBody,
@@ -10,12 +9,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import MyPagination from "@/components/MyPagination";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { buildS3ImageUrl } from "@/lib/url";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SquarePen } from "lucide-react";
-import { getInitials } from "@/app/dashboard/UserProfileImageNav";
 import {
   CompanyBox,
   FacilitatorBox,
@@ -90,6 +86,9 @@ const ProspectRow = (props: ProspectRowProps) => {
     companyUrlToProfile,
   );
 
+  if(!facilitatorProfiles.companyProfile) return <></>
+
+  console.log("contactProfiles: ", contactProfiles);
   console.log("facilitatorProfiles: ", facilitatorProfiles);
 
   return (
@@ -115,7 +114,7 @@ const ProspectRow = (props: ProspectRowProps) => {
           />
         </TableCell>
         <TableCell className={""}>
-          <div className={'flex flex-col whitespace-nowrap'}>
+          <div className={"flex flex-col whitespace-nowrap"}>
             <div>Sent: {prospect.sentCount}</div>
             <div>Received: {prospect.receivedCount}</div>
             <div>Ratio: {prospect.sentReceivedRatio / 100}</div>
