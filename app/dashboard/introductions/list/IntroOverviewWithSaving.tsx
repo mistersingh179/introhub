@@ -8,16 +8,22 @@ import {
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import {
   CompanyBox,
+  FacilitatorBox,
   getAllProfiles,
   IntroStatusBadge,
   ProspectBox,
   RequesterBox,
 } from "@/app/dashboard/introductions/list/IntroTable";
 import IntroApproveWithMessageForm from "@/app/dashboard/introductions/list/IntroApproveWithMessageForm";
-import { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
+import IntroUpdateWithMessagesForm from "@/app/dashboard/introductions/list/IntroUpdateWithMessagesForm";
+import IntroCancelForm from "@/app/dashboard/introductions/list/IntroCancelForm";
+import { Button } from "@/components/ui/button";
 
-type IntroOverviewProps = {
+type IntroOverviewWithSavingProps = {
   user: User;
   intro: IntroWithContactFacilitatorAndRequester;
   emailToProfile: EmailToProfile;
@@ -25,7 +31,7 @@ type IntroOverviewProps = {
   setOpen?: Dispatch<SetStateAction<boolean>>;
 };
 
-const IntroOverview = (props: IntroOverviewProps) => {
+const IntroOverviewWithSaving = (props: IntroOverviewWithSavingProps) => {
   const { intro, user, emailToProfile, companyUrlToProfile, setOpen } = props;
   const { contactProfiles, requestProfiles, facilitatorProfiles } =
     getAllProfiles(intro, emailToProfile, companyUrlToProfile);
@@ -41,15 +47,17 @@ const IntroOverview = (props: IntroOverviewProps) => {
 
       <ScrollArea className={"flex-grow"}>
         <div className={"flex flex-col gap-4"}>
-          <h2 className={"text-xl mb-2"}> About Requester </h2>
+          <h2 className={"text-xl mb-2"}> About Facilitator </h2>
           <div className={"flex flex-row justify-around"}>
-            <RequesterBox intro={intro} personExp={requestProfiles.personExp} />
+            <FacilitatorBox
+              user={intro.facilitator}
+              personExp={facilitatorProfiles.personExp}
+            />
             <CompanyBox
-              companyProfile={requestProfiles.companyProfile}
-              personExp={requestProfiles.personExp}
+              companyProfile={facilitatorProfiles.companyProfile}
+              personExp={facilitatorProfiles.personExp}
             />
           </div>
-          <p className={"my-2"}>{intro.messageForFacilitator}</p>
           <h2 className={"text-xl mb-2"}> About Prospect </h2>
           <div className={"flex flex-row justify-around"}>
             <ProspectBox
@@ -62,12 +70,14 @@ const IntroOverview = (props: IntroOverviewProps) => {
               personExp={contactProfiles.personExp}
             />
           </div>
-          <h2 className={"text-xl mb-2"}> Message to Prospect </h2>
-          <IntroApproveWithMessageForm intro={intro} setOpen={setOpen} />
+          <IntroUpdateWithMessagesForm intro={intro} setOpen={setOpen} />
+          <div className={"flex flex-row justify-end"}>
+            <IntroCancelForm intro={intro} />
+          </div>
         </div>
       </ScrollArea>
     </div>
   );
 };
 
-export default IntroOverview;
+export default IntroOverviewWithSaving;

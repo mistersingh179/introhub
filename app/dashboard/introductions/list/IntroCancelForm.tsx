@@ -9,10 +9,10 @@ import { useFormState } from "react-dom";
 import { useEffect, useState } from "react";
 import canStateChange from "@/services/canStateChange";
 
-type IntroApproveFormProps = {
+type IntroCancelFormProps = {
   intro: IntroWithContactFacilitatorAndRequester;
 };
-export default function IntroApproveForm(props: IntroApproveFormProps) {
+export default function IntroCancelForm(props: IntroCancelFormProps) {
   const { intro } = props;
   const [submittedAt, setSubmittedAt] = useState<undefined | number>(undefined);
   const action = cancelIntroAction.bind(null, intro.id);
@@ -37,7 +37,7 @@ export default function IntroApproveForm(props: IntroApproveFormProps) {
   return (
     <>
       <form action={formActionHandler}>
-        <SubmitButton label={"Cancel"} beDisabled={!canChange} />
+        <SubmitButton variant={'link'} label={"Cancel Intro"} beDisabled={!canChange} />
       </form>
     </>
   );

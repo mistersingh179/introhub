@@ -34,9 +34,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { buildS3ImageUrl } from "@/lib/url";
 import { getInitials } from "@/app/dashboard/UserProfileImageNav";
 import { Badge } from "@/components/ui/badge";
-import IntroOverviewSheet from "@/app/dashboard/introductions/list/IntroOverviewSheet";
+import IntroOverviewWithApprovingSheet from "@/app/dashboard/introductions/list/IntroOverviewWithApprovingSheet";
 import Link from "next/link";
 import getClosestPersonExp from "@/services/helpers/getClosestPersonExp";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import IntroOverviewWithSavingSheet from "./IntroOverviewWithSavingSheet";
+import { SlidersHorizontal } from "lucide-react";
 
 const IntroTable = ({
   introductions,
@@ -66,7 +70,7 @@ const IntroTable = ({
         <TableBody>
           {introductions.map((introduction) => {
             return (
-              <IntroSentRow
+              <IntroRow
                 key={introduction.id}
                 introduction={introduction}
                 user={user}
@@ -306,7 +310,7 @@ export const getAllProfiles = (
   return { contactProfiles, requestProfiles, facilitatorProfiles };
 };
 
-const IntroSentRow = ({
+const IntroRow = ({
   introduction,
   user,
   emailToProfile,
@@ -358,7 +362,16 @@ const IntroSentRow = ({
 
         <TableCell className={"p-2"}>
           {user.id === introduction.facilitator.id && (
-            <IntroOverviewSheet
+            <IntroOverviewWithApprovingSheet
+              intro={introduction}
+              user={user}
+              emailToProfile={emailToProfile}
+              companyUrlToProfile={companyUrlToProfile}
+            />
+          )}
+
+          {user.id === introduction.requester.id && (
+            <IntroOverviewWithSavingSheet
               intro={introduction}
               user={user}
               emailToProfile={emailToProfile}

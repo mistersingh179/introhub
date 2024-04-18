@@ -80,7 +80,6 @@ export default async function IntroductionsRequested({
         emailToProfile={emailToProfile}
         companyUrlToProfile={companyUrlToProfile}
       />
-      {/*<AllIntrosTable myIntroductions={myIntroductions} user={user} />*/}
     </>
   );
 }
