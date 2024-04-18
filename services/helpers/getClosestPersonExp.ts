@@ -19,9 +19,9 @@ const getClosestPersonExp = (
   const bestPe = personProfile.personExperiences.reduce<PersonExperience>(
     (pe, cv) => {
       const exisitngWebsite =
-        companyUrlToProfile[pe.companyLinkedInUrl].website || "";
+        companyUrlToProfile[pe?.companyLinkedInUrl]?.website ?? "";
       const newWebsite =
-        companyUrlToProfile[cv.companyLinkedInUrl].website || "";
+        companyUrlToProfile[cv?.companyLinkedInUrl]?.website ?? "";
 
       const existingDistance = distance(emailDomainName, exisitngWebsite);
       const newDistance = distance(emailDomainName, newWebsite);
