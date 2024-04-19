@@ -47,11 +47,15 @@ const IntroTable = ({
   user,
   emailToProfile,
   companyUrlToProfile,
+  showRequester = true,
+  showFacilitator = true,
 }: {
   introductions: IntroWithContactFacilitatorAndRequester[];
   user: User;
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
+  showRequester?: boolean;
+  showFacilitator?: boolean;
 }) => {
   return (
     <>
@@ -59,10 +63,14 @@ const IntroTable = ({
         <TableCaption>Introductions</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className={"p-2"}>Requester</TableHead>
+            {showRequester && (
+              <TableHead className={"p-2"}>Requester</TableHead>
+            )}
             <TableHead className={"p-2"}>Prospect</TableHead>
             <TableHead className={"p-2"}>Organization</TableHead>
-            <TableHead className={"p-2"}>Facilitating Person</TableHead>
+            {showFacilitator && (
+              <TableHead className={"p-2"}>Facilitating Person</TableHead>
+            )}
             <TableHead className={"p-2"}>Status</TableHead>
             <TableHead className={"p-2"}>Actions</TableHead>
           </TableRow>
@@ -76,6 +84,8 @@ const IntroTable = ({
                 user={user}
                 emailToProfile={emailToProfile}
                 companyUrlToProfile={companyUrlToProfile}
+                showRequester={showRequester}
+                showFacilitator={showFacilitator}
               />
             );
           })}
@@ -315,11 +325,15 @@ const IntroRow = ({
   user,
   emailToProfile,
   companyUrlToProfile,
+  showRequester,
+  showFacilitator,
 }: {
   introduction: IntroWithContactFacilitatorAndRequester;
   user: User;
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
+  showRequester: boolean;
+  showFacilitator: boolean;
 }) => {
   const { contactProfiles, requestProfiles, facilitatorProfiles } =
     getAllProfiles(introduction, emailToProfile, companyUrlToProfile);
@@ -327,12 +341,14 @@ const IntroRow = ({
   return (
     <>
       <TableRow key={introduction.id}>
-        <TableCell className={"p-2"}>
-          <RequesterBox
-            intro={introduction}
-            personExp={requestProfiles.personExp}
-          />
-        </TableCell>
+        {showRequester && (
+          <TableCell className={"p-2"}>
+            <RequesterBox
+              intro={introduction}
+              personExp={requestProfiles.personExp}
+            />
+          </TableCell>
+        )}
 
         <TableCell className={"p-2"}>
           <ProspectBox
@@ -349,12 +365,14 @@ const IntroRow = ({
           />
         </TableCell>
 
-        <TableCell className={"p-2"}>
-          <FacilitatorBox
-            user={introduction.facilitator}
-            personExp={facilitatorProfiles.personExp}
-          />
-        </TableCell>
+        {showFacilitator && (
+          <TableCell className={"p-2"}>
+            <FacilitatorBox
+              user={introduction.facilitator}
+              personExp={facilitatorProfiles.personExp}
+            />
+          </TableCell>
+        )}
 
         <TableCell className={"p-2"}>
           <IntroStatusBadge introduction={introduction} />
