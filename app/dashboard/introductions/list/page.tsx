@@ -3,8 +3,7 @@ import { auth } from "@/auth";
 import { Session } from "next-auth";
 import { Contact, Introduction, User } from "@prisma/client";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
-import IntroTable from "@/app/dashboard/introductions/list/IntroTable";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import IntroListTabs from "@/app/dashboard/introductions/list/IntroListTabs";
 
 export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
@@ -43,7 +42,7 @@ export default async function IntroductionsRequested({
         requester: true,
       },
       orderBy: {
-        createdAt: "desc",
+        updatedAt: "desc",
       },
       skip: recordsToSkip,
       take: itemsPerPage,
@@ -59,7 +58,7 @@ export default async function IntroductionsRequested({
         requester: true,
       },
       orderBy: {
-        createdAt: "desc",
+        updatedAt: "desc",
       },
       skip: recordsToSkip,
       take: itemsPerPage,
@@ -81,30 +80,13 @@ export default async function IntroductionsRequested({
 
   return (
     <>
-      <Tabs defaultValue="received" className={"mt-4"}>
-        <TabsList>
-          <TabsTrigger value="sent">Intros Sent</TabsTrigger>
-          <TabsTrigger value="received">Intros Received</TabsTrigger>
-        </TabsList>
-        <TabsContent value="sent">
-          <IntroTable
-            introductions={introsSent}
-            user={user}
-            emailToProfile={emailToProfile}
-            companyUrlToProfile={companyUrlToProfile}
-            showRequester={false}
-          />
-        </TabsContent>
-        <TabsContent value="received">
-          <IntroTable
-            introductions={introsReceived}
-            user={user}
-            emailToProfile={emailToProfile}
-            companyUrlToProfile={companyUrlToProfile}
-            showFacilitator={false}
-          />
-        </TabsContent>
-      </Tabs>
+      <IntroListTabs
+        introsSent={introsSent}
+        introsReceived={introsReceived}
+        user={user}
+        emailToProfile={emailToProfile}
+        companyUrlToProfile={companyUrlToProfile}
+      />
     </>
   );
 }
