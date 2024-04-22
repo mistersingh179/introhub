@@ -4,6 +4,7 @@ import { Session } from "next-auth";
 import { Contact, Introduction, User } from "@prisma/client";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import IntroListTabs from "@/app/dashboard/introductions/list/IntroListTabs";
+import { IntroStates } from "@/lib/introStates";
 
 export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
@@ -64,6 +65,20 @@ export default async function IntroductionsRequested({
       take: itemsPerPage,
     });
 
+  const pendingApprovalCount = await prisma.introduction.count({
+    where: {
+      facilitatorId: user.id,
+      status: IntroStates["pending approval"],
+    },
+  });
+
+  const pendingCreditsCount = await prisma.introduction.count({
+    where: {
+      requesterId: user.id,
+      status: IntroStates["pending credits"],
+    },
+  });
+
   let emails = [
     ...new Set(
       introsSent.concat(introsReceived).reduce<string[]>((acc, intro) => {
@@ -82,7 +97,9 @@ export default async function IntroductionsRequested({
     <>
       <IntroListTabs
         introsSent={introsSent}
+        pendingCreditsCount={pendingCreditsCount}
         introsReceived={introsReceived}
+        pendingApprovalCount={pendingApprovalCount}
         user={user}
         emailToProfile={emailToProfile}
         companyUrlToProfile={companyUrlToProfile}

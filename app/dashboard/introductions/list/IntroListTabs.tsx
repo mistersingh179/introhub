@@ -7,11 +7,13 @@ import {
   CompanyUrlToProfile,
   EmailToProfile,
 } from "@/services/getEmailAndCompanyUrlProfiles";
-import {usePathname, useSearchParams} from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 type IntroListTabsProps = {
   introsSent: IntroWithContactFacilitatorAndRequester[];
+  pendingCreditsCount: number;
   introsReceived: IntroWithContactFacilitatorAndRequester[];
+  pendingApprovalCount: number;
   user: User;
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
@@ -23,23 +25,34 @@ const IntroListTabs = (props: IntroListTabsProps) => {
     user,
     emailToProfile,
     companyUrlToProfile,
+    pendingApprovalCount,
+    pendingCreditsCount,
   } = props;
   const searchParams = useSearchParams();
-  const pathname = usePathname()
+  const pathname = usePathname();
   const selectedTab = searchParams.get("selectedTab") ?? "received";
 
   const tabChangeHandler = (newValue: string) => {
     const updatedSearchParams = new URLSearchParams(searchParams);
     updatedSearchParams.set("selectedTab", newValue);
-    const updatedUrl = `${pathname}?${updatedSearchParams.toString()}`
+    const updatedUrl = `${pathname}?${updatedSearchParams.toString()}`;
     history.replaceState({}, "", updatedUrl);
-  }
+  };
 
   return (
-    <Tabs onValueChange={tabChangeHandler} defaultValue={selectedTab} className={"mt-4"}>
+    <Tabs
+      onValueChange={tabChangeHandler}
+      defaultValue={selectedTab}
+      className={"mt-4"}
+    >
       <TabsList>
-        <TabsTrigger value="sent">Intros Sent</TabsTrigger>
-        <TabsTrigger value="received">Intros Received</TabsTrigger>
+        <TabsTrigger value="sent">
+          Intros Sent {pendingCreditsCount ? `(${pendingCreditsCount})` : ""}
+        </TabsTrigger>
+        <TabsTrigger value="received">
+          Intros Received{" "}
+          {pendingApprovalCount ? `(${pendingApprovalCount})` : ""}
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="sent">
         <IntroTable
