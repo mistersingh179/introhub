@@ -1,9 +1,20 @@
 import prisma from "@/prismaClient";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {buildS3ImageUrl} from "@/lib/url";
+import { buildS3ImageUrl } from "@/lib/url";
 import Link from "next/link";
-import {SquarePen} from "lucide-react";
-import {Button} from "@/components/ui/button";
+import { ExternalLink, SquarePen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import getEmailAndCompanyUrlProfiles, {
+  CompanyProfileWithCategories,
+} from "@/services/getEmailAndCompanyUrlProfiles";
+import {
+  CompanyBox,
+  getProfiles,
+  ProspectBox,
+} from "@/app/dashboard/introductions/list/IntroTable";
+import { Badge } from "@/components/ui/badge";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
 
 export default async function ShowContact({
   params,
@@ -12,65 +23,135 @@ export default async function ShowContact({
     id: string;
   };
 }) {
+  const session = (await auth()) as Session;
+  const user = await prisma.user.findFirstOrThrow({
+    where: {
+      email: session.user?.email ?? "",
+    },
+  });
   const { id } = params;
-  console.log("id: ", id);
   const contact = await prisma.contact.findFirstOrThrow({
     where: { id },
   });
-  console.log("contact: ", contact);
-  const personProfile = await prisma.personProfile.findFirstOrThrow({
-    where: {
-      email: contact.email,
-    },
-    include: {
-      personExperiences: true,
-    },
-  });
-  console.log("personProfile: ", personProfile);
-  console.log(
-    personProfile.personExperiences.map((pe) => pe.companyLinkedInUrl),
+  const email = contact.email;
+  const { emailToProfile, companyUrlToProfile } =
+    await getEmailAndCompanyUrlProfiles([email]);
+  const { personExp, companyProfile, personProfile } = getProfiles(
+    email,
+    emailToProfile,
+    companyUrlToProfile,
   );
-
-  const companyProfiles = await prisma.companyProfile.findMany({
-    where: {
-      linkedInUrl: {
-        in: personProfile.personExperiences.map((pe) => pe.companyLinkedInUrl),
-      },
-    },
-    include: {
-      categories: {
-        include: {
-          category: true,
-        },
-      },
-    },
-  });
-  console.dir(companyProfiles, { depth: 4 });
+  const categoryNames = getCategoryNames(companyProfile);
   return (
     <>
-      <h1 className={"text-2xl my-2"}>Show Prospect</h1>
-      <div className={'flex flex-row gap-8'}>
-        <Avatar>
-          <AvatarImage src={buildS3ImageUrl('avatar', personProfile.email)} title={'X'} />
-          <AvatarFallback>X</AvatarFallback>
-        </Avatar>
-        <Avatar>
-          <AvatarImage src={buildS3ImageUrl('logo', companyProfiles?.[0]?.website ?? "")} title={'X'} />
-          <AvatarFallback>X</AvatarFallback>
-        </Avatar>
-        <Button asChild>
-          <Link href={`/dashboard/introductions/create/${id}`}>
-            Create Intro
-            <SquarePen size={18} className={"ml-2"} />
-          </Link>
-        </Button>
-      </div>
-      <div className={"whitespace-pre-wrap bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-2"}>
-        {JSON.stringify(personProfile, null, 2)}
-      </div>
-      <div className={"whitespace-pre-wrap bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-2"}>
-        {JSON.stringify(companyProfiles, null, 2)}
+      <div className={"flex flex-col gap-4 mt-6"}>
+        <div className={"flex flex-row gap-8 items-center"}>
+          <h1 className={"text-2xl my-2"}>Prospect Profile</h1>
+          <ShowChildren showIt={contact.userId !== user.id}>
+            <Button asChild className={"max-w-96"}>
+              <Link href={`/dashboard/introductions/create/${id}`}>
+                Create Intro
+                <SquarePen size={18} className={"ml-2"} />
+              </Link>
+            </Button>
+          </ShowChildren>
+        </div>
+        <ProspectBox
+          contact={contact}
+          personProfile={personProfile}
+          personExp={personExp}
+        />
+        <div className={"flex flex-row gap-4"}>
+          <div>LinkedIn Url:</div>
+          <LinkWithExternalIcon href={personProfile.linkedInUrl!} />
+        </div>
+        <CompanyBox companyProfile={companyProfile} personExp={personExp} />
+        <div className={"flex flex-row gap-4"}>
+          <div>LinkedIn Url:</div>
+          <LinkWithExternalIcon href={personExp.companyLinkedInUrl} />
+        </div>
+
+        <div className={"flex flex-row gap-4"}>
+          <div>Job Description:</div>
+          <div>{personExp.jobDescription}</div>
+        </div>
+
+        <div className={"flex flex-row gap-4"}>
+          <div>Website:</div>
+          <div>
+            <LinkWithExternalIcon href={companyProfile.website!} />
+          </div>
+        </div>
+
+        <div className={"flex flex-row gap-4"}>
+          <div>Size Range:</div>
+          <div>
+            {companyProfile.sizeFrom} - {companyProfile.sizeTo}
+          </div>
+        </div>
+
+        <div className={"flex flex-row gap-4"}>
+          <div>Size:</div>
+          <div>{companyProfile.size}</div>
+        </div>
+
+        <div className={"flex flex-row gap-4"}>
+          <div>Location:</div>
+          <div>
+            {personProfile.city} {personProfile.state} {personProfile.country}
+          </div>
+        </div>
+
+        <div className={"flex flex-row gap-4"}>
+          <div>Industry:</div>
+          <div>{companyProfile.industry}</div>
+        </div>
+
+        <ShowChildren showIt={!!companyProfile.foundedYear}>
+          <div className={"flex flex-row gap-4"}>
+            <div>Founded Year:</div>
+            <div>{companyProfile.foundedYear}</div>
+          </div>
+        </ShowChildren>
+
+        <ShowChildren showIt={categoryNames.length > 0}>
+          <div className={"flex flex-row gap-4"}>
+            <div>Company Categories:</div>
+            <div className={"space-x-2"}>
+              {categoryNames.map((x) => (
+                <Badge key={"x"}>{x}</Badge>
+              ))}
+            </div>
+          </div>
+        </ShowChildren>
       </div>
     </>
   );
 }
+
+type ShowChildrenProps = {
+  showIt: boolean;
+  children: React.ReactNode;
+};
+const ShowChildren = (props: ShowChildrenProps) => {
+  const { showIt, children } = props;
+  if (showIt) {
+    return children;
+  }
+  return <></>;
+};
+
+const LinkWithExternalIcon = ({ href }: { href: string }) => {
+  return (
+    <Link href={href} target={"_blank"}>
+      <div className={"flex flex-row gap-2 items-center"}>
+        <div>{href}</div>
+        <ExternalLink className={"inline"} size={18} />
+      </div>
+    </Link>
+  );
+};
+
+const getCategoryNames = (companyProfile: CompanyProfileWithCategories) => {
+  return companyProfile.categories.map((x) => x.category.name);
+};
