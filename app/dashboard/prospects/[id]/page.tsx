@@ -9,12 +9,15 @@ import getEmailAndCompanyUrlProfiles, {
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import {
   CompanyBox,
+  getCategoryNames,
   getProfiles,
   ProspectBox,
 } from "@/app/dashboard/introductions/list/IntroTable";
 import { Badge } from "@/components/ui/badge";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
+import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
+import ShowChildren from "@/components/ShowChildren";
 
 export default async function ShowContact({
   params,
@@ -60,23 +63,16 @@ export default async function ShowContact({
           contact={contact}
           personProfile={personProfile}
           personExp={personExp}
+          showLinkedInUrls={true}
         />
-        <div className={"flex flex-row gap-4"}>
-          <div>LinkedIn Url:</div>
-          <LinkWithExternalIcon href={personProfile.linkedInUrl!} />
-        </div>
-        <CompanyBox companyProfile={companyProfile} personExp={personExp} />
-        <div className={"flex flex-row gap-4"}>
-          <div>LinkedIn Url:</div>
-          <LinkWithExternalIcon href={personExp.companyLinkedInUrl} />
-        </div>
+        <CompanyBox companyProfile={companyProfile} personExp={personExp} showLinkedInUrls={true} />
 
         <div className={"flex flex-row gap-4"}>
           <div>Job Description:</div>
           <div>{personExp.jobDescription}</div>
         </div>
 
-        <div className={"flex flex-row gap-4"}>
+        <div className={"flex flex-row gap-4 items-center"}>
           <div>Website:</div>
           <div>
             <LinkWithExternalIcon href={companyProfile.website!} />
@@ -128,30 +124,3 @@ export default async function ShowContact({
     </>
   );
 }
-
-type ShowChildrenProps = {
-  showIt: boolean;
-  children: React.ReactNode;
-};
-const ShowChildren = (props: ShowChildrenProps) => {
-  const { showIt, children } = props;
-  if (showIt) {
-    return children;
-  }
-  return <></>;
-};
-
-const LinkWithExternalIcon = ({ href }: { href: string }) => {
-  return (
-    <Link href={href} target={"_blank"}>
-      <div className={"flex flex-row gap-2 items-center"}>
-        <div>{href}</div>
-        <ExternalLink className={"inline"} size={18} />
-      </div>
-    </Link>
-  );
-};
-
-const getCategoryNames = (companyProfile: CompanyProfileWithCategories) => {
-  return companyProfile.categories.map((x) => x.category.name);
-};
