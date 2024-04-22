@@ -8,7 +8,7 @@ import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/Submi
 import ErrorMessage from "@/app/dashboard/introductions/create/[contactId]/ErrorMessage";
 import createIntroductionAction from "@/app/actions/introductions/createIntroductionAction";
 import { TypographyMuted } from "@/components/TypographyMuted";
-import { CompanyProfile, PersonExperience, User } from "@prisma/client";
+import {CompanyProfile, PersonExperience, PersonProfile, User} from "@prisma/client";
 import {
   ContactWithUser,
   PersonProfileWithExperiences,
@@ -22,7 +22,7 @@ export default function CreateIntroductionForm({
   user,
 }: {
   contact: ContactWithUser;
-  personProfile: PersonProfileWithExperiences;
+  personProfile: PersonProfile;
   personExperience: PersonExperience;
   companyProfile: CompanyProfile;
   user: User;

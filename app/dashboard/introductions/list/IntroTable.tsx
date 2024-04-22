@@ -39,6 +39,8 @@ import IntroOverviewWithApprovingSheet from "@/app/dashboard/introductions/list/
 import Link from "next/link";
 import getClosestPersonExp from "@/services/helpers/getClosestPersonExp";
 import IntroOverviewWithSavingSheet from "./IntroOverviewWithSavingSheet";
+import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
+import ShowChildren from "@/components/ShowChildren";
 
 const IntroTable = ({
   introductions,
@@ -232,10 +234,12 @@ export const ProspectBox = ({
   contact,
   personProfile,
   personExp,
+  showLinkedInUrls = false,
 }: {
   contact: Contact;
   personProfile: PersonProfile;
   personExp: PersonExperience;
+  showLinkedInUrls?: boolean;
 }) => {
   return (
     <div className={"flex flex-row gap-4 items-center"}>
@@ -247,6 +251,9 @@ export const ProspectBox = ({
           </Link>{" "}
         </div>
         <p className={"text-muted-foreground"}>{personExp.jobTitle} </p>
+        <ShowChildren showIt={showLinkedInUrls}>
+          <LinkWithExternalIcon href={personProfile.linkedInUrl!} />
+        </ShowChildren>
       </div>
     </div>
   );
@@ -255,9 +262,11 @@ export const ProspectBox = ({
 export const CompanyBox = ({
   companyProfile,
   personExp,
+  showLinkedInUrls = false,
 }: {
   companyProfile: CompanyProfile;
   personExp: PersonExperience;
+  showLinkedInUrls?: boolean;
 }) => {
   return (
     <div className={"flex flex-row gap-4 items-center"}>
@@ -265,6 +274,9 @@ export const CompanyBox = ({
       <div className={"flex flex-col gap-2"}>
         <div>{personExp.companyName} </div>
         <p className={"text-muted-foreground"}>{companyProfile.industry}</p>
+        <ShowChildren showIt={showLinkedInUrls}>
+          <LinkWithExternalIcon href={personExp.companyLinkedInUrl} />
+        </ShowChildren>
       </div>
     </div>
   );
@@ -316,6 +328,12 @@ export const getAllProfiles = (
     companyUrlToProfile,
   );
   return { contactProfiles, requestProfiles, facilitatorProfiles };
+};
+
+export const getCategoryNames = (
+  companyProfile: CompanyProfileWithCategories,
+) => {
+  return companyProfile.categories.map((x) => x.category.name);
 };
 
 const IntroRow = ({

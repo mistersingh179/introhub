@@ -1,14 +1,15 @@
 import prisma from "@/prismaClient";
 import CreateIntroductionForm from "@/app/dashboard/introductions/create/[contactId]/CreatIntroductionForm";
+import { Contact, PersonExperience, PersonProfile, User } from "@prisma/client";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
+import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import {
-  CompanyProfile,
-  Contact,
-  PersonExperience,
-  PersonProfile,
-  User,
-} from "@prisma/client";
-import {auth} from "@/auth";
-import {Session} from "next-auth";
+  CompanyBox,
+  getCategoryNames,
+  getProfiles,
+  ProspectBox,
+} from "@/app/dashboard/introductions/list/IntroTable";
 
 export type ContactWithUser = Contact & { user: User };
 export type PersonProfileWithExperiences = PersonProfile & {
@@ -36,36 +37,34 @@ export default async function Introductions({
       user: true,
     },
   });
-  const personProfile: PersonProfileWithExperiences =
-    await prisma.personProfile.findFirstOrThrow({
-      where: {
-        email: contact.email,
-      },
-      include: {
-        personExperiences: true,
-      },
-    });
-  const personExperience: PersonExperience = personProfile.personExperiences[0];
-
-  const companyProfile: CompanyProfile =
-    await prisma.companyProfile.findFirstOrThrow({
-      where: {
-        linkedInUrl: personExperience?.companyLinkedInUrl,
-      },
-    });
+  const email = contact.email;
+  const { emailToProfile, companyUrlToProfile } =
+    await getEmailAndCompanyUrlProfiles([email]);
+  const { personExp, companyProfile, personProfile } = getProfiles(
+    email,
+    emailToProfile,
+    companyUrlToProfile,
+  );
+  const categoryNames = getCategoryNames(companyProfile);
 
   return (
-    <>
-      <h1 className={"text-2xl my-4"}>
-        Create an Introduction – {contact.email}
-      </h1>
+    <div className={"flex flex-col gap-4 my-4"}>
+      <h1 className={"text-2xl"}>Create an Introduction</h1>
+      <div className={"flex flex-row gap-8"}>
+        <ProspectBox
+          contact={contact}
+          personProfile={personProfile}
+          personExp={personExp}
+        />
+        <CompanyBox companyProfile={companyProfile} personExp={personExp} />
+      </div>
       <CreateIntroductionForm
         contact={contact}
         personProfile={personProfile}
-        personExperience={personExperience}
+        personExperience={personExp}
         companyProfile={companyProfile}
         user={user}
       />
-    </>
+    </div>
   );
 }
