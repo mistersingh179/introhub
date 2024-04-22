@@ -27,6 +27,7 @@ import {
 import { IntroStatesKey, IntroStatesWithMeaning } from "@/lib/introStates";
 import { Separator } from "@/components/ui/separator";
 import {
+  CompanyProfileWithCategories,
   CompanyUrlToProfile,
   EmailToProfile,
 } from "@/services/getEmailAndCompanyUrlProfiles";
@@ -37,10 +38,7 @@ import { Badge } from "@/components/ui/badge";
 import IntroOverviewWithApprovingSheet from "@/app/dashboard/introductions/list/IntroOverviewWithApprovingSheet";
 import Link from "next/link";
 import getClosestPersonExp from "@/services/helpers/getClosestPersonExp";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import IntroOverviewWithSavingSheet from "./IntroOverviewWithSavingSheet";
-import { SlidersHorizontal } from "lucide-react";
 
 const IntroTable = ({
   introductions,
@@ -275,7 +273,7 @@ export const CompanyBox = ({
 export type Profiles = {
   personProfile: PersonProfile;
   personExp: PersonExperience;
-  companyProfile: CompanyProfile;
+  companyProfile: CompanyProfileWithCategories;
 };
 
 export const getProfiles = (
