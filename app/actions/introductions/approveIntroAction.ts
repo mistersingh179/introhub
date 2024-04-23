@@ -74,7 +74,10 @@ export default async function approveIntroAction(
       from: introduction.facilitator.email!,
       cc: introduction.requester.email!,
       to: introduction.contact.email,
+      intro: introduction,
     };
+    // todo - extract the actual pure sender as a service which is not a job,
+    // todo - sendIntroEmail job should use service & update intro & save email id/thread-id
     const jobObj = await MediumQueue.add("sendEmail", sendEmailInput);
     const { name, id } = jobObj;
     console.log("scheduled sendEmail job: ", name, id);
