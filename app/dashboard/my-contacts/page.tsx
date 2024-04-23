@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Contact } from "@prisma/client";
+import { Contact, Prisma } from "@prisma/client";
 import MyPagination from "@/components/MyPagination";
 import Search from "@/components/Search";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
@@ -21,6 +21,9 @@ import {
   Profiles,
   ProspectBox,
 } from "@/app/dashboard/introductions/list/IntroTable";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { UserPlus } from "lucide-react";
 
 export default async function MyContacts({
   searchParams,
@@ -36,19 +39,26 @@ export default async function MyContacts({
   const recordsToSkip = (currentPage - 1) * itemsPerPage;
 
   const session = (await auth()) as Session;
-  const contacts: Contact[] = await prisma.contact.findMany({
-    where: {
-      user: {
-        email: session.user?.email || "",
-      },
-      email: {
-        contains: query,
-        mode: "insensitive",
-      },
-    },
-    take: itemsPerPage,
-    skip: recordsToSkip,
-  });
+
+  const emailFilterSql = query
+    ? Prisma.sql`and C.email ilike ${"%" + query + "%"}`
+    : Prisma.sql``;
+
+  const sql = Prisma.sql`
+  select distinct on (C.email) C.* from "Contact" C
+                    inner join public."User" U on U.id = C."userId"
+                    inner join public."PersonProfile" PP on C.email = PP.email and PP."linkedInUrl" is not null
+                    inner join public."PersonExperience" PE on PP.id = PE."personProfileId"
+                    inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
+  where U.email=${session.user?.email ?? ""} ${emailFilterSql}
+  order by email ASC, "receivedCount" DESC
+  offset ${recordsToSkip} limit ${itemsPerPage};`;
+
+  console.log(sql.text, sql.values);
+  const contacts = await prisma.$queryRaw<Contact[]>(sql);
+
+  console.log("contacts: ", contacts);
+
   let emails = contacts.reduce<string[]>((acc, contact) => {
     acc.push(contact.email);
     return acc;
@@ -58,7 +68,15 @@ export default async function MyContacts({
     await getEmailAndCompanyUrlProfiles(emails);
   return (
     <>
-      <h1 className={"text-2xl my-4"}>My Contacts</h1>
+      <div className={"flex flex-row gap-8 items-center"}>
+        <h1 className={"text-2xl my-4"}>My Contacts</h1>
+        <Button asChild className={"max-w-96"}>
+          <Link href={`/dashboard/my-contacts/create`}>
+            Manually Add Contact
+            <UserPlus size={18} className={"ml-2"} />
+          </Link>
+        </Button>
+      </div>
       <Search placeholder={"filter by email here"} />
       <Table>
         <TableCaption>Your Contacts</TableCaption>
