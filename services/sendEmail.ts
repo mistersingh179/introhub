@@ -3,7 +3,8 @@ import getGmailObject from "@/services/helpers/getGmailObject";
 import { gmail_v1 } from "googleapis";
 import Gmail = gmail_v1.Gmail;
 import Schema$Message = gmail_v1.Schema$Message;
-import { Account } from "@prisma/client";
+import { Account, Introduction } from "@prisma/client";
+import { IntroStates } from "@/lib/introStates";
 
 export type SendEmailInput = {
   account: Account;
@@ -12,17 +13,20 @@ export type SendEmailInput = {
   cc: string;
   subject: string;
   body: string;
+  intro?: Introduction;
 };
 
 type SendEmail = (input: SendEmailInput) => Promise<Schema$Message>;
 const sendEmail: SendEmail = async (input) => {
-  const { account, from, to, cc, subject, body } = input;
+  const { account, from, to, cc, subject, body, intro } = input;
 
   const gmail = await getGmailObject(account);
   const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString("base64")}?=`;
   const htmlBody = body.replaceAll("\r\n", "<br>");
-  const toFixed = process.env.NODE_ENV === 'production' ? to : "mistersingh179@gmail.com";
-  const ccFixed = process.env.NODE_ENV === 'production' ? cc : "mistersingh179@gmail.com";
+  const toFixed =
+    process.env.NODE_ENV === "production" ? to : "mistersingh179@gmail.com";
+  const ccFixed =
+    process.env.NODE_ENV === "production" ? cc : "mistersingh179@gmail.com";
 
   const messageParts = [
     `From: ${from}`,
@@ -56,6 +60,16 @@ const sendEmail: SendEmail = async (input) => {
     },
   });
   console.log("message sent: ", res.data);
+  if (intro && res.data.id) {
+    await prisma.introduction.update({
+      where: {
+        id: intro.id,
+      },
+      data: {
+        status: IntroStates["email sent"],
+      },
+    });
+  }
   return res.data;
 };
 
