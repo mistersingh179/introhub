@@ -14,6 +14,7 @@ import {
 import { Contact, Message } from "@prisma/client";
 import MyPagination from "@/components/MyPagination";
 import Search from "@/components/Search";
+import {lightFormat} from "date-fns";
 
 export default async function Emails({
   searchParams,
@@ -34,20 +35,22 @@ export default async function Emails({
       user: {
         email: session.user?.email || "",
       },
-      OR: query ? [
-        {
-          fromAddress: {
-            contains: query,
-            mode: "insensitive"
-          },
-        },
-        {
-          toAddress: {
-            contains: query,
-            mode: "insensitive"
-          },
-        },
-      ] : undefined,
+      OR: query
+        ? [
+            {
+              fromAddress: {
+                contains: query,
+                mode: "insensitive",
+              },
+            },
+            {
+              toAddress: {
+                contains: query,
+                mode: "insensitive",
+              },
+            },
+          ]
+        : undefined,
     },
     take: itemsPerPage,
     skip: recordsToSkip,
@@ -56,7 +59,7 @@ export default async function Emails({
     <>
       <h1 className={"text-2xl my-4"}>My Emails</h1>
       <Search placeholder={"filter by email here"} />
-      <Table>
+      <Table className={"table-fixed"}>
         <TableCaption>My Emails</TableCaption>
         <TableHeader>
           <TableRow>
@@ -64,7 +67,6 @@ export default async function Emails({
             <TableHead>Delivered To</TableHead>
             <TableHead>To</TableHead>
             <TableHead>Reply-To</TableHead>
-            <TableHead>Subject</TableHead>
             <TableHead>Received At</TableHead>
           </TableRow>
         </TableHeader>
@@ -75,7 +77,7 @@ export default async function Emails({
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={6}>
+            <TableCell colSpan={5}>
               <MyPagination />
             </TableCell>
           </TableRow>
@@ -93,13 +95,40 @@ const MessageRow = (props: MessageProps) => {
   return (
     <>
       <TableRow key={message.gmailMessageId}>
-        <TableCell className={"p-2"}>{message.fromAddress}</TableCell>
-        <TableCell className={"p-2"}>{message.deliveredTo}</TableCell>
-        <TableCell className={"p-2"}>{message.toAddress}</TableCell>
-        <TableCell className={"p-2"}>{message.replyToAddress}</TableCell>
-        <TableCell className={"p-2"}>{message.subject}</TableCell>
-        <TableCell className={"p-2"}>
-          {message.receivedAt?.toString()}
+        <TableCell
+          className={
+            "p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"
+          }
+        >
+          {message.fromAddress}
+        </TableCell>
+        <TableCell
+          className={
+            "p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"
+          }
+        >
+          {message.deliveredTo}
+        </TableCell>
+        <TableCell
+          className={
+            "p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"
+          }
+        >
+          {message.toAddress}
+        </TableCell>
+        <TableCell
+          className={
+            "p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"
+          }
+        >
+          {message.replyToAddress}
+        </TableCell>
+        <TableCell
+          className={
+            "p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"
+          }
+        >
+          {message.receivedAt && lightFormat(message.receivedAt, 'yyyy-MM-dd')}
         </TableCell>
       </TableRow>
     </>
