@@ -55,6 +55,7 @@ export function FancyMultiSelect(props: FancyMultiSelectProps) {
     <Command
       onKeyDown={handleKeyDown}
       className="overflow-visible bg-transparent"
+      filter={(val, search) => (val.includes(search) ? 1 : 0)}
     >
       <div className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
         <div className="flex gap-1 flex-wrap">
