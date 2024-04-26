@@ -4,7 +4,12 @@ import * as React from "react";
 import { X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
 import { FancyOption } from "@/components/FancyOption";
 
@@ -55,7 +60,7 @@ export function FancyMultiSelect(props: FancyMultiSelectProps) {
     <Command
       onKeyDown={handleKeyDown}
       className="overflow-visible bg-transparent"
-      filter={(val, search) => (val.includes(search) ? 1 : 0)}
+      // filter={(val, search) => (val.includes(search) ? 1 : 0)}
     >
       <div className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
         <div className="flex gap-1 flex-wrap">
@@ -96,26 +101,28 @@ export function FancyMultiSelect(props: FancyMultiSelectProps) {
       <div className="relative mt-2">
         {open && selectables.length > 0 ? (
           <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
-            <CommandGroup className="h-full overflow-auto">
-              {selectables.map((framework) => {
-                return (
-                  <CommandItem
-                    key={framework.value}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onSelect={(value) => {
-                      setInputValue("");
-                      setSelected((prev) => [...prev, framework]);
-                    }}
-                    className={"cursor-pointer"}
-                  >
-                    {framework.label}
-                  </CommandItem>
-                );
-              })}
-            </CommandGroup>
+            <CommandList>
+              <CommandGroup className="h-full overflow-auto">
+                {selectables.map((framework) => {
+                  return (
+                    <CommandItem
+                      key={framework.value}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      onSelect={(value) => {
+                        setInputValue("");
+                        setSelected((prev) => [...prev, framework]);
+                      }}
+                      className={"cursor-pointer"}
+                    >
+                      {framework.label}
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+            </CommandList>
           </div>
         ) : null}
       </div>
