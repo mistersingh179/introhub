@@ -65,7 +65,7 @@ cc: ${requesterName}, please take it from here.`;
               defaultValue={defaultMessageForFacilitator}
             />
             <TypographyMuted className={"text-center"}>
-              Explain the value you see in being introduced to {contact.email},
+              Explain the value you see in being introduced to {contactName},
               and how you might offer value to them. Be concise and clear.
             </TypographyMuted>
           </div>
@@ -80,7 +80,7 @@ cc: ${requesterName}, please take it from here.`;
             />
             <TypographyMuted className={"text-center"}>
               Ghost write an introduction from the Facilitator to the Prospect.
-              Highlight what makes your request relevant to {contact.email}.
+              Highlight what makes your request relevant to {contactName}.
               Think about what you can offer or discuss that aligns with their
               interests.
             </TypographyMuted>
