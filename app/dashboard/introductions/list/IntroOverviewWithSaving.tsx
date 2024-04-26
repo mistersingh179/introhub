@@ -8,20 +8,15 @@ import {
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import {
   CompanyBox,
-  FacilitatorBox,
   getAllProfiles,
   IntroStatusBadge,
   ProspectBox,
-  RequesterBox,
 } from "@/app/dashboard/introductions/list/IntroTable";
-import IntroApproveWithMessageForm from "@/app/dashboard/introductions/list/IntroApproveWithMessageForm";
 import React, { Dispatch, SetStateAction } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/textarea";
-import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
 import IntroUpdateWithMessagesForm from "@/app/dashboard/introductions/list/IntroUpdateWithMessagesForm";
 import IntroCancelForm from "@/app/dashboard/introductions/list/IntroCancelForm";
-import { Button } from "@/components/ui/button";
+import FacilitatorBox from "@/components/FacilitatorBox";
 
 type IntroOverviewWithSavingProps = {
   user: User;

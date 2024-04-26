@@ -41,6 +41,7 @@ import getClosestPersonExp from "@/services/helpers/getClosestPersonExp";
 import IntroOverviewWithSavingSheet from "./IntroOverviewWithSavingSheet";
 import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
 import ShowChildren from "@/components/ShowChildren";
+import FacilitatorBox from "@/components/FacilitatorBox";
 
 const IntroTable = ({
   introductions,
@@ -210,25 +211,6 @@ export const RequesterBox = ({
   );
 };
 
-export const FacilitatorBox = ({
-  user,
-  personExp,
-}: {
-  user: User;
-  personExp: PersonExperience;
-}) => {
-  return (
-    <div className={"flex flex-row gap-2 items-center"}>
-      <UserAvatar user={user} />
-      <div className={"flex flex-col gap-2"}>
-        <div>{user.name}</div>
-        {personExp.jobTitle && (
-          <p className={"text-muted-foreground"}>{personExp.jobTitle} </p>
-        )}
-      </div>
-    </div>
-  );
-};
 
 export const ProspectBox = ({
   contact,
