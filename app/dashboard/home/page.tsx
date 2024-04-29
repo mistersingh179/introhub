@@ -14,22 +14,31 @@ export default async function Home() {
     where: {
       email: session.user?.email ?? "",
     },
+    include: {
+      accounts: true,
+    },
   });
-  const contactStats = await getContactStats();
+  // const contactStats = await getContactStats();
 
   return (
     <>
       <div className={"flex flex-row items-center gap-2"}>
         <h1 className={"text-2xl"}>Home</h1>
-        <RefreshStatsForm />
+        {/*<RefreshStatsForm />*/}
       </div>
-      <pre
-        className={
-          "bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-4"
-        }
-      >
-        {JSON.stringify(contactStats, null, 2)}
-      </pre>
+      <div className={"flex flex-row gap-12"}>
+        <div>Scope :</div>
+        <ul className={'list-disc'}>
+          {user.accounts[0].scope?.split(" ").map((x) => <li key={x}>{x}</li>)}
+        </ul>
+      </div>
+      {/*<pre*/}
+      {/*  className={*/}
+      {/*    "bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-4 break-all whitespace-pre-wrap"*/}
+      {/*  }*/}
+      {/*>*/}
+      {/*  {JSON.stringify(user.accounts[0].scope, null, 2)}*/}
+      {/*</pre>*/}
     </>
   );
 }
