@@ -7,8 +7,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 // @ts-ignore
 import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
 import * as React from "react";
-import getContactStats from "@/services/getContactStats";
-import RefreshStatsForm from "@/app/dashboard/home/RefreshStatsForm";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -32,12 +30,22 @@ export default async function Home() {
         {/*<RefreshStatsForm />*/}
       </div>
       <div className={"flex flex-row gap-12"}>
-        <div>Scope :</div>
+        <div className={"min-w-36"}>Scope :</div>
         <ul className={"list-disc"}>
           {scopes.map((x) => (
             <li key={x}>{x}</li>
           ))}
         </ul>
+      </div>
+      <div className={"flex flex-row gap-12"}>
+        <div className={"min-w-36"}>Name / Email :</div>
+        <div>
+          {user.name} / {user.email}
+        </div>
+      </div>
+      <div className={"flex flex-row gap-12"}>
+        <div className={"min-w-36"}>Access Token :</div>
+        <div>{user.accounts[0].access_token}</div>
       </div>
 
       {foundSendScope && (

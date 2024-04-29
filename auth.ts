@@ -5,14 +5,17 @@ import prisma from "@/prismaClient";
 
 const makeOnboardCall = async (userId: string) => {
   console.log("going to make fetch call to onboard user: ", userId);
-  const resp = await fetch(`${process.env.BASE_API_URL}/api/users/${userId}/onboard`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${process.env.INTERNAL_API_SECRET}`,
-    }
-  });
+  const resp = await fetch(
+    `${process.env.BASE_API_URL}/api/users/${userId}/onboard`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${process.env.INTERNAL_API_SECRET}`,
+      },
+    },
+  );
   console.log(await resp.json());
 };
 
@@ -55,9 +58,9 @@ export const {
     async jwt(params) {
       console.log("*** in jwt callback: ", params);
       const { token, trigger, user } = params;
-      if(trigger === "signUp"){
+      if (trigger === "signUp") {
         console.log("user has just signed up: ", user);
-        await makeOnboardCall(user.id!)
+        await makeOnboardCall(user.id!);
       }
       return token;
     },
@@ -66,23 +69,31 @@ export const {
     signIn: async (message) => {
       console.log("*** got signIn event: ", message);
       const { user, account, profile } = message;
-      if (
-        account?.scope &&
-        account?.refresh_token &&
-        account?.provider &&
-        account?.providerAccountId
-      ) {
-        console.log("updating account as we have refresh_token");
-        await prisma.account.update({
+
+      if (account?.provider && account?.providerAccountId) {
+        console.log("*** updating user & account upon sign-in ***");
+
+        const { userId } = await prisma.account.update({
           data: {
-            scope: account.scope,
-            refresh_token: account.refresh_token,
+            scope: account?.scope,
+            refresh_token: account?.refresh_token,
+            access_token: account?.access_token,
           },
           where: {
             provider_providerAccountId: {
               provider: account.provider,
               providerAccountId: account.providerAccountId,
             },
+          },
+        });
+
+        await prisma.user.update({
+          data: {
+            email: profile?.email,
+            image: profile?.picture,
+          },
+          where: {
+            id: userId,
           },
         });
       }
