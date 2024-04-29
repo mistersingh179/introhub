@@ -67,6 +67,7 @@ export const {
       console.log("*** got signIn event: ", message);
       const { user, account, profile } = message;
       if (
+        account?.scope &&
         account?.refresh_token &&
         account?.provider &&
         account?.providerAccountId
@@ -74,6 +75,7 @@ export const {
         console.log("updating account as we have refresh_token");
         await prisma.account.update({
           data: {
+            scope: account.scope,
             refresh_token: account.refresh_token,
           },
           where: {

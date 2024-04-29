@@ -1,5 +1,6 @@
 import prisma from "../prismaClient";
 import { Contact } from "@prisma/client";
+import getGmailObject from "@/services/helpers/getGmailObject";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -11,14 +12,22 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-  const contacts: Contact[] = await prisma.contact.findMany({
+  console.log("Hello world");
+  const account = await prisma.account.findFirstOrThrow({
     where: {
       user: {
-        email: "sandeep@brandweaver.ai" || "",
+        name: {
+          contains: "sandeep",
+          mode: "insensitive",
+        },
       },
     },
   });
-  console.log(contacts);
+  const gmail = await getGmailObject(account);
+  const profile = await gmail.users.getProfile({
+    userId: "me",
+  });
+  console.log("profile ", profile);
 })();
 
 export {};
