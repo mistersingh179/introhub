@@ -13,9 +13,9 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-  console.log("Hello world !!!");
+  console.log("Hello world !!!!");
 
-  const email = "mistersingh179@gmail.com";
+  const email = "kytamal@gmail.com";
 
   let account = await prisma.account.findFirstOrThrow({
     where: {
