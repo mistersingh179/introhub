@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
 import * as React from "react";
 import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
+import OnBoardUserForm from "@/app/dashboard/home/OnBoardUserForm";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -24,6 +25,17 @@ export default async function Home() {
   const foundSendScope = !!scopes.find((val) => val === sendScope);
   // const contactStats = await getContactStats();
 
+  const emailsCount = await prisma.message.count({
+    where: {
+      userId: user.id,
+    },
+  });
+  const contactsCount = await prisma.contact.count({
+    where: {
+      userId: user.id,
+    },
+  });
+
   return (
     <div className={"flex flex-col gap-8"}>
       <div className={"flex flex-row items-center gap-2"}>
@@ -32,7 +44,7 @@ export default async function Home() {
       </div>
       {foundSendScope && (
         <Alert variant="default">
-          <Check className="h-8 w-8"/>
+          <Check className="h-8 w-8" />
           <AlertTitle className={"ml-8"}>Permissions Success</AlertTitle>
           <AlertDescription className={"ml-8"}>
             Send Permission was found. Good to go!
@@ -42,7 +54,7 @@ export default async function Home() {
 
       {!foundSendScope && (
         <Alert variant="destructive">
-          <AlertCircle className="h-8 w-8"/>
+          <AlertCircle className="h-8 w-8" />
           <AlertTitle className={"ml-8"}>Error</AlertTitle>
           <AlertDescription className={"ml-8"}>
             Unable to find Send Permission. You need to Log-out, and log back in
@@ -51,7 +63,9 @@ export default async function Home() {
         </Alert>
       )}
       <div className={"flex flex-row gap-12"}>
-        <div className={"min-w-36 flex flex-row gap-4 items-center"}>Scope : <RefreshScopesForm /> </div>
+        <div className={"min-w-36 flex flex-row gap-4 items-center"}>
+          Scope : <RefreshScopesForm />{" "}
+        </div>
         <ul className={"list-disc"}>
           {scopes.map((x) => (
             <li key={x}>{x}</li>
@@ -60,9 +74,7 @@ export default async function Home() {
       </div>
       <div className={"flex flex-row gap-12"}>
         <div className={"min-w-36"}>User Id :</div>
-        <div>
-          {user.id}
-        </div>
+        <div>{user.id}</div>
       </div>
       <div className={"flex flex-row gap-12"}>
         <div className={"min-w-36"}>Name / Email :</div>
@@ -70,6 +82,17 @@ export default async function Home() {
           {user.name} / {user.email}
         </div>
       </div>
+      <div className={"flex flex-row gap-12"}>
+        <div className={"min-w-36"}>Count:</div>
+        <ul className={"list-disc space-y-2"}>
+          <li>Contacts: {contactsCount}</li>
+          <li>Emails: {emailsCount}</li>
+          <li>
+            <OnBoardUserForm />
+          </li>
+        </ul>
+      </div>
+
       {/*<div className={"flex flex-row gap-12 items-center"}>*/}
       {/*  <div className={"min-w-36"}>Access Token :</div>*/}
       {/*  <div className={'break-all'}>{user.accounts[0].access_token}</div>*/}

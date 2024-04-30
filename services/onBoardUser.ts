@@ -37,7 +37,7 @@ const onBoardUser: OnBoardUser = async (input) => {
 
   // using delay to wait for the downloadMetaData job
   // using priority to run after downloadMetaData job
-  // downloadMetaData job is started by the downloadMessages Job
+  // downloadMetaData job is started internally by the downloadMessages Job
 
   // todo - use Queue#getJobs to ensure that downloadMetaData has finished
   const buildContactsJob = await MediumQueue.add("buildContacts", user, {
