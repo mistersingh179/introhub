@@ -43,7 +43,6 @@ const IntroListTabs = (props: IntroListTabsProps) => {
     <Tabs
       onValueChange={tabChangeHandler}
       defaultValue={selectedTab}
-      className={"mt-4"}
     >
       <TabsList>
         <TabsTrigger value="sent">

@@ -5,6 +5,7 @@ import { Contact, Introduction, User } from "@prisma/client";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import IntroListTabs from "@/app/dashboard/introductions/list/IntroListTabs";
 import { IntroStates } from "@/lib/introStates";
+import ScopeMissingMessage from "@/app/dashboard/home/ScopeMissingMessage";
 
 export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
@@ -94,7 +95,8 @@ export default async function IntroductionsRequested({
     await getEmailAndCompanyUrlProfiles(emails);
 
   return (
-    <>
+    <div className={"flex flex-col gap-4 mt-4"}>
+      <ScopeMissingMessage />
       <IntroListTabs
         introsSent={introsSent}
         pendingCreditsCount={pendingCreditsCount}
@@ -104,6 +106,6 @@ export default async function IntroductionsRequested({
         emailToProfile={emailToProfile}
         companyUrlToProfile={companyUrlToProfile}
       />
-    </>
+    </div>
   );
 }
