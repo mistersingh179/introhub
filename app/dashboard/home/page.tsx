@@ -70,10 +70,10 @@ export default async function Home() {
           {user.name} / {user.email}
         </div>
       </div>
-      <div className={"flex flex-row gap-12 items-center"}>
-        <div className={"min-w-36"}>Access Token :</div>
-        <div className={'break-all'}>{user.accounts[0].access_token}</div>
-      </div>
+      {/*<div className={"flex flex-row gap-12 items-center"}>*/}
+      {/*  <div className={"min-w-36"}>Access Token :</div>*/}
+      {/*  <div className={'break-all'}>{user.accounts[0].access_token}</div>*/}
+      {/*</div>*/}
 
       {/*<pre*/}
       {/*  className={*/}

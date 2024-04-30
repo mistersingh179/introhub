@@ -42,7 +42,7 @@ export default refreshScopes;
 
 if (require.main === module) {
   (async () => {
-    const scopes = await refreshScopes("clvl71yei0000gcenwb6m36zs");
+    const scopes = await refreshScopes("clv2snocc001ffat35omiomam");
     console.log("scopes: ", scopes.join(" "));
     process.exit(0);
   })();
