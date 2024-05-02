@@ -62,29 +62,29 @@ export default async function Home() {
           </AlertDescription>
         </Alert>
       )}
-      <div className={"flex flex-row gap-12"}>
+      <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36 flex flex-row gap-4 items-center"}>
           Scope : <RefreshScopesForm />{" "}
         </div>
-        <ul className={"list-disc"}>
+        <ul className={"list-disc ml-4"}>
           {scopes.map((x) => (
             <li key={x}>{x}</li>
           ))}
         </ul>
       </div>
-      <div className={"flex flex-row gap-12"}>
+      <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36"}>User Id :</div>
         <div>{user.id}</div>
       </div>
-      <div className={"flex flex-row gap-12"}>
+      <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36"}>Name / Email :</div>
         <div>
           {user.name} / {user.email}
         </div>
       </div>
-      <div className={"flex flex-row gap-12"}>
+      <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36"}>Count:</div>
-        <ul className={"list-disc space-y-2"}>
+        <ul className={"list-disc space-y-2 ml-4"}>
           <li>Contacts: {contactsCount}</li>
           <li>Emails: {emailsCount}</li>
           <li>
@@ -93,7 +93,7 @@ export default async function Home() {
         </ul>
       </div>
 
-      {/*<div className={"flex flex-row gap-12 items-center"}>*/}
+      {/*<div className={"flex flex-row gap-4 items-center"}>*/}
       {/*  <div className={"min-w-36"}>Access Token :</div>*/}
       {/*  <div className={'break-all'}>{user.accounts[0].access_token}</div>*/}
       {/*</div>*/}
