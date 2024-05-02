@@ -9,6 +9,11 @@ import refreshAccessToken from "@/services/helpers/refreshAccessToken";
 type GetGmailObject = (account: Account) => Promise<Gmail>;
 
 const getGmailObject: GetGmailObject = async (account: Account) => {
+  account = await prisma.account.findFirstOrThrow({
+    where: {
+      id: account.id,
+    },
+  });
   const expiresAt = fromUnixTime(account.expires_at!);
 
   if (isPast(expiresAt)) {
