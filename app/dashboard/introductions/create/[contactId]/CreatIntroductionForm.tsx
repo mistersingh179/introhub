@@ -55,8 +55,8 @@ cc: ${requesterName}, please take it from here.`;
         {errorMessage && (
           <ErrorMessage description={JSON.stringify(errorMessage, null, 2)} />
         )}
-        <div className={"flex flex-row gap-12 justify-evenly"}>
-          <div className={"flex flex-col gap-6 items-center w-1/2"}>
+        <div className={"flex flex-col md:flex-row gap-12 justify-evenly"}>
+          <div className={"flex flex-col gap-6 items-center md:w-1/2"}>
             <Label>Message For Facilitator</Label>
             <Textarea
               rows={15}
@@ -70,7 +70,7 @@ cc: ${requesterName}, please take it from here.`;
             </TypographyMuted>
           </div>
 
-          <div className={"flex flex-col gap-6 items-center w-1/2"}>
+          <div className={"flex flex-col gap-6 items-center md:w-1/2"}>
             <Label>Message For Contact</Label>
             <Textarea
               rows={15}

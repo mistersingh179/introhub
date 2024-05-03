@@ -50,7 +50,7 @@ export default async function Introductions({
   return (
     <div className={"flex flex-col gap-4 my-4"}>
       <h1 className={"text-2xl"}>Create an Introduction</h1>
-      <div className={"flex flex-row gap-8"}>
+      <div className={"flex flex-col md:flex-row gap-8"}>
         <ProspectBox
           contact={contact}
           personProfile={personProfile}
