@@ -295,8 +295,8 @@ export default async function Prospects({
         <h1 className={"text-2xl my-4"}>Prospects</h1>
       </div>
 
-      <div className={"flex flex-row gap-4 items-start"}>
-        <div className={"basis-1/5 mt-2 border p-4"}>
+      <div className={"flex flex-col md:flex-row gap-4 items-start"}>
+        <div className={"w-full md:basis-1/4 mt-2 border p-4"}>
           <h1>Filters</h1>
           <FiltersForm
             cities={cities}
@@ -307,7 +307,7 @@ export default async function Prospects({
             userEmails={userEmails}
           />
         </div>
-        <div className={"flex-grow"}>
+        <div className={"md:flex-grow"}>
           <ProspectsTable
             prospects={prospectsWithUser}
             emailToProfile={emailToProfile}

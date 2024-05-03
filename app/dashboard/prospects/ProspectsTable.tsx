@@ -38,11 +38,8 @@ const ProspectsTable = ({
       <TableCaption>Prospects</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead>Prospect</TableHead>
-          <TableHead>Company</TableHead>
-          <TableHead>Introducer</TableHead>
-          <TableHead>Stats</TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead className={"w-1/2"}>Prospect</TableHead>
+          <TableHead className={"w-1/2"}>Introducer</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -59,7 +56,7 @@ const ProspectsTable = ({
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={8}>
+          <TableCell colSpan={2}>
             <MyPagination />
           </TableCell>
         </TableRow>
@@ -90,38 +87,36 @@ const ProspectRow = (props: ProspectRowProps) => {
     <>
       <TableRow key={prospect.email}>
         <TableCell className={""}>
-          <ProspectBox
-            contact={prospect}
-            personProfile={contactProfiles.personProfile}
-            personExp={contactProfiles.personExp}
-          />
-        </TableCell>
-        <TableCell className={""}>
-          <CompanyBox
-            companyProfile={contactProfiles.companyProfile}
-            personExp={contactProfiles.personExp}
-          />
-        </TableCell>
-        <TableCell className={""}>
-          <FacilitatorBox
-            user={prospect.user}
-            personExp={facilitatorProfiles.personExp}
-          />
-        </TableCell>
-        <TableCell className={""}>
-          <div className={"flex flex-col whitespace-nowrap"}>
-            <div>Sent: {prospect.sentCount}</div>
-            <div>Received: {prospect.receivedCount}</div>
-            <div>Ratio: {prospect.sentReceivedRatio / 100}</div>
+          <div className={"flex flex-col gap-4 overflow-hidden"}>
+            <ProspectBox
+              contact={prospect}
+              personProfile={contactProfiles.personProfile}
+              personExp={contactProfiles.personExp}
+            />
+            <CompanyBox
+              companyProfile={contactProfiles.companyProfile}
+              personExp={contactProfiles.personExp}
+            />
           </div>
         </TableCell>
         <TableCell className={""}>
-          <Button asChild>
-            <Link href={`/dashboard/introductions/create/${prospect.id}`}>
-              Create Intro
-              <SquarePen size={18} className={"ml-2"} />
-            </Link>
-          </Button>
+          <div className={"flex flex-col gap-4"}>
+            <FacilitatorBox
+              user={prospect.user}
+              personExp={facilitatorProfiles.personExp}
+            />
+            <div className={"flex flex-col whitespace-nowrap"}>
+              <div>Sent: {prospect.sentCount}</div>
+              <div>Received: {prospect.receivedCount}</div>
+              <div>Ratio: {prospect.sentReceivedRatio / 100}</div>
+            </div>
+            <Button asChild className={'w-fit'}>
+              <Link href={`/dashboard/introductions/create/${prospect.id}`}>
+                Create Intro
+                <SquarePen size={18} className={"ml-2"} />
+              </Link>
+            </Button>
+          </div>
         </TableCell>
       </TableRow>
     </>
