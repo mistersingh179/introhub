@@ -11,10 +11,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Contact, Message } from "@prisma/client";
+import { Message } from "@prisma/client";
 import MyPagination from "@/components/MyPagination";
 import Search from "@/components/Search";
-import {lightFormat} from "date-fns";
 
 export default async function Emails({
   searchParams,
@@ -64,10 +63,7 @@ export default async function Emails({
         <TableHeader>
           <TableRow>
             <TableHead>From</TableHead>
-            <TableHead>Delivered To</TableHead>
             <TableHead>To</TableHead>
-            <TableHead>Reply-To</TableHead>
-            <TableHead>Received At</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -77,7 +73,7 @@ export default async function Emails({
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={5}>
+            <TableCell colSpan={2}>
               <MyPagination />
             </TableCell>
           </TableRow>
@@ -96,39 +92,14 @@ const MessageRow = (props: MessageProps) => {
     <>
       <TableRow key={message.gmailMessageId}>
         <TableCell
-          className={
-            "p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"
-          }
+          className={"p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"}
         >
           {message.fromAddress}
         </TableCell>
         <TableCell
-          className={
-            "p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"
-          }
-        >
-          {message.deliveredTo}
-        </TableCell>
-        <TableCell
-          className={
-            "p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"
-          }
+          className={"p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"}
         >
           {message.toAddress}
-        </TableCell>
-        <TableCell
-          className={
-            "p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"
-          }
-        >
-          {message.replyToAddress}
-        </TableCell>
-        <TableCell
-          className={
-            "p-2 overflow-ellipsis whitespace-nowrap overflow-hidden"
-          }
-        >
-          {message.receivedAt && lightFormat(message.receivedAt, 'yyyy-MM-dd')}
         </TableCell>
       </TableRow>
     </>
