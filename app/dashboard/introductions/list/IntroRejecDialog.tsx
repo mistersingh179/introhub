@@ -31,7 +31,7 @@ export default function IntroRejectDialog(props: IntroRejectDialogProps) {
         <DialogTrigger asChild>
           <Button variant={'secondary'} className={'w-fit'} disabled={!canChange}>Reject</Button>
         </DialogTrigger>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-[425px] md:max-w-4xl">
           <DialogHeader>
             <DialogTitle>Reject Introduction?</DialogTitle>
             <DialogDescription>

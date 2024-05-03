@@ -64,16 +64,11 @@ const IntroTable = ({
         <TableCaption>Introductions</TableCaption>
         <TableHeader>
           <TableRow>
-            {showRequester && (
-              <TableHead className={"p-2"}>Requester</TableHead>
-            )}
-            <TableHead className={"p-2"}>Prospect</TableHead>
-            <TableHead className={"p-2"}>Organization</TableHead>
-            {showFacilitator && (
-              <TableHead className={"p-2"}>Facilitating Person</TableHead>
-            )}
-            <TableHead className={"p-2"}>Status</TableHead>
-            <TableHead className={"p-2"}>Actions</TableHead>
+            <TableHead className={"p-2 w-1/2"}>Prospect</TableHead>
+            <TableHead className={"p-2 w-1/2"}>
+              {showRequester && <>Requester</>}
+              {showFacilitator && <>Facilitator</>}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -93,7 +88,7 @@ const IntroTable = ({
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={8}>
+            <TableCell colSpan={2}>
               <MyPagination />
             </TableCell>
           </TableRow>
@@ -170,7 +165,7 @@ export const IntroStatusBadge = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <div>
-            <Badge variant={"default"} className={"text-center"}>
+            <Badge variant={"secondary"} className={"text-center"}>
               <div>{introduction.status}</div>
             </Badge>
           </div>
@@ -210,7 +205,6 @@ export const RequesterBox = ({
     </div>
   );
 };
-
 
 export const ProspectBox = ({
   contact,
@@ -338,63 +332,59 @@ const IntroRow = ({
 
   return (
     <>
-      <TableRow key={introduction.id}>
-        {showRequester && (
-          <TableCell className={"p-2"}>
-            <RequesterBox
-              intro={introduction}
-              personExp={requestProfiles.personExp}
-            />
-          </TableCell>
-        )}
-
-        <TableCell className={"p-2"}>
+      <TableRow className={""} key={introduction.id}>
+        <TableCell
+          className={"p-2 flex flex-col gap-4 overflow-hidden text-ellipsis"}
+        >
           <ProspectBox
             contact={introduction.contact}
             personProfile={contactProfiles.personProfile}
             personExp={contactProfiles.personExp}
           />
-        </TableCell>
-
-        <TableCell className={"p-2"}>
           <CompanyBox
             companyProfile={contactProfiles.companyProfile}
             personExp={contactProfiles.personExp}
           />
         </TableCell>
 
-        {showFacilitator && (
-          <TableCell className={"p-2"}>
-            <FacilitatorBox
-              user={introduction.facilitator}
-              personExp={facilitatorProfiles.personExp}
-            />
-          </TableCell>
-        )}
-
         <TableCell className={"p-2"}>
-          <IntroStatusBadge introduction={introduction} />
+          <div className={"flex flex-col gap-4"}>
+            {showRequester && (
+              <RequesterBox
+                intro={introduction}
+                personExp={requestProfiles.personExp}
+              />
+            )}
+
+            {showFacilitator && (
+              <FacilitatorBox
+                user={introduction.facilitator}
+                personExp={facilitatorProfiles.personExp}
+              />
+            )}
+
+            <IntroStatusBadge introduction={introduction} />
+
+            {user.id === introduction.facilitator.id && (
+              <IntroOverviewWithApprovingSheet
+                intro={introduction}
+                user={user}
+                emailToProfile={emailToProfile}
+                companyUrlToProfile={companyUrlToProfile}
+              />
+            )}
+
+            {user.id === introduction.requester.id && (
+              <IntroOverviewWithSavingSheet
+                intro={introduction}
+                user={user}
+                emailToProfile={emailToProfile}
+                companyUrlToProfile={companyUrlToProfile}
+              />
+            )}
+          </div>
         </TableCell>
 
-        <TableCell className={"p-2"}>
-          {user.id === introduction.facilitator.id && (
-            <IntroOverviewWithApprovingSheet
-              intro={introduction}
-              user={user}
-              emailToProfile={emailToProfile}
-              companyUrlToProfile={companyUrlToProfile}
-            />
-          )}
-
-          {user.id === introduction.requester.id && (
-            <IntroOverviewWithSavingSheet
-              intro={introduction}
-              user={user}
-              emailToProfile={emailToProfile}
-              companyUrlToProfile={companyUrlToProfile}
-            />
-          )}
-        </TableCell>
       </TableRow>
     </>
   );

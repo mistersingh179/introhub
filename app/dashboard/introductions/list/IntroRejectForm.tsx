@@ -64,7 +64,7 @@ export default function IntroRejectForm(props: IntroRejectFormProps) {
               value="I'm concerned about the credibility of the person asking for the introduction."
               id="r1"
             />
-            <Label htmlFor="r1">
+            <Label htmlFor="r1" className={'leading-normal'}>
               I&quot;m concerned about the credibility of the person asking for
               the introduction.
             </Label>
@@ -75,7 +75,7 @@ export default function IntroRejectForm(props: IntroRejectFormProps) {
                   introduction."
               id="r2"
             />
-            <Label htmlFor="r2">
+            <Label htmlFor="r2"  className={'leading-normal'}>
               I don&quot;t see a clear benefit for my contact in this
               introduction.
             </Label>
@@ -86,7 +86,7 @@ export default function IntroRejectForm(props: IntroRejectFormProps) {
                   sufficient detail for me to proceed."
               id="r3"
             />
-            <Label htmlFor="r3">
+            <Label htmlFor="r3" className={'leading-normal'}>
               The request doesn&quot;t seem well-thought-out or lacks sufficient
               detail for me to proceed.
             </Label>
@@ -96,7 +96,7 @@ export default function IntroRejectForm(props: IntroRejectFormProps) {
               value="This introduction might conflict with my own interests."
               id="r4"
             />
-            <Label htmlFor="r4">
+            <Label htmlFor="r4" className={'leading-normal'}>
               This introduction might conflict with my own interests.
             </Label>
           </div>
@@ -104,7 +104,7 @@ export default function IntroRejectForm(props: IntroRejectFormProps) {
             <RadioGroupItem value={"Other"} id="r5" ref={ref} />
             <Label htmlFor="r5">Other</Label>
             <Textarea
-              className={"w-96"}
+              className={"w-64 md:w-96"}
               onChange={(evt) => {
                 setOtherValue(evt.target.value);
                 ref.current?.click();
@@ -113,7 +113,7 @@ export default function IntroRejectForm(props: IntroRejectFormProps) {
             />
           </div>
         </RadioGroup>
-        <div className={"w-full flex flex-row justify-end"}>
+        <div className={"w-full flex flex-row justify-end mt-4"}>
           <SubmitButton label={"Reject"} beDisabled={!canChange} />
         </div>
       </form>
