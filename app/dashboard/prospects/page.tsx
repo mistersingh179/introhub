@@ -9,6 +9,9 @@ import sleep from "@/lib/sleep";
 import ProspectsTable from "@/app/dashboard/prospects/ProspectsTable";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import { ContactWithUser } from "@/app/dashboard/introductions/create/[contactId]/page";
+import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible";
+import {Button} from "@/components/ui/button";
+import {ChevronsUpDown} from "lucide-react";
 
 type ProspectsSearchParams = {
   query?: string;
@@ -297,17 +300,29 @@ export default async function Prospects({
 
       <div className={"flex flex-col md:flex-row gap-4 items-start"}>
         <div className={"w-full md:basis-1/4 mt-2 border p-4"}>
-          <h1>Filters</h1>
-          <FiltersForm
-            cities={cities}
-            states={states}
-            jobTitles={jobTitles}
-            industries={industries}
-            categories={categories}
-            userEmails={userEmails}
-          />
+          <Collapsible defaultOpen={true}>
+            <div className={'flex flex-row justify-between items-center'}>
+            <h1>Filters</h1>
+            <CollapsibleTrigger asChild className={'md:hidden'}>
+              <Button variant="ghost" size="sm" className="w-9 p-0">
+                <ChevronsUpDown className="h-4 w-4" />
+                <span className="sr-only">Toggle</span>
+              </Button>
+            </CollapsibleTrigger>
+            </div>
+            <CollapsibleContent>
+              <FiltersForm
+                cities={cities}
+                states={states}
+                jobTitles={jobTitles}
+                industries={industries}
+                categories={categories}
+                userEmails={userEmails}
+              />
+            </CollapsibleContent>
+          </Collapsible>
         </div>
-        <div className={"md:flex-grow"}>
+        <div className={"w-full"}>
           <ProspectsTable
             prospects={prospectsWithUser}
             emailToProfile={emailToProfile}
