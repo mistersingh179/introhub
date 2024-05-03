@@ -82,9 +82,8 @@ export default async function MyContacts({
         <TableCaption>Your Contacts</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Contact</TableHead>
-            <TableHead>Company</TableHead>
-            <TableHead>Stats</TableHead>
+            <TableHead className={'w-2/3'}>Contact</TableHead>
+            <TableHead className={'w-1/3'}>Stats</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -111,7 +110,7 @@ export default async function MyContacts({
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={4}>
+            <TableCell colSpan={2}>
               <MyPagination />
             </TableCell>
           </TableRow>
@@ -132,14 +131,14 @@ const ContactRow = (props: ContactProps) => {
     <>
       <TableRow key={contact.email}>
         <TableCell className={"p-2"}>
+          <div className={'flex flex-col gap-4'}>
           <ProspectBox
             contact={contact}
             personProfile={personProfile}
             personExp={personExp}
           />
-        </TableCell>
-        <TableCell className={"p-2"}>
           <CompanyBox companyProfile={companyProfile} personExp={personExp} />
+          </div>
         </TableCell>
         <TableCell className={"p-2"}>
           <div className={"flex flex-col whitespace-nowrap"}>
