@@ -31,7 +31,12 @@ const IntroOverviewWithApprovingSheet = (
           See More <ChevronRightCircle size={18} className={"ml-2"} />
         </Button>
       </SheetTrigger>
-      <SheetContent className="sm:max-w-[60%] md:max-w-[50%] lg:max-w-[40%]">
+      <SheetContent
+        className="sm:max-w-[60%] md:max-w-[50%] lg:max-w-[40%]"
+        onOpenAutoFocus={(evt) => {
+          evt.preventDefault();
+        }}
+      >
         <IntroOverviewWithApproving
           user={user}
           intro={intro}
