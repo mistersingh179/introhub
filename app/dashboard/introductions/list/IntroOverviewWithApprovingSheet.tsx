@@ -9,8 +9,8 @@ import {
   EmailToProfile,
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import IntroOverviewWithApproving from "@/app/dashboard/introductions/list/IntroOverviewWithApproving";
-import { useState } from "react";
-import IntroOverviewWithSaving from "@/app/dashboard/introductions/list/IntroOverviewWithSaving";
+import React, { useState } from "react";
+import { ChevronRightCircle } from "lucide-react";
 
 type IntroApproveWithApprovingSheetProps = {
   user: User;
@@ -27,7 +27,9 @@ const IntroOverviewWithApprovingSheet = (
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button className={"w-fit"}>See More</Button>
+        <Button className={"w-fit"}>
+          See More <ChevronRightCircle size={18} className={"ml-2"} />
+        </Button>
       </SheetTrigger>
       <SheetContent className="sm:max-w-[60%] md:max-w-[50%] lg:max-w-[40%]">
         <IntroOverviewWithApproving
