@@ -8,6 +8,7 @@ import companyLookupByProxyUrl from "@/services/helpers/proxycurl/companyLookupA
 const companyLookupApiResponse = async (
   linkedInProfileUrl: string,
 ): Promise<Record<string, any>> => {
+  console.log("checking cache for ", linkedInProfileUrl);
   const record = await prisma.companyProfileEndpoint.findFirst({
     where: {
       url: linkedInProfileUrl,
@@ -15,9 +16,10 @@ const companyLookupApiResponse = async (
   });
 
   if (record) {
-    console.log("giving result from db for: ", linkedInProfileUrl);
+    console.log("got cache HIT for: ", linkedInProfileUrl);
     return record.response as Record<string, any>;
   }
+
   const data = await companyLookupByProxyUrl(linkedInProfileUrl);
   const newRecord = await prisma.companyProfileEndpoint.create({
     data: {

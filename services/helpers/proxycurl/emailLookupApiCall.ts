@@ -1,4 +1,3 @@
-
 import { ProxyCurlError } from "@/services/helpers/proxycurl/ProxyCurlError";
 
 type EmailLookupApiCall = (email: string) => Promise<Record<string, any>>;
@@ -14,7 +13,6 @@ const emailLookupByProxyUrl: EmailLookupApiCall = async (email) => {
   });
 
   const fullUrl = `${baseUrl}/${url}?${params}`;
-  console.log(fullUrl);
 
   const res = await fetch(fullUrl, {
     method: "GET",
@@ -24,12 +22,32 @@ const emailLookupByProxyUrl: EmailLookupApiCall = async (email) => {
       "Content-Type": "application/x-www-form-urlencoded",
     },
   });
-  console.log(res.status, res.headers.get("X-Proxycurl-Credit-Cost"));
-  const data = await res.json();
-  console.log("data: ", data);
-  if (data.code >= 400) {
-    throw new ProxyCurlError(data.description, data);
+  console.log(
+    "emailLookupByProxyUrl: ",
+    email,
+    res.status,
+    res.headers.get("X-Proxycurl-Credit-Cost"),
+  );
+
+  // throwing an error because these requests are fee and we want to retry!
+  if ([400, 401, 403, 429, 500, 503].includes(res.status)) {
+    throw new ProxyCurlError("error: " + res.status + " email: " + email, {
+      email,
+      code: res.status,
+      cost: res.headers.get("X-Proxycurl-Credit-Cost"),
+    });
   }
+
+  let data = {};
+  try{
+    data = await res.json();
+  }catch(err){
+    console.log("emailLookupByProxyUrl invalid json: ", email, data);
+    data = {};
+  }
+
+  console.log("emailLookupByProxyUrl: ", email, data);
+
   return data;
 };
 
