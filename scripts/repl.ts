@@ -15,39 +15,7 @@ prisma.$on("query", (e) => {
 (async () => {
   console.log("Hello world !!!!");
 
-  const email = "kytamal@gmail.com";
-
-  let account = await prisma.account.findFirstOrThrow({
-    where: {
-      user: {
-        email,
-      },
-    },
-  });
-  console.log(account);
-
-  const gmail = await getGmailObject(account);
-  const { data: profileData } = await gmail.users.getProfile({
-    userId: "me",
-  });
-  console.log("profile: ", profileData);
-
-  account = await prisma.account.findFirstOrThrow({
-    where: {
-      user: {
-        email,
-      },
-    },
-  });
-
-  const at = account.access_token as string;
-
-  const oauth2Client = new google.auth.OAuth2();
-  oauth2Client.setCredentials({
-    access_token: at,
-  });
-  const tokenInfo = await oauth2Client.getTokenInfo(at);
-  console.log("tokenInfo: ", tokenInfo);
+  console.log("hello!");
 })();
 
 export {};
