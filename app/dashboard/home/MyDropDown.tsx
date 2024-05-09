@@ -51,7 +51,7 @@ const MyDropDown = (props: MyDropDownProps): React.ReactElement => {
     inputValue: string,
     callback: (options: MyOption[]) => void,
   ) => {
-    callback(filterOptions(inputValue).slice(0, 5));
+    callback(filterOptions(inputValue).slice(0,5+selected.length));
   };
   const changeHandler = (
     newValue: MultiValue<MyOption>,
@@ -174,7 +174,7 @@ const MyDropDown = (props: MyDropDownProps): React.ReactElement => {
       <AsyncSelect
         styles={customStyles}
         placeholder={placeholder}
-        cacheOptions
+        // cacheOptions
         defaultOptions
         isMulti
         hideSelectedOptions
