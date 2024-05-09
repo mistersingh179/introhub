@@ -6,6 +6,7 @@ import { FancyMultiSelect } from "@/components/FancyMultiSelect";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
+import MyDropDown from "@/app/dashboard/home/MyDropDown";
 
 const buildOptions = (values: string[]): FancyOption[] => {
   return values.map((rec) => ({ label: rec, value: rec }));
@@ -126,12 +127,11 @@ const FiltersForm = (props: FiltersFormProps) => {
           selected={selectedStates}
           setSelected={setSelectedStates}
         />
-        <FancyMultiSelect
+        <MyDropDown
           placeholder={"Job Titles"}
           options={buildOptions(jobTitles)}
           selected={selectedJobTitles}
-          setSelected={setSelectedJobTitles}
-        />
+          setSelected={setSelectedJobTitles} />
         <FancyMultiSelect
           placeholder={"Industries"}
           options={buildOptions(industries)}

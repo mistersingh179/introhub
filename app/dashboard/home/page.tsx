@@ -36,6 +36,27 @@ export default async function Home() {
     },
   });
 
+  // const jobTitlesWithCount = await prisma.personExperience.groupBy({
+  //   by: "jobTitle",
+  //   _count: true,
+  // });
+  // const jobTitles = jobTitlesWithCount
+  //   .filter((rec) => rec.jobTitle)
+  //   .map((rec) => rec.jobTitle as string);
+  //
+  // const jobTitleOptions = jobTitles.map((jobTitle) => {
+  //   return {
+  //     value: jobTitle,
+  //     label: jobTitle,
+  //   };
+  // });
+  //
+  // const options = [
+  //   { value: "chocolate", label: "Chocolate" },
+  //   { value: "strawberry", label: "Strawberry" },
+  //   { value: "vanilla", label: "Vanilla" },
+  // ];
+
   return (
     <div className={"flex flex-col gap-8"}>
       <div className={"flex flex-row items-center gap-2"}>
