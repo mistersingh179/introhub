@@ -144,10 +144,11 @@ const MyDropDown = (props: MyDropDownProps): React.ReactElement => {
       fontSize: "14px",
     }),
 
-    // input: (provided: CSSObject) => ({
-    //   ...provided,
-    //   color: "hsl(var(--muted-foreground))",
-    // }),
+    input: (provided: CSSObject) => ({
+      ...provided,
+      color: "hsl(var(--foreground))",
+      fontSize: "14px",
+    }),
 
     // *** Styling the dropdown arrow & its separator ***
     dropdownIndicator: (
