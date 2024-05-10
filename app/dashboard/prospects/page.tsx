@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
+import getUniqueValuesWithOrderPreserved from "@/services/getUniqueValuesWithOrderPreserved";
 
 type ProspectsSearchParams = {
   query?: string;
@@ -118,21 +119,29 @@ type GetAllFilterValues = (user: User) => Promise<{
 const getAllFilterValues: GetAllFilterValues = async (user) => {
   const citiesWithCount = await prisma.personProfile.groupBy({
     by: "city",
-    _count: true,
+    _count: {
+      city: true
+    },
+    orderBy: {
+      _count: {
+        city: 'desc'
+      }
+    }
   });
-  const cities = citiesWithCount
-    .filter((rec) => rec.city)
-    .map((rec) => rec.city as string);
-  console.log("*** cities.length: ", cities.length);
+  const cities = getUniqueValuesWithOrderPreserved(citiesWithCount, "city");
 
   const statesWithCount = await prisma.personProfile.groupBy({
     by: "state",
-    _count: true,
+    _count: {
+      state: true
+    },
+    orderBy: {
+      _count: {
+        state: 'desc'
+      }
+    }
   });
-  const states = statesWithCount
-    .filter((rec) => rec.state)
-    .map((rec) => rec.state as string);
-  console.log("*** states.length: ", states.length);
+  const states = getUniqueValuesWithOrderPreserved(statesWithCount, "state");
 
   const jobTitlesWithCount = await prisma.personExperience.groupBy({
     by: "jobTitle",
@@ -145,32 +154,33 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
       }
     }
   });
-  const uniqueJobTitles = new Map<string, null>();
-  jobTitlesWithCount.forEach(rec => {
-    const trimmedTitle = rec.jobTitle?.trim();
-    if (trimmedTitle && trimmedTitle !== "") {
-      uniqueJobTitles.set(trimmedTitle, null);
-    }
-  });
-  const jobTitles = [...uniqueJobTitles.keys()]
+  const jobTitles = getUniqueValuesWithOrderPreserved(jobTitlesWithCount, "jobTitle");
 
   const industriesWithCount = await prisma.companyProfile.groupBy({
     by: "industry",
-    _count: true,
+    _count: {
+      industry: true,
+    },
+    orderBy: {
+      _count: {
+        industry: 'desc'
+      }
+    }
   });
-  const industries = industriesWithCount
-    .filter((rec) => rec.industry)
-    .map((rec) => rec.industry as string);
-  console.log("*** industries.length: ", industries.length);
+  const industries = getUniqueValuesWithOrderPreserved(industriesWithCount, "industry");
 
   const categoriesWithCount = await prisma.category.groupBy({
     by: "name",
-    _count: true,
+    _count: {
+      name: true
+    },
+    orderBy: {
+      _count: {
+        name: 'desc'
+      }
+    }
   });
-  const categories = categoriesWithCount
-    .filter((rec) => rec.name)
-    .map((rec) => rec.name as string);
-  console.log("*** categories.length: ", categories.length);
+  const categories = getUniqueValuesWithOrderPreserved(categoriesWithCount, "name");
 
 
   const usersWithCount = await prisma.user.groupBy({
@@ -180,12 +190,17 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
         not: user.email,
       },
     },
-    _count: true,
+    _count: {
+      email: true
+    },
+    orderBy: {
+      _count: {
+        email: 'desc'
+      }
+    }
   });
-  const userEmails = usersWithCount
-    .filter((rec) => rec.email)
-    .map((rec) => rec.email as string);
-  console.log("*** userEmails.length: ", userEmails.length);
+  const userEmails = getUniqueValuesWithOrderPreserved(usersWithCount, "email");
+  console.log("userEmails.length: ", userEmails.length);
 
 
   const result = {
