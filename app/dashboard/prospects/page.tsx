@@ -123,6 +123,7 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
   const cities = citiesWithCount
     .filter((rec) => rec.city)
     .map((rec) => rec.city as string);
+  console.log("*** cities.length: ", cities.length);
 
   const statesWithCount = await prisma.personProfile.groupBy({
     by: "state",
@@ -131,6 +132,7 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
   const states = statesWithCount
     .filter((rec) => rec.state)
     .map((rec) => rec.state as string);
+  console.log("*** states.length: ", states.length);
 
   const jobTitlesWithCount = await prisma.personExperience.groupBy({
     by: "jobTitle",
@@ -159,6 +161,7 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
   const industries = industriesWithCount
     .filter((rec) => rec.industry)
     .map((rec) => rec.industry as string);
+  console.log("*** industries.length: ", industries.length);
 
   const categoriesWithCount = await prisma.category.groupBy({
     by: "name",
@@ -167,6 +170,8 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
   const categories = categoriesWithCount
     .filter((rec) => rec.name)
     .map((rec) => rec.name as string);
+  console.log("*** categories.length: ", categories.length);
+
 
   const usersWithCount = await prisma.user.groupBy({
     by: "email",
@@ -180,6 +185,8 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
   const userEmails = usersWithCount
     .filter((rec) => rec.email)
     .map((rec) => rec.email as string);
+  console.log("*** userEmails.length: ", userEmails.length);
+
 
   const result = {
     cities,
