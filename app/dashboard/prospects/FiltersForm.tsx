@@ -115,36 +115,41 @@ const FiltersForm = (props: FiltersFormProps) => {
             placeholder="company.com"
           />
         </div>
-        <FancyMultiSelect
+        <MyDropDown
           placeholder={"Cities"}
           options={buildOptions(cities)}
           selected={selectedCities}
           setSelected={setSelectedCities}
+          limit={50}
         />
-        <FancyMultiSelect
+        <MyDropDown
           placeholder={"States"}
           options={buildOptions(states)}
           selected={selectedStates}
           setSelected={setSelectedStates}
+          limit={50}
         />
         <MyDropDown
           placeholder={"Job Titles"}
           options={buildOptions(jobTitles)}
           selected={selectedJobTitles}
+          limit={5}
           setSelected={setSelectedJobTitles} />
-        <FancyMultiSelect
+        <MyDropDown
           placeholder={"Industries"}
           options={buildOptions(industries)}
           selected={selectedIndustries}
           setSelected={setSelectedIndustries}
+          limit={50}
         />
-        <FancyMultiSelect
+        <MyDropDown
           placeholder={"Categories"}
           options={buildOptions(categories)}
           selected={selectedCategories}
           setSelected={setSelectedCategories}
+          limit={50}
         />
-        <FancyMultiSelect
+        <MyDropDown
           placeholder={"Facilitators"}
           options={buildOptions(userEmails)}
           selected={selectedUserEmails}

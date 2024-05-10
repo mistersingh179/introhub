@@ -20,10 +20,11 @@ type MyDropDownProps = {
   placeholder: string;
   selected: MyOption[];
   setSelected: React.Dispatch<React.SetStateAction<MyOption[]>>;
+  limit?: number;
 };
 
 const MyDropDown = (props: MyDropDownProps): React.ReactElement => {
-  const { options, placeholder, selected, setSelected } = props;
+  const { options, placeholder, selected, setSelected, limit } = props;
 
   const filterOptions = (query: string) => {
     const results: { score: number; option: MyOption }[] = [];
@@ -51,12 +52,12 @@ const MyDropDown = (props: MyDropDownProps): React.ReactElement => {
     inputValue: string,
     callback: (options: MyOption[]) => void,
   ) => {
-    if(inputValue === ''){
-      callback(options.slice(0, 5 + selected.length));
-    }else{
-      callback(filterOptions(inputValue).slice(0, 5 + selected.length));
-    }
-
+    callback(
+      (inputValue === "" ? options : filterOptions(inputValue)).slice(
+        0,
+        limit ? limit + selected.length : undefined,
+      ),
+    );
   };
   const changeHandler = (
     newValue: MultiValue<MyOption>,
