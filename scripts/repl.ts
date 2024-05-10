@@ -17,28 +17,16 @@ prisma.$on("query", (e) => {
   const jobTitlesWithCount = await prisma.personExperience.groupBy({
     by: "jobTitle",
     _count: {
-      jobTitle: true
+      jobTitle: true,
     },
     orderBy: {
       _count: {
-        jobTitle: 'asc',
-      },
-    },
-  });
-  const uniqueJobTitles = new Map();
-  for (const rec of jobTitlesWithCount) {
-    if(rec && rec.jobTitle){
-      const trimmedTitle = rec.jobTitle.trim();
-      if (trimmedTitle !== "" && !uniqueJobTitles.has(trimmedTitle)) {
-        uniqueJobTitles.set(trimmedTitle, rec._count.jobTitle);
+        jobTitle: 'desc'
       }
-    }
-  }
-
-  const orderedJobTitles = Array.from(uniqueJobTitles, ([title, count]) => ({ title, count }));
-
-  console.log('Ordered Job Titles:', orderedJobTitles);
-  console.log(orderedJobTitles[0].title, "***", orderedJobTitles[orderedJobTitles.length - 1].title);
+    },
+    take: 5
+  });
+  console.log(jobTitlesWithCount);
 
 })();
 

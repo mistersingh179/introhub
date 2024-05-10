@@ -126,8 +126,8 @@ const enrichContact: EnrichContact = async (input) => {
 export default enrichContact;
 
 if (require.main === module) {
+  (async () => {
+    const ans = await enrichContact({ email: "bill@gates.com" });
+    console.log("ans: ", ans);
+  })();
 }
-(async () => {
-  const ans = await enrichContact({ email: "bill@gates.com" });
-  console.log("ans: ", ans);
-})();
