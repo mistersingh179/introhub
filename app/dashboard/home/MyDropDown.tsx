@@ -51,7 +51,12 @@ const MyDropDown = (props: MyDropDownProps): React.ReactElement => {
     inputValue: string,
     callback: (options: MyOption[]) => void,
   ) => {
-    callback(filterOptions(inputValue).slice(0,5+selected.length));
+    if(inputValue === ''){
+      callback(options.slice(0, 5 + selected.length));
+    }else{
+      callback(filterOptions(inputValue).slice(0, 5 + selected.length));
+    }
+
   };
   const changeHandler = (
     newValue: MultiValue<MyOption>,
@@ -177,7 +182,7 @@ const MyDropDown = (props: MyDropDownProps): React.ReactElement => {
         // cacheOptions
         defaultOptions
         isMulti
-        hideSelectedOptions
+        hideSelectedOptions={true}
         loadOptions={loadOptions}
         onChange={changeHandler}
         onInputChange={inputChangeHandler}

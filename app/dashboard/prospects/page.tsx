@@ -134,11 +134,23 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
 
   const jobTitlesWithCount = await prisma.personExperience.groupBy({
     by: "jobTitle",
-    _count: true,
+    _count: {
+      jobTitle: true,
+    },
+    orderBy: {
+      _count: {
+        jobTitle: 'desc'
+      }
+    }
   });
-  const jobTitles = jobTitlesWithCount
-    .filter((rec) => rec.jobTitle)
-    .map((rec) => rec.jobTitle as string);
+  const uniqueJobTitles = new Map<string, null>();
+  jobTitlesWithCount.forEach(rec => {
+    const trimmedTitle = rec.jobTitle?.trim();
+    if (trimmedTitle && trimmedTitle !== "") {
+      uniqueJobTitles.set(trimmedTitle, null);
+    }
+  });
+  const jobTitles = [...uniqueJobTitles.keys()]
 
   const industriesWithCount = await prisma.companyProfile.groupBy({
     by: "industry",

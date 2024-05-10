@@ -14,31 +14,32 @@ prisma.$on("query", (e) => {
 
 (async () => {
   console.log("Hello world !");
-  const titles = ["CEO", 'founder', 'cto'];
-  // Create a regex pattern from the titles array
+  const jobTitlesWithCount = await prisma.personExperience.groupBy({
+    by: "jobTitle",
+    _count: {
+      jobTitle: true
+    },
+    orderBy: {
+      _count: {
+        jobTitle: 'asc',
+      },
+    },
+  });
+  const uniqueJobTitles = new Map();
+  for (const rec of jobTitlesWithCount) {
+    if(rec && rec.jobTitle){
+      const trimmedTitle = rec.jobTitle.trim();
+      if (trimmedTitle !== "" && !uniqueJobTitles.has(trimmedTitle)) {
+        uniqueJobTitles.set(trimmedTitle, rec._count.jobTitle);
+      }
+    }
+  }
 
-  const jobTitleFilterSql = titles
-    ? Prisma.sql`PE."jobTitle" ~* ${"\\y(" + titles.join("|") + ")\\y"}`
-    : Prisma.sql``;
+  const orderedJobTitles = Array.from(uniqueJobTitles, ([title, count]) => ({ title, count }));
 
-  // const sql2 = Prisma.sql`SELECT *
-  //                         FROM "PersonExperience"
-  //                         WHERE "PersonExperience"."jobTitle" ~* ${titlesPattern}`
-  //
-  // const contacts2 = await prisma.$queryRaw<Contact[]>(sql2);
-  // console.log("records found: ", contacts2.length, contacts2);
-  //
-  // const jobTitleFilterSql = `(^|\\s|\\W)(${titles.join("|")})(\\s|\\W|$)`;
+  console.log('Ordered Job Titles:', orderedJobTitles);
+  console.log(orderedJobTitles[0].title, "***", orderedJobTitles[orderedJobTitles.length - 1].title);
 
-
-
-  const sql = Prisma.sql`
-      select *
-      from public."PersonExperience" PE
-      where ${jobTitleFilterSql} 
-  `;
-  const contacts = await prisma.$queryRaw<Contact[]>(sql);
-  console.log("records found: ", contacts.length, contacts);
 })();
 
 export {};
