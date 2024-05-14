@@ -219,6 +219,13 @@ model CompanyProfileEndpoint {
   updatedAt DateTime @default(now()) @updatedAt
 }
 
+model PeopleEnrichmentEndpoint {
+  email     String   @id
+  response  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
 model Message {
   id             String    @id
   userId         String
