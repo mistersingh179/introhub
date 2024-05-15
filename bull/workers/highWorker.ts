@@ -40,7 +40,7 @@ highWorker.on("drained", () => {
 });
 
 highWorker.on("failed", (job) => {
-  console.log("highWorker: job failed: ", job);
+  console.log("highWorker failed: ", job?.name, job?.id, job?.data, job?.stacktrace);
 });
 
 export default highWorker;

@@ -1,6 +1,4 @@
-SELECT C.email,
-       PP."linkedInUrl",
-       PEE.response
+SELECT count(*)
 FROM "Contact" C
          LEFT JOIN public."PersonProfile" PP ON C.email = PP.email
          LEFT JOIN "PeopleEnrichmentEndpoint" PEE ON C.email = PEE.email

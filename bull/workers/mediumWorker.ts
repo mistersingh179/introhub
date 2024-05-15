@@ -17,8 +17,8 @@ import processRateLimitedRequest from "@/services/processRateLimitedRequest";
 import { User } from "@prisma/client";
 import buildContacts from "@/services/buildContacts";
 import buildContactsForAllUsers from "@/services/buildContactsForAllUsers";
-import sendEmail, {SendEmailInput} from "@/services/sendEmail";
-import onBoardUser, {OnBoardUserInput} from "@/services/onBoardUser";
+import sendEmail, { SendEmailInput } from "@/services/sendEmail";
+import onBoardUser, { OnBoardUserInput } from "@/services/onBoardUser";
 
 const queueName = "medium";
 
@@ -72,7 +72,7 @@ const mediumWorker: Worker<
       case "buildContactsForAllUsers": {
         return await buildContactsForAllUsers();
       }
-      case "onBoardUser" : {
+      case "onBoardUser": {
         const input = data as OnBoardUserInput;
         return await onBoardUser(input);
       }
@@ -95,7 +95,7 @@ const mediumWorker: Worker<
 );
 
 mediumWorker.on("error", (err) => {
-  console.log("medium worker has an error: ", err);
+  console.log("mediumWorker has an error: ", err);
 });
 
 mediumWorker.on("completed", (job) => {
@@ -106,19 +106,25 @@ mediumWorker.on("completed", (job) => {
 
 mediumWorker.on("active", (job) => {
   const { name, data, id, opts } = job;
-  console.log("job active: ", name, id);
+  console.log("mediumWorker - job active: ", name, id);
 });
 
 mediumWorker.on("drained", () => {
-  console.log("all jobs have been drained");
+  console.log("mediumWorker - all jobs have been drained");
 });
 
 mediumWorker.on("failed", (job) => {
-  console.log("job failed: ", job);
+  console.log(
+    "mediumWorker failed: ",
+    job?.name,
+    job?.id,
+    job?.data,
+    job?.stacktrace,
+  );
 });
 
 mediumWorker.on("ready", () => {
-  console.log("worker is ready");
+  console.log("mediumWorker is ready");
 });
 
 export default mediumWorker;
