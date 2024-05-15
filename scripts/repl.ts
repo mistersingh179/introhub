@@ -2,6 +2,8 @@ import prisma from "../prismaClient";
 import { Contact, Prisma } from "@prisma/client";
 import getGmailObject from "@/services/helpers/getGmailObject";
 import { google } from "googleapis";
+import apolloQueue from "@/bull/queues/apolloQueue";
+import {randomInt} from "node:crypto";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -14,20 +16,20 @@ prisma.$on("query", (e) => {
 
 (async () => {
   console.log("Hello world !");
-  const jobTitlesWithCount = await prisma.personExperience.groupBy({
-    by: "jobTitle",
-    _count: {
-      jobTitle: true,
-    },
-    orderBy: {
-      _count: {
-        jobTitle: 'desc'
-      }
-    },
-    take: 5
-  });
-  console.log(jobTitlesWithCount);
+  const randomDelay = randomInt(1000, 5000);
+  const jobObj = await apolloQueue.add(
+    "enrichContactUsingApollo",
+    "foo3@bar.xyz",
+    {
+      delay: randomDelay
+    }
+  );
+  console.log(jobObj);
 
+  // const ttl = await apolloQueue.getRateLimitTtl();
+  // console.log(ttl);
+
+  // console.log(randomInt(1,5));
 })();
 
 export {};

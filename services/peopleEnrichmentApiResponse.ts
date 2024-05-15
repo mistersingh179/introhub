@@ -1,10 +1,12 @@
 import prisma from "@/prismaClient";
-import peopleEnrichmentApiCall from "@/services/helpers/apollo/peopleEnrichmentApiCall";
+import peopleEnrichmentApiCall, {
+  ApolloEnrichResponseWithLimitInfo,
+} from "@/services/helpers/apollo/peopleEnrichmentApiCall";
 
 const peopleEnrichmentApiResponse = async (
   email: string,
   useCache: boolean = true,
-): Promise<PeopleEnrichmentResponse> => {
+): Promise<ApolloEnrichResponseWithLimitInfo> => {
   console.log("got useCache as: ", useCache, " for: ", email);
   if (useCache) {
     const record = await prisma.peopleEnrichmentEndpoint.findFirst({
@@ -14,20 +16,27 @@ const peopleEnrichmentApiResponse = async (
     });
     if (record) {
       console.log("got cache HIT for: ", email);
-      return record.response as unknown as PeopleEnrichmentResponse;
+      return {
+        response: record.response as unknown as PeopleEnrichmentResponse,
+        rateLimitInfo: undefined,
+      };
     }
   }
   console.log("cache did not help for: ", email);
 
   const data = await peopleEnrichmentApiCall(email);
+  const { response, rateLimitInfo } = data;
   const newRecord = await prisma.peopleEnrichmentEndpoint.create({
     data: {
       email,
-      response: data as Record<string, any>,
+      response: response as Record<string, any>,
     },
   });
 
-  return newRecord.response as unknown as PeopleEnrichmentResponse;
+  return {
+    response: newRecord.response as unknown as PeopleEnrichmentResponse,
+    rateLimitInfo: rateLimitInfo,
+  };
 };
 
 export default peopleEnrichmentApiResponse;

@@ -65,31 +65,41 @@ export default async function ShowContact({
           personExp={personExp}
           showLinkedInUrls={true}
         />
-        <CompanyBox companyProfile={companyProfile} personExp={personExp} showLinkedInUrls={true} />
+        <CompanyBox
+          companyProfile={companyProfile}
+          personExp={personExp}
+          showLinkedInUrls={true}
+        />
 
         <div className={"flex flex-row gap-4"}>
           <div>Job Description:</div>
           <div>{personExp.jobDescription}</div>
         </div>
 
-        <div className={"flex flex-row gap-4 items-center"}>
-          <div>Website:</div>
-          <div>
-            <LinkWithExternalIcon href={companyProfile.website!} />
+        <ShowChildren showIt={!!companyProfile.website}>
+          <div className={"flex flex-row gap-4 items-center"}>
+            <div>Website:</div>
+            <div>
+              <LinkWithExternalIcon href={companyProfile.website!} />
+            </div>
           </div>
-        </div>
+        </ShowChildren>
 
-        <div className={"flex flex-row gap-4"}>
-          <div>Size Range:</div>
-          <div>
-            {companyProfile.sizeFrom} - {companyProfile.sizeTo}
+        <ShowChildren showIt={!!companyProfile.sizeFrom}>
+          <div className={"flex flex-row gap-4"}>
+            <div>Size Range:</div>
+            <div>
+              {companyProfile.sizeFrom} - {companyProfile.sizeTo}
+            </div>
           </div>
-        </div>
+        </ShowChildren>
 
-        <div className={"flex flex-row gap-4"}>
-          <div>Size:</div>
-          <div>{companyProfile.size}</div>
-        </div>
+        <ShowChildren showIt={!!companyProfile.size}>
+          <div className={"flex flex-row gap-4"}>
+            <div>Size:</div>
+            <div>{companyProfile.size}</div>
+          </div>
+        </ShowChildren>
 
         <div className={"flex flex-row gap-4"}>
           <div>Location:</div>

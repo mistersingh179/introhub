@@ -1,0 +1,123 @@
+import { MetricsTime, Worker } from "bullmq";
+import redisClient from "@/lib/redisClient";
+import {
+  ApolloInputDataType,
+  ApolloJobNames,
+  ApolloOutputDataType,
+} from "@/bull/dataTypes";
+import enrichContactUsingApollo from "@/services/enrichContactUsingApollo";
+import {
+  addDays,
+  addHours,
+  addMinutes,
+  startOfDay,
+  startOfHour,
+  startOfMinute,
+} from "date-fns";
+import { randomInt } from "node:crypto";
+
+const queueName = "apollo";
+
+function calculateTimeToNextWindow(
+  windowType: "minute" | "hour" | "day",
+): number {
+  const now = new Date();
+
+  switch (windowType) {
+    case "minute":
+      const nextMinute = startOfMinute(addMinutes(now, 1));
+      return nextMinute.getTime() - now.getTime();
+    case "hour":
+      const nextHour = startOfHour(addHours(now, 1));
+      return nextHour.getTime() - now.getTime();
+    case "day":
+      const nextDay = startOfDay(addDays(now, 1));
+      return nextDay.getTime() - now.getTime();
+  }
+}
+
+const apolloWorker: Worker<
+  ApolloInputDataType,
+  ApolloOutputDataType,
+  ApolloJobNames
+> = new Worker(
+  queueName,
+  async (job, token) => {
+    const { name, data, opts } = job;
+    console.log("in processing function", name);
+    switch (job.name) {
+      case "enrichContactUsingApollo": {
+        const input = data as string;
+        const result = await enrichContactUsingApollo(input);
+        if (result) {
+          const { response, rateLimitInfo } = result;
+          if (rateLimitInfo) {
+            const randomStop = randomInt(1, 10);
+            console.log("rateLimitInfo: ", rateLimitInfo, randomStop);
+            if (rateLimitInfo["x-minute-requests-left"] <= randomStop) {
+              const waitTime = calculateTimeToNextWindow("minute");
+              console.log("manually rate limiting for minute: ", waitTime);
+              await apolloWorker.rateLimit(waitTime);
+              throw Worker.RateLimitError();
+            } else if (rateLimitInfo["x-hourly-requests-left"] <= randomStop) {
+              const waitTime = calculateTimeToNextWindow("hour");
+              console.log("manually rate limiting for hour: ", waitTime);
+              await apolloWorker.rateLimit(waitTime);
+              throw Worker.RateLimitError();
+            } else if (rateLimitInfo["x-24-hour-requests-left"] <= randomStop) {
+              const waitTime = calculateTimeToNextWindow("day");
+              console.log("manually rate limiting for 24 hour: ", waitTime);
+              await apolloWorker.rateLimit(waitTime);
+              throw Worker.RateLimitError();
+            }
+          }
+          return response;
+        }
+        return undefined;
+      }
+      default:
+        console.error("got unknown job!");
+    }
+  },
+  {
+    connection: redisClient,
+    concurrency: Number(process.env.WORKER_CONCURRENCY_COUNT),
+    limiter: {
+      max: 20, // Max 20 requests per minute
+      duration: 60 * 1000, // 60,000 ms (1 minute)
+    },
+    autorun: false,
+    metrics: {
+      maxDataPoints: MetricsTime.TWO_WEEKS,
+    },
+  },
+);
+
+apolloWorker.on("error", (err) => {
+  console.log("medium worker has an error: ", err);
+});
+
+apolloWorker.on("completed", (job) => {
+  const { name, data, id, opts } = job;
+  // console.log("job completed: ", name, data, id, opts);
+  console.log("job completed: ", name, id);
+});
+
+apolloWorker.on("active", (job) => {
+  const { name, data, id, opts } = job;
+  console.log("job active: ", name, id);
+});
+
+apolloWorker.on("drained", () => {
+  console.log("all jobs have been drained");
+});
+
+apolloWorker.on("failed", (job) => {
+  console.log("job failed: ", job);
+});
+
+apolloWorker.on("ready", () => {
+  console.log("worker is ready");
+});
+
+export default apolloWorker;

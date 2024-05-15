@@ -1,9 +1,14 @@
 import emailLookupByProxyUrl from "@/services/helpers/proxycurl/emailLookupApiCall";
 import loadEnvVariables from "@/lib/loadEnvVariables";
 
-type PeopleEnrichmentApiCall = (
+export type ApolloEnrichResponseWithLimitInfo = {
+  response: PeopleEnrichmentResponse;
+  rateLimitInfo?: ApolloRateLimitInfo;
+};
+
+export type PeopleEnrichmentApiCall = (
   email: string,
-) => Promise<PeopleEnrichmentResponse>;
+) => Promise<ApolloEnrichResponseWithLimitInfo>;
 
 const peopleEnrichmentApiCall: PeopleEnrichmentApiCall = async (email) => {
   const url = `https://api.apollo.io/v1/people/match`;
@@ -24,16 +29,25 @@ const peopleEnrichmentApiCall: PeopleEnrichmentApiCall = async (email) => {
     body: JSON.stringify(body),
   });
 
-  const status = res.status;
-  const dLeft = res.headers.get("x-24-hour-requests-left");
-  const hLeft = res.headers.get("x-hourly-requests-left");
-  const mLeft = res.headers.get("x-minute-requests-left");
+  const rateLimitInfo: ApolloRateLimitInfo = {
+    "x-24-hour-requests-left": Number(
+      res.headers.get("x-24-hour-requests-left"),
+    ),
+    "x-24-hour-usage": Number(res.headers.get("x-24-hour-usage")),
+    "x-hourly-requests-left": Number(res.headers.get("x-hourly-requests-left")),
+    "x-hourly-usage": Number(res.headers.get("x-hourly-usage")),
+    "x-minute-requests-left": Number(res.headers.get("x-minute-requests-left")),
+    "x-minute-usage": Number(res.headers.get("x-minute-usage")),
+    "x-rate-limit-24-hour": Number(res.headers.get("x-rate-limit-24-hour")),
+    "x-rate-limit-hourly": Number(res.headers.get("x-rate-limit-hourly")),
+    "x-rate-limit-minute": Number(res.headers.get("x-rate-limit-minute")),
+  };
 
-  console.log("peopleEnrichmentCall: ", email, status, dLeft, hLeft, mLeft);
+  console.log("peopleEnrichmentCall: ", email, res.status, rateLimitInfo);
 
-  const data = await res.json();
+  const data = (await res.json()) as PeopleEnrichmentResponse;
   console.log("peopleEnrichmentCall: ", email, data);
-  return data;
+  return { response: data, rateLimitInfo: rateLimitInfo };
 };
 
 export default peopleEnrichmentApiCall;
@@ -41,6 +55,9 @@ export default peopleEnrichmentApiCall;
 if (require.main === module) {
   (async () => {
     loadEnvVariables();
-    const ans = await peopleEnrichmentApiCall("sandeep@introhub.net");
+    const { response, rateLimitInfo } = await peopleEnrichmentApiCall(
+      "sandeep@introhub.net",
+    );
+    console.log(response, rateLimitInfo);
   })();
 }
