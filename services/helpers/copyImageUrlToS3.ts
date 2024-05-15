@@ -51,8 +51,8 @@ const copyImageUrlToS3: CopyImageUrlToS3 = async (url, dirName, fileName) => {
   }
 
   const resp = await fetch(url);
-  console.log("Headers:");
-  console.log(resp.headers);
+  // console.log("Headers:");
+  // console.log(resp.headers);
   const contentType = resp.headers.get("content-type") ?? undefined;
   const arrayBuffer = await resp.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);

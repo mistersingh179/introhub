@@ -15,6 +15,7 @@ import {
   startOfMinute,
 } from "date-fns";
 import { randomInt } from "node:crypto";
+import enrichAllRemainingContactsUsingApollo from "@/services/enrichAllRemainingContactsUsingApollo";
 
 const queueName = "apollo";
 
@@ -74,6 +75,9 @@ const apolloWorker: Worker<
           return response;
         }
         return undefined;
+      }
+      case "enrichAllRemainingContactsUsingApollo": {
+        return await enrichAllRemainingContactsUsingApollo();
       }
       default:
         console.error("got unknown job!");
