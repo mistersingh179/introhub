@@ -108,10 +108,12 @@ export default async function ShowContact({
           </div>
         </div>
 
-        <div className={"flex flex-row gap-4"}>
-          <div>Industry:</div>
-          <div>{companyProfile.industry}</div>
-        </div>
+        <ShowChildren showIt={!!companyProfile.industry}>
+          <div className={"flex flex-row gap-4"}>
+            <div>Industry:</div>
+            <div>{companyProfile.industry}</div>
+          </div>
+        </ShowChildren>
 
         <ShowChildren showIt={!!companyProfile.foundedYear}>
           <div className={"flex flex-row gap-4"}>

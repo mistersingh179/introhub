@@ -8,11 +8,11 @@ import { SendEmailInput } from "@/services/sendEmail";
 import { gmail_v1 } from "googleapis";
 import Schema$Message = gmail_v1.Schema$Message;
 import { EnrichContactInput } from "@/services/enrichContact";
-import {OnBoardUserInput} from "@/services/onBoardUser";
+import { OnBoardUserInput } from "@/services/onBoardUser";
 
 export type ProxyCurlInputDataType = EnrichContactInput | null;
 
-export type ApolloInputDataType = string;
+export type ApolloInputDataType = string | null;
 
 export type MediumInputDataType =
   | DownloadMessagesInput
@@ -35,7 +35,9 @@ export type MediumOutputDataType =
 
 export type ProxyCurlJobNames = "enrichContact" | "enrichAllContacts";
 
-export type ApolloJobNames = "enrichContactUsingApollo";
+export type ApolloJobNames =
+  | "enrichContactUsingApollo"
+  | "enrichAllRemainingContactsUsingApollo";
 
 export type MediumJobNames =
   | "downloadMessages"

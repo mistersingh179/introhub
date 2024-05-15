@@ -1,5 +1,6 @@
 import mediumQueue from "@/bull/queues/mediumQueue";
 import proxyCurlQueue from "@/bull/queues/proxyCurlQueue";
+import apolloQueue from "@/bull/queues/apolloQueue";
 
 const addDownloadMessagesForAllAccounts = async () => {
   const jobObj = await mediumQueue.add("downloadMessagesForAllAccounts", null, {
@@ -31,10 +32,25 @@ const addEnrichAllContacts = async () => {
   console.log("schedule job: ", name, id, opts);
 };
 
+const addEnrichAllRemainingContactsUsingApollo = async () => {
+  const jobObj = await apolloQueue.add(
+    "enrichAllRemainingContactsUsingApollo",
+    null,
+    {
+      repeat: {
+        pattern: "0 10 * * *",
+      },
+    },
+  );
+  const { name, id, opts } = jobObj;
+  console.log("schedule job: ", name, id, opts);
+};
+
 const setupCronJobs = async () => {
   await addDownloadMessagesForAllAccounts();
   await addBuildContactsForAllUsers();
   await addEnrichAllContacts();
+  await addEnrichAllRemainingContactsUsingApollo();
 };
 
 export default setupCronJobs;
