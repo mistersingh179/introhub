@@ -117,7 +117,7 @@ apolloWorker.on("drained", () => {
 });
 
 apolloWorker.on("failed", (job) => {
-  console.log("job failed: ", job);
+  console.log("apolloWorker failed: ", job?.name, job?.id, job?.data, job?.stacktrace);
 });
 
 apolloWorker.on("ready", () => {

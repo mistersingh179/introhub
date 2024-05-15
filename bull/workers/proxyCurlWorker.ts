@@ -66,7 +66,7 @@ proxyCurlWorker.on("drained", () => {
 });
 
 proxyCurlWorker.on("failed", (job) => {
-  console.log("job failed: ", job);
+  console.log("proxyCurlWorker failed: ", job?.name, job?.id, job?.data, job?.stacktrace);
 });
 
 proxyCurlWorker.on("ready", () => {
