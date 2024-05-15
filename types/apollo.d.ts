@@ -132,3 +132,16 @@ interface FundingEvent {
   amount: string;
   currency: string;
 }
+
+interface ApolloRateLimitInfo {
+  "x-24-hour-requests-left": number;
+  "x-24-hour-usage": number;
+  "x-hourly-requests-left": number;
+  "x-hourly-usage": number;
+  "x-minute-requests-left": number;
+  "x-minute-usage": number;
+  "x-rate-limit-24-hour": number;
+  "x-rate-limit-hourly": number;
+  "x-rate-limit-minute": number;
+}
+

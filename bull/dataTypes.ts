@@ -12,6 +12,8 @@ import {OnBoardUserInput} from "@/services/onBoardUser";
 
 export type ProxyCurlInputDataType = EnrichContactInput | null;
 
+export type ApolloInputDataType = string;
+
 export type MediumInputDataType =
   | DownloadMessagesInput
   | DownloadMetaDataInput
@@ -22,6 +24,8 @@ export type MediumInputDataType =
 
 export type ProxyCurlOutputDataType = void;
 
+export type ApolloOutputDataType = void | PeopleEnrichmentResponse;
+
 export type MediumOutputDataType =
   | DownloadMessagesOutput
   | Schema$Message
@@ -30,6 +34,8 @@ export type MediumOutputDataType =
   | void;
 
 export type ProxyCurlJobNames = "enrichContact" | "enrichAllContacts";
+
+export type ApolloJobNames = "enrichContactUsingApollo";
 
 export type MediumJobNames =
   | "downloadMessages"
