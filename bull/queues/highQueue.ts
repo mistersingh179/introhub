@@ -1,6 +1,5 @@
 import redisClient from "@/lib/redisClient";
 import {Queue, QueueEvents} from "bullmq";
-import {MediumInputDataType, MediumJobNames, MediumOutputDataType} from "@/bull/dataTypes";
 
 const queueName = "high";
 

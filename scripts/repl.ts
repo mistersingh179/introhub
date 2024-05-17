@@ -4,6 +4,7 @@ import getGmailObject from "@/services/helpers/getGmailObject";
 import { google } from "googleapis";
 import apolloQueue from "@/bull/queues/apolloQueue";
 import { randomInt } from "node:crypto";
+import highQueue from "@/bull/queues/highQueue";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -42,6 +43,10 @@ prisma.$on("query", (e) => {
 
   const ttl = await apolloQueue.getRateLimitTtl();
   console.log(ttl);
+
+  // const jobObj = await highQueue.add("foo", "");
+  // const {name, id, data} = jobObj;
+  // console.log("ans: ", name, id, data);
 
   // console.log(randomInt(1,5));
 })();

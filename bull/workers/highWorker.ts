@@ -8,8 +8,8 @@ const queueName = "high";
 const highWorker = new Worker(
   queueName,
   async (job, token) => {
-    console.log("in high worker");
-    throw new ProxyCurlError("oops is the message", {foo: "bar"});
+    const {id, name} = job;
+    console.log("in high worker with job: ", id, name, token);
   },
   {
     connection: redisClient,
