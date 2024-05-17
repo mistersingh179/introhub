@@ -2,11 +2,22 @@
 
 import { useState } from "react";
 import { FancyOption } from "@/components/FancyOption";
-import { FancyMultiSelect } from "@/components/FancyMultiSelect";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
 import MyDropDown from "@/app/dashboard/home/MyDropDown";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon, X } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import ShowChildren from "@/components/ShowChildren";
 
 const buildOptions = (values: string[]): FancyOption[] => {
   return values.map((rec) => ({ label: rec, value: rec }));
@@ -31,14 +42,8 @@ type FiltersFormProps = {
 };
 
 const FiltersForm = (props: FiltersFormProps) => {
-  const {
-    cities,
-    states,
-    jobTitles,
-    industries,
-    categories,
-    userEmails,
-  } = props;
+  const { cities, states, jobTitles, industries, categories, userEmails } =
+    props;
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -64,6 +69,10 @@ const FiltersForm = (props: FiltersFormProps) => {
     buildOptions(searchParams.getAll("selectedUserEmails")),
   );
 
+  const createdAfter = searchParams.get("createdAfter");
+  const [date, setDate] = useState<Date | undefined>(
+    createdAfter ? new Date(createdAfter) : new Date(),
+  );
   const formHandler = (formData: FormData) => {
     console.log("in formHandler: ", formData);
 
@@ -88,6 +97,11 @@ const FiltersForm = (props: FiltersFormProps) => {
     params.delete("selectedWebsite");
     if (formData.get("selectedWebsite")) {
       params.set("selectedWebsite", formData.get("selectedWebsite") as string);
+    }
+
+    params.delete("createdAfter");
+    if (date) {
+      params.set("createdAfter", date.toISOString());
     }
 
     params.set("page", "1");
@@ -134,7 +148,8 @@ const FiltersForm = (props: FiltersFormProps) => {
           options={buildOptions(jobTitles)}
           selected={selectedJobTitles}
           limit={5}
-          setSelected={setSelectedJobTitles} />
+          setSelected={setSelectedJobTitles}
+        />
         <MyDropDown
           placeholder={"Industries"}
           options={buildOptions(industries)}
@@ -155,6 +170,38 @@ const FiltersForm = (props: FiltersFormProps) => {
           selected={selectedUserEmails}
           setSelected={setSelectedUserEmails}
         />
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-[280px] justify-start text-left font-normal",
+                !date && "text-muted-foreground",
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, "PPP") : <span>Created After</span>}
+              <div className={"flex-grow"}></div>
+              <ShowChildren showIt={!!date}>
+                <X
+                  className="mr-2 h-4 w-4"
+                  onClick={(x) => {
+                    setDate(undefined);
+                    x.preventDefault();
+                  }}
+                />
+              </ShowChildren>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
 
         <div className={"flex flex-row justify-center"}>
           <SubmitButton label={"Apply Filter"} />

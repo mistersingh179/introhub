@@ -29,6 +29,7 @@ type ProspectsSearchParams = {
   selectedEmail?: string;
   selectedWebsite?: string;
   page?: string | string[];
+  createdAfter?: string;
 };
 
 export type ContactWithUserInfo = Contact & {
@@ -61,6 +62,7 @@ type GetSelectedFilterValues = (
   selectedUserEmails: string[] | undefined;
   selectedEmail: string | undefined;
   selectedWebsite: string | undefined;
+  createdAfter: string | undefined;
 };
 
 const getSelectedFilterValues: GetSelectedFilterValues = (searchParams) => {
@@ -72,6 +74,7 @@ const getSelectedFilterValues: GetSelectedFilterValues = (searchParams) => {
   const selectedUserEmails = getValueAsArray(searchParams?.selectedUserEmails);
   const selectedEmail = searchParams?.selectedEmail;
   const selectedWebsite = searchParams?.selectedWebsite;
+  const createdAfter = searchParams?.createdAfter;
 
   const result = {
     selectedCities,
@@ -82,6 +85,7 @@ const getSelectedFilterValues: GetSelectedFilterValues = (searchParams) => {
     selectedEmail,
     selectedWebsite,
     selectedUserEmails,
+    createdAfter,
   };
 
   console.log("selected: ", result);
@@ -120,26 +124,26 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
   const citiesWithCount = await prisma.personProfile.groupBy({
     by: "city",
     _count: {
-      city: true
+      city: true,
     },
     orderBy: {
       _count: {
-        city: 'desc'
-      }
-    }
+        city: "desc",
+      },
+    },
   });
   const cities = getUniqueValuesWithOrderPreserved(citiesWithCount, "city");
 
   const statesWithCount = await prisma.personProfile.groupBy({
     by: "state",
     _count: {
-      state: true
+      state: true,
     },
     orderBy: {
       _count: {
-        state: 'desc'
-      }
-    }
+        state: "desc",
+      },
+    },
   });
   const states = getUniqueValuesWithOrderPreserved(statesWithCount, "state");
 
@@ -150,11 +154,14 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
     },
     orderBy: {
       _count: {
-        jobTitle: 'desc'
-      }
-    }
+        jobTitle: "desc",
+      },
+    },
   });
-  const jobTitles = getUniqueValuesWithOrderPreserved(jobTitlesWithCount, "jobTitle");
+  const jobTitles = getUniqueValuesWithOrderPreserved(
+    jobTitlesWithCount,
+    "jobTitle",
+  );
 
   const industriesWithCount = await prisma.companyProfile.groupBy({
     by: "industry",
@@ -163,25 +170,30 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
     },
     orderBy: {
       _count: {
-        industry: 'desc'
-      }
-    }
+        industry: "desc",
+      },
+    },
   });
-  const industries = getUniqueValuesWithOrderPreserved(industriesWithCount, "industry");
+  const industries = getUniqueValuesWithOrderPreserved(
+    industriesWithCount,
+    "industry",
+  );
 
   const categoriesWithCount = await prisma.category.groupBy({
     by: "name",
     _count: {
-      name: true
+      name: true,
     },
     orderBy: {
       _count: {
-        name: 'desc'
-      }
-    }
+        name: "desc",
+      },
+    },
   });
-  const categories = getUniqueValuesWithOrderPreserved(categoriesWithCount, "name");
-
+  const categories = getUniqueValuesWithOrderPreserved(
+    categoriesWithCount,
+    "name",
+  );
 
   const usersWithCount = await prisma.user.groupBy({
     by: "email",
@@ -191,17 +203,16 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
       },
     },
     _count: {
-      email: true
+      email: true,
     },
     orderBy: {
       _count: {
-        email: 'desc'
-      }
-    }
+        email: "desc",
+      },
+    },
   });
   const userEmails = getUniqueValuesWithOrderPreserved(usersWithCount, "email");
   console.log("userEmails.length: ", userEmails.length);
-
 
   const result = {
     cities,
@@ -244,6 +255,7 @@ export default async function Prospects({
     selectedIndustries,
     selectedCategories,
     selectedUserEmails,
+    createdAfter,
   } = getSelectedFilterValues(searchParams);
 
   const cityFilterSql = selectedCities
@@ -278,6 +290,10 @@ export default async function Prospects({
     ? Prisma.sql`and C.email ilike ${"%" + selectedWebsite + "%"}`
     : Prisma.sql``;
 
+  const createdAfterFilterSql = createdAfter
+    ? Prisma.sql`and C."createdAt" >= ${new Date(createdAfter)}`
+    : Prisma.sql``;
+
   const sql = Prisma.sql`
       select distinct on (C.email) C.*
       from "Contact" C
@@ -288,7 +304,8 @@ export default async function Prospects({
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} \
-            ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql}
+            ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} \
+            ${createdAfterFilterSql}
         and C."userId" != ${user.id}
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
