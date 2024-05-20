@@ -71,7 +71,7 @@ const FiltersForm = (props: FiltersFormProps) => {
 
   const createdAfter = searchParams.get("createdAfter");
   const [date, setDate] = useState<Date | undefined>(
-    createdAfter ? new Date(createdAfter) : new Date(),
+    createdAfter ? new Date(createdAfter) : undefined,
   );
   const formHandler = (formData: FormData) => {
     console.log("in formHandler: ", formData);
