@@ -2,6 +2,7 @@ import prisma from "../prismaClient";
 import prepareProspectsData from "@/services/prepareProspectsData";
 import { getNewProspectsHtml } from "@/email-templates/NewProspects";
 import { subDays } from "date-fns";
+import HighQueue from "@/bull/queues/highQueue";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -14,17 +15,13 @@ prisma.$on("query", (e) => {
 
 (async () => {
   console.log("Hello world !");
-  const prospects = await prisma.contact.findMany();
-  const { prospectsWithUser, emailToProfile, companyUrlToProfile } =
-    await prepareProspectsData(prospects);
+  const userId = 'clvl71yei0000gcenwb6m36zs';
 
-  const html = getNewProspectsHtml(
-    prospectsWithUser,
-    emailToProfile,
-    companyUrlToProfile,
-    subDays(new Date(), 1)
-  );
-  console.log("html: ", html);
+  const jobObj = await HighQueue.add("onBoardUser", { userId });
+  const { name, id } = jobObj;
+
+  const result = { message: "thanks!", name, id, userId };
+  console.log(result);
 })();
 
 export {};

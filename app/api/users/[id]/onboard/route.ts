@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import MediumQueue from "@/bull/queues/mediumQueue";
+import HighQueue from "@/bull/queues/highQueue";
 
 const doAuthCheck = (request: NextRequest): undefined | NextResponse => {
   const providedAuthToken = request.headers.get("Authorization");
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest, { params }: OptionsType) {
   const userId = params.id;
   console.log("going to onboard user: ", params.id);
 
-  const jobObj = await MediumQueue.add("onBoardUser", { userId });
+  const jobObj = await HighQueue.add("onBoardUser", { userId });
   const { name, id } = jobObj;
 
   const result = { message: "thanks!", name, id, userId };

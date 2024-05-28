@@ -10,6 +10,8 @@ import Schema$Message = gmail_v1.Schema$Message;
 import { EnrichContactInput } from "@/services/enrichContact";
 import { OnBoardUserInput } from "@/services/onBoardUser";
 
+export type HighInputDataType = OnBoardUserInput;
+
 export type ProxyCurlInputDataType = EnrichContactInput | null;
 
 export type ApolloInputDataType = string | null;
@@ -22,6 +24,8 @@ export type MediumInputDataType =
   | OnBoardUserInput
   | null;
 
+export type HighOutputDataType = void;
+
 export type ProxyCurlOutputDataType = void;
 
 export type ApolloOutputDataType = void | PeopleEnrichmentResponse;
@@ -32,6 +36,8 @@ export type MediumOutputDataType =
   | number
   | undefined
   | void;
+
+export type HighJobNames = "onBoardUser";
 
 export type ProxyCurlJobNames = "enrichContact" | "enrichAllContacts";
 
@@ -45,5 +51,4 @@ export type MediumJobNames =
   | "sendEmail"
   | "downloadMessagesForAllAccounts"
   | "buildContacts"
-  | "buildContactsForAllUsers"
-  | "onBoardUser";
+  | "buildContactsForAllUsers";

@@ -1,9 +1,13 @@
 import redisClient from "@/lib/redisClient";
-import {Queue, QueueEvents} from "bullmq";
+import { Queue, QueueEvents } from "bullmq";
+import {
+  HighInputDataType,
+  HighJobNames,
+  HighOutputDataType,
+} from "@/bull/dataTypes";
 
 const queueName = "high";
-
-const highQueue: Queue =
+const highQueue: Queue<HighInputDataType, HighOutputDataType, HighJobNames> =
   new Queue(queueName, {
     connection: redisClient,
     defaultJobOptions: {
