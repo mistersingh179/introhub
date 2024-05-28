@@ -33,7 +33,7 @@ const onBoardUser: OnBoardUser = async (input) => {
   const downloadMessagesJob = await MediumQueue.add("downloadMessages", {
     account: account,
   });
-  await downloadMessagesJob.waitUntilFinished(mediumQueueEvents);
+  await downloadMessagesJob.waitUntilFinished(mediumQueueEvents, 5 * 60 * 1000);
 
   // using delay to wait for the downloadMetaData job
   // using priority to run after downloadMetaData job
@@ -44,17 +44,16 @@ const onBoardUser: OnBoardUser = async (input) => {
     delay: 60 * 1000,
     priority: 10,
   });
-  await buildContactsJob.waitUntilFinished(mediumQueueEvents);
+  await buildContactsJob.waitUntilFinished(mediumQueueEvents, 5 * 60 * 1000);
 
   const contacts = await prisma.contact.findMany({
     where: {
-      userId: user.id
-    }
-  })
-  for(const contact of contacts){
-    await proxyCurlQueue.add("enrichContact", {email: contact.email})
+      userId: user.id,
+    },
+  });
+  for (const contact of contacts) {
+    await proxyCurlQueue.add("enrichContact", { email: contact.email });
   }
-
 };
 
 export default onBoardUser;
@@ -63,11 +62,11 @@ if (require.main === module) {
   (async () => {
     const user = await prisma.user.findFirstOrThrow({
       where: {
-        email: "mistersingh179@gmail.com"
-      }
-    })
+        email: "mistersingh179@gmail.com",
+      },
+    });
     await onBoardUser({
-      userId: user.id
+      userId: user.id,
     });
     process.exit(0);
   })();
