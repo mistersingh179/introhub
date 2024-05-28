@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import {
   Table,
   TableBody,
@@ -25,11 +27,11 @@ import { ContactWithUser } from "@/app/dashboard/introductions/create/[contactId
 import FacilitatorBox from "@/components/FacilitatorBox";
 
 const ProspectsTable = ({
-  prospects,
+  prospectsWithUser,
   emailToProfile,
   companyUrlToProfile,
 }: {
-  prospects: ContactWithUser[];
+  prospectsWithUser: ContactWithUser[];
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
 }) => {
@@ -43,7 +45,7 @@ const ProspectsTable = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {prospects.map((prospect) => {
+        {prospectsWithUser.map((prospect) => {
           return (
             <ProspectRow
               key={prospect.id}
@@ -70,7 +72,7 @@ type ProspectRowProps = {
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
 };
-const ProspectRow = (props: ProspectRowProps) => {
+export const ProspectRow = (props: ProspectRowProps) => {
   const { prospect, emailToProfile, companyUrlToProfile } = props;
   const contactProfiles = getProfiles(
     prospect.email,
@@ -110,7 +112,7 @@ const ProspectRow = (props: ProspectRowProps) => {
               <div>Received: {prospect.receivedCount}</div>
               <div>Ratio: {prospect.sentReceivedRatio / 100}</div>
             </div>
-            <Button asChild className={'w-fit'}>
+            <Button asChild className={"w-fit"}>
               <Link href={`/dashboard/introductions/create/${prospect.id}`}>
                 Create Intro
                 <SquarePen size={18} className={"ml-2"} />
