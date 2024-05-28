@@ -1,30 +1,30 @@
-import prisma from "../prismaClient";
+import prisma from "@/prismaClient";
 import prepareProspectsData from "@/services/prepareProspectsData";
 import { getNewProspectsHtml } from "@/email-templates/NewProspects";
-import { subDays } from "date-fns";
+import {startOfToday} from "date-fns";
 
-// @ts-ignore
-prisma.$on("query", (e) => {
-  const { timestamp, query, params, duration, target } = e;
-  console.log("***");
-  console.log(query, params);
-  console.log("***");
-  console.log({ timestamp, params, duration, target });
-});
+export const dynamic = "force-dynamic"; // defaults to auto
 
-(async () => {
-  console.log("Hello world !");
+export async function GET(request: Request) {
+
   const prospects = await prisma.contact.findMany();
   const { prospectsWithUser, emailToProfile, companyUrlToProfile } =
     await prepareProspectsData(prospects);
 
+  const date = startOfToday();
   const html = getNewProspectsHtml(
     prospectsWithUser,
     emailToProfile,
     companyUrlToProfile,
-    subDays(new Date(), 1)
+    date
   );
   console.log("html: ", html);
-})();
 
-export {};
+  const response = new Response(html, {
+    status: 200,
+    headers: {
+      "content-type": "text/html",
+    },
+  });
+  return response;
+}

@@ -301,7 +301,7 @@ export default async function Prospects({
         </div>
         <div className={"w-full"}>
           <ProspectsTable
-            prospects={prospectsWithUser}
+            prospectsWithUser={prospectsWithUser}
             emailToProfile={emailToProfile}
             companyUrlToProfile={companyUrlToProfile}
           />

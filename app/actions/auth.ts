@@ -10,7 +10,8 @@ export async function signOutAction() {
 
 export async function signInWithGoogleAction(formData: FormData) {
   console.log("in signInWithGoogle");
+  const callbackUrl = formData.get("callbackUrl") as string;
   await signIn("google", {
-    redirectTo: "/dashboard/introductions/list",
+    redirectTo: callbackUrl ? callbackUrl : "/dashboard/introductions/list",
   });
 }
