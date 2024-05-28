@@ -6,6 +6,7 @@ import {
   HighOutputDataType,
 } from "@/bull/dataTypes";
 import onBoardUser, { OnBoardUserInput } from "@/services/onBoardUser";
+import sendProspectsCreatedToday from "@/services/sendProspectsCreatedToday";
 
 const queueName = "high";
 const highWorker = new Worker<
@@ -21,6 +22,9 @@ const highWorker = new Worker<
       case "onBoardUser": {
         const input = data as OnBoardUserInput;
         return await onBoardUser(input);
+      }
+      case "sendProspectsCreatedToday": {
+        return await sendProspectsCreatedToday();
       }
       default:
         console.error("got unknown job!");
