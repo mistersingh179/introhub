@@ -72,10 +72,6 @@ const mediumWorker: Worker<
       case "buildContactsForAllUsers": {
         return await buildContactsForAllUsers();
       }
-      case "onBoardUser": {
-        const input = data as OnBoardUserInput;
-        return await onBoardUser(input);
-      }
       default:
         console.error("got unknown job!");
     }

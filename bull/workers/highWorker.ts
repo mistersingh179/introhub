@@ -1,19 +1,38 @@
-import { DelayedError, Job, MetricsTime, Worker } from "bullmq";
+import { MetricsTime, Worker } from "bullmq";
 import redisClient from "@/lib/redisClient";
-import { addMilliseconds, addSeconds, getTime } from "date-fns";
-import accquireLock from "@/services/helpers/accquireLock";
-import {ProxyCurlError} from "@/services/helpers/proxycurl/ProxyCurlError";
+import {
+  HighInputDataType,
+  HighJobNames,
+  HighOutputDataType,
+} from "@/bull/dataTypes";
+import onBoardUser, { OnBoardUserInput } from "@/services/onBoardUser";
 
 const queueName = "high";
-const highWorker = new Worker(
+const highWorker = new Worker<
+  HighInputDataType,
+  HighOutputDataType,
+  HighJobNames
+>(
   queueName,
   async (job, token) => {
-    const {id, name} = job;
-    console.log("in high worker with job: ", id, name, token);
+    const { id, name, data } = job;
+    console.log("in processing function", name);
+    switch (job.name) {
+      case "onBoardUser": {
+        const input = data as OnBoardUserInput;
+        return await onBoardUser(input);
+      }
+      default:
+        console.error("got unknown job!");
+    }
   },
   {
     connection: redisClient,
-    concurrency: 1,
+    concurrency: Number(process.env.WORKER_CONCURRENCY_COUNT),
+    limiter: {
+      max: 100,
+      duration: 1000,
+    },
     autorun: false,
     metrics: {
       maxDataPoints: MetricsTime.TWO_WEEKS,
@@ -40,7 +59,13 @@ highWorker.on("drained", () => {
 });
 
 highWorker.on("failed", (job) => {
-  console.log("highWorker failed: ", job?.name, job?.id, job?.data, job?.stacktrace);
+  console.log(
+    "highWorker failed: ",
+    job?.name,
+    job?.id,
+    job?.data,
+    job?.stacktrace,
+  );
 });
 
 export default highWorker;
