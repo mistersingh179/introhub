@@ -5,7 +5,7 @@ export type PaginatedValues = {
   currentPage: number;
   itemsPerPage: number;
   recordsToSkip: number;
-}
+};
 
 export type SelectedFilterValues = {
   selectedCities?: string[] | undefined;
@@ -17,13 +17,18 @@ export type SelectedFilterValues = {
   selectedEmail?: string | undefined;
   selectedWebsite?: string | undefined;
   createdAfter?: string | undefined;
-}
+};
+
+type ProspectsBasedOnFiltersResult = {
+  prospects: Contact[];
+  totalRecordsCount: number;
+};
 
 const getProspectsBasedOnFilters = async (
   filters: SelectedFilterValues,
   paginatedValues: PaginatedValues,
   user: User,
-): Promise<Contact[]> => {
+): Promise<ProspectsBasedOnFiltersResult> => {
   const {
     selectedCities,
     selectedStates,
@@ -96,7 +101,24 @@ const getProspectsBasedOnFilters = async (
   const prospects = await prisma.$queryRaw<Contact[]>(sql);
   console.log("prospects found: ", prospects.length);
 
-  return prospects;
+  const countSql = Prisma.sql`
+      select count(distinct C.email)
+      from "Contact" C
+               inner join public."User" U on U.id = C."userId"
+               inner join public."PersonProfile" PP on C.email = PP.email and PP."linkedInUrl" is not null
+               inner join public."PersonExperience" PE on PP.id = PE."personProfileId"
+               inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
+               left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
+               left join public."Category" CAT on CPC."categoryId" = CAT.id
+      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} \
+            ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} \
+            ${createdAfterFilterSql}
+        and C."userId" != ${user.id}
+  `;
+  const countSqlResult = await prisma.$queryRaw<{ count: number }[]>(countSql);
+  const totalRecordsCount = Number(countSqlResult[0].count);
+
+  return { prospects, totalRecordsCount };
 };
 
 export default getProspectsBasedOnFilters;
@@ -107,16 +129,21 @@ if (require.main === module) {
     const paginationValues: PaginatedValues = {
       currentPage: 1,
       itemsPerPage: 10,
-      recordsToSkip: 0
-    }
+      recordsToSkip: 0,
+    };
     const d = new Date(2024, 4, 16);
     console.log(d.toISOString());
     const filters: SelectedFilterValues = {
-      selectedStates: ['New York']
+      selectedStates: ["New York"],
     };
 
-    const prospects = await getProspectsBasedOnFilters(filters, paginationValues, user);
+    const { prospects, totalRecordsCount } = await getProspectsBasedOnFilters(
+      filters,
+      paginationValues,
+      user,
+    );
     console.log("prospects: ", prospects);
+    console.log("totalRecordsCount: ", totalRecordsCount);
     process.exit(0);
   })();
 }
