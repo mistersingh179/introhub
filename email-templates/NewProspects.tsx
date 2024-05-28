@@ -50,7 +50,10 @@ const getProfiles = (
 const NewProspects = (props: NewProspectsProps) => {
   const { prospectsWithUser, emailToProfile, companyUrlToProfile, date } =
     props;
-  console.log("*** date ***: ", date);
+  const personProfiles = Object.values(emailToProfile || {});
+  const companyNames = personProfiles
+    .map((pp) => pp.personExperiences?.[0]?.companyName ?? "")
+    .join(", ");
   const count = prospectsWithUser.length;
   return (
     <>
@@ -58,10 +61,10 @@ const NewProspects = (props: NewProspectsProps) => {
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-        <Preview>foo bar boom bam</Preview>
+        <Preview> {companyNames || "nothing here to see :-/"} </Preview>
         <Container>
           <Heading as="h2">
-            {count} New Prospect{count > 1 ? "s" : ""} –{" "}
+            {count} New Prospect{count == 1 ? "" : "s"} –{" "}
             {lightFormat(date, "MM-dd-yyyy")}
           </Heading>
           <Hr />

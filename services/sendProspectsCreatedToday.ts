@@ -27,12 +27,21 @@ const sendProspectsCreatedToday = async () => {
     nonExistentUser,
   );
 
-  if(prospects.length == 0){
-    console.log("aborting as no new prospects: ", filters);
-  }
+  // if(prospects.length == 0){
+  //   console.log("aborting as no new prospects: ", filters);
+  //   return
+  // }
 
   const { prospectsWithUser, emailToProfile, companyUrlToProfile } =
     await prepareProspectsData(prospects);
+
+  const html = getNewProspectsHtml(
+    prospectsWithUser,
+    emailToProfile,
+    companyUrlToProfile,
+    createdAfter,
+  );
+  console.log("html: ", html);
 
   const systemEmail = "sandeep@introhub.net";
   const systemAccount = await prisma.account.findFirstOrThrow({
@@ -42,16 +51,6 @@ const sendProspectsCreatedToday = async () => {
       },
     },
   });
-
-  console.log("*** createdAfter: ", createdAfter);
-  const html = getNewProspectsHtml(
-    prospectsWithUser,
-    emailToProfile,
-    companyUrlToProfile,
-    createdAfter,
-  );
-  console.log("html: ", html);
-
   const count = prospectsWithUser.length;
   const response = await sendEmail({
     account: systemAccount,
@@ -59,10 +58,11 @@ const sendProspectsCreatedToday = async () => {
     from: systemEmail,
     to: "rod@introhub.net",
     cc: "sandeep@introhub.net",
-    subject: `${count} New Prospect${count > 1 ? "s" : ""}`,
+    subject: `${count} New Prospect${count == 1 ? "" : "s"}`,
   });
 
   console.log(response);
+  return prospects;
 };
 
 export default sendProspectsCreatedToday;

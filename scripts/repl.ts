@@ -3,6 +3,7 @@ import prepareProspectsData from "@/services/prepareProspectsData";
 import { getNewProspectsHtml } from "@/email-templates/NewProspects";
 import { subDays } from "date-fns";
 import HighQueue from "@/bull/queues/highQueue";
+import refreshScopes from "@/services/refreshScopes";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -15,13 +16,16 @@ prisma.$on("query", (e) => {
 
 (async () => {
   console.log("Hello world !");
-  const userId = 'clwjp1tda000f13y8f29ky4ki';
+  const userId = 'cluvta2ke0000fat3dhwdwkim';
 
-  const jobObj = await HighQueue.add("onBoardUser", { userId });
-  const { name, id } = jobObj;
+  const scopes = await refreshScopes(userId);
+  console.log(scopes);
 
-  const result = { message: "thanks!", name, id, userId };
-  console.log(result);
+  // const jobObj = await HighQueue.add("onBoardUser", { userId });
+  // const { name, id } = jobObj;
+  //
+  // const result = { message: "thanks!", name, id, userId };
+  // console.log(result);
 })();
 
 export {};
