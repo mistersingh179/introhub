@@ -6,11 +6,12 @@ import {
 import { User } from "@prisma/client";
 import { SendEmailInput } from "@/services/sendEmail";
 import { gmail_v1 } from "googleapis";
-import Schema$Message = gmail_v1.Schema$Message;
 import { EnrichContactInput } from "@/services/enrichContact";
 import { OnBoardUserInput } from "@/services/onBoardUser";
+import { SendProspectsCreatedTodayOutput } from "@/services/sendProspectsCreatedToday";
+import Schema$Message = gmail_v1.Schema$Message;
 
-export type HighInputDataType = OnBoardUserInput;
+export type HighInputDataType = OnBoardUserInput | undefined;
 
 export type ProxyCurlInputDataType = EnrichContactInput | null;
 
@@ -24,7 +25,7 @@ export type MediumInputDataType =
   | OnBoardUserInput
   | null;
 
-export type HighOutputDataType = void;
+export type HighOutputDataType = void | SendProspectsCreatedTodayOutput;
 
 export type ProxyCurlOutputDataType = void;
 
@@ -37,7 +38,7 @@ export type MediumOutputDataType =
   | undefined
   | void;
 
-export type HighJobNames = "onBoardUser";
+export type HighJobNames = "onBoardUser" | "sendProspectsCreatedToday";
 
 export type ProxyCurlJobNames = "enrichContact" | "enrichAllContacts";
 

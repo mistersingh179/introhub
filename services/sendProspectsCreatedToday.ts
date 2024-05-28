@@ -7,8 +7,12 @@ import { startOfToday, subDays } from "date-fns";
 import sendEmail from "@/services/sendEmail";
 import prepareProspectsData from "@/services/prepareProspectsData";
 import { getNewProspectsHtml } from "@/email-templates/NewProspects";
+import { Contact } from "@prisma/client";
 
-const sendProspectsCreatedToday = async () => {
+export type SendProspectsCreatedTodayOutput = Contact[];
+type SendProspectsCreatedToday = () => Promise<SendProspectsCreatedTodayOutput>;
+
+const sendProspectsCreatedToday: SendProspectsCreatedToday = async () => {
   const user = await prisma.user.findFirstOrThrow();
   const nonExistentUser = { ...user, id: "-1" };
 
