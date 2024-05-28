@@ -235,7 +235,11 @@ export default async function Prospects({
 
   const paginationValues: PaginatedValues = getPaginationValues(searchParams);
   const filters: SelectedFilterValues = getSelectedFilterValues(searchParams);
-  const prospects = await getProspectsBasedOnFilters(filters, paginationValues, user);
+  const { prospects, totalRecordsCount } = await getProspectsBasedOnFilters(
+    filters,
+    paginationValues,
+    user,
+  );
 
   const userIds = [...new Set(prospects.map((p) => p.userId))];
   const users = await prisma.user.findMany({
@@ -272,7 +276,7 @@ export default async function Prospects({
   return (
     <>
       <div className={"flex flex-row justify-start items-center gap-4"}>
-        <h1 className={"text-2xl my-4"}>Prospects</h1>
+        <h1 className={"text-2xl my-4"}>Prospects – {totalRecordsCount}</h1>
       </div>
 
       <div className={"flex flex-col md:flex-row gap-4 items-start"}>
