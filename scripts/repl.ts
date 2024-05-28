@@ -15,7 +15,7 @@ prisma.$on("query", (e) => {
 
 (async () => {
   console.log("Hello world !");
-  const userId = 'clvl71yei0000gcenwb6m36zs';
+  const userId = 'clwjp1tda000f13y8f29ky4ki';
 
   const jobObj = await HighQueue.add("onBoardUser", { userId });
   const { name, id } = jobObj;
