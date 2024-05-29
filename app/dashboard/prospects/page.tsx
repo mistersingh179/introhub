@@ -284,6 +284,9 @@ export default async function Prospects({
           <Collapsible defaultOpen={true}>
             <div className={"flex flex-row justify-between items-center"}>
               <h1>Filters</h1>
+              {/*<div className="text-sm text-muted-foreground">*/}
+              {/*  15 possible Results*/}
+              {/*</div>*/}
               <CollapsibleTrigger asChild className={"md:hidden"}>
                 <Button variant="ghost" size="sm" className="w-9 p-0">
                   <ChevronsUpDown className="h-4 w-4" />

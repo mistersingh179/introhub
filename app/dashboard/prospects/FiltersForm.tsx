@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FancyOption } from "@/components/FancyOption";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -49,6 +49,12 @@ const FiltersForm = (props: FiltersFormProps) => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  const [selectedEmail, setSelectedEmail] = useState<string | undefined>(
+    undefined,
+  );
+  const [selectedWebsite, setSelectedWebsite] = useState<string | undefined>(
+    undefined,
+  );
   const [selectedCities, setSelectedCities] = useState<FancyOption[]>(
     buildOptions(searchParams.getAll("selectedCities")),
   );
@@ -68,17 +74,33 @@ const FiltersForm = (props: FiltersFormProps) => {
   const [selectedUserEmails, setSelectedUserEmails] = useState<FancyOption[]>(
     buildOptions(searchParams.getAll("selectedUserEmails")),
   );
-
   const createdAfter = searchParams.get("createdAfter");
   const [date, setDate] = useState<Date | undefined>(
     createdAfter ? new Date(createdAfter) : undefined,
   );
-  const formHandler = (formData: FormData) => {
-    console.log("in formHandler: ", formData);
 
-    formData.forEach((value, key) => {
-      console.log("key: ", key, "value: ", value);
-    });
+  useEffect(() => {
+    console.log("we have a change!");
+    formHandler();
+  }, [
+    selectedEmail,
+    selectedWebsite,
+    selectedCities,
+    selectedStates,
+    selectedJobTitles,
+    selectedIndustries,
+    selectedCategories,
+    selectedUserEmails,
+    date,
+  ]);
+
+  const formHandler = (formData?: FormData) => {
+    console.log("in formHandler: ", formData);
+    if (formData) {
+      formData.forEach((value, key) => {
+        console.log("key: ", key, "value: ", value);
+      });
+    }
 
     const params = new URLSearchParams(searchParams);
 
@@ -90,13 +112,14 @@ const FiltersForm = (props: FiltersFormProps) => {
     addMultiOptionsToParams(params, selectedUserEmails, "selectedUserEmails");
 
     params.delete("selectedEmail");
-    if (formData.get("selectedEmail")) {
-      params.set("selectedEmail", formData.get("selectedEmail") as string);
+    if (selectedEmail) {
+      params.set("selectedEmail", selectedEmail as string);
     }
 
     params.delete("selectedWebsite");
-    if (formData.get("selectedWebsite")) {
-      params.set("selectedWebsite", formData.get("selectedWebsite") as string);
+    if (selectedWebsite) {
+      console.log("selectedWebsite: ", selectedWebsite);
+      params.set("selectedWebsite", selectedWebsite as string);
     }
 
     params.delete("createdAfter");
@@ -118,6 +141,10 @@ const FiltersForm = (props: FiltersFormProps) => {
             type="search"
             name="selectedEmail"
             id="email"
+            onChange={(evt) => {
+              setSelectedEmail(evt.target.value);
+            }}
+            value={selectedEmail}
             placeholder="customer@company.com"
           />
         </div>
@@ -127,6 +154,10 @@ const FiltersForm = (props: FiltersFormProps) => {
             name="selectedWebsite"
             id="website"
             placeholder="company.com"
+            value={selectedWebsite}
+            onChange={(evt) => {
+              setSelectedWebsite(evt.target.value);
+            }}
           />
         </div>
         <MyDropDown
