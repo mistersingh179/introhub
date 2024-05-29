@@ -21,6 +21,8 @@ import getProspectsBasedOnFilters, {
   PaginatedValues,
   SelectedFilterValues,
 } from "@/services/getProspectsBasedOnFilters";
+import getAllProspectsCount from "@/services/getAllProspectsCount";
+import numeral from "numeral";
 
 export type ProspectsSearchParams = {
   query?: string;
@@ -240,6 +242,7 @@ export default async function Prospects({
     paginationValues,
     user,
   );
+  const allProspectsCount = await getAllProspectsCount(user);
 
   const userIds = [...new Set(prospects.map((p) => p.userId))];
   const users = await prisma.user.findMany({
@@ -276,7 +279,7 @@ export default async function Prospects({
   return (
     <>
       <div className={"flex flex-row justify-start items-center gap-4"}>
-        <h1 className={"text-2xl my-4"}>Prospects – {totalRecordsCount}</h1>
+        <h1 className={"text-2xl my-4"}>Prospects</h1>
       </div>
 
       <div className={"flex flex-col md:flex-row gap-4 items-start"}>
@@ -284,9 +287,10 @@ export default async function Prospects({
           <Collapsible defaultOpen={true}>
             <div className={"flex flex-row justify-between items-center"}>
               <h1>Filters</h1>
-              {/*<div className="text-sm text-muted-foreground">*/}
-              {/*  15 possible Results*/}
-              {/*</div>*/}
+              <div className="text-sm text-muted-foreground">
+                Showing {numeral(totalRecordsCount).format("0,0")} of{" "}
+                {numeral(allProspectsCount).format("0,0")}
+              </div>
               <CollapsibleTrigger asChild className={"md:hidden"}>
                 <Button variant="ghost" size="sm" className="w-9 p-0">
                   <ChevronsUpDown className="h-4 w-4" />
