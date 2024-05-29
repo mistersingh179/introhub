@@ -9,6 +9,7 @@ import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
 import * as React from "react";
 import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
 import OnBoardUserForm from "@/app/dashboard/home/OnBoardUserForm";
+import ProspectsCountForm from "@/app/dashboard/home/ProspectsCountForm";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -110,6 +111,9 @@ export default async function Home() {
           <li>Emails: {emailsCount}</li>
           <li>
             <OnBoardUserForm />
+          </li>
+          <li>
+            <ProspectsCountForm />
           </li>
         </ul>
       </div>
