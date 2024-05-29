@@ -21,7 +21,7 @@ export type SelectedFilterValues = {
 
 type ProspectsBasedOnFiltersResult = {
   prospects: Contact[];
-  totalRecordsCount: number;
+  filteredRecordsCount: number;
 };
 
 const getProspectsBasedOnFilters = async (
@@ -116,9 +116,9 @@ const getProspectsBasedOnFilters = async (
         and C."userId" != ${user.id}
   `;
   const countSqlResult = await prisma.$queryRaw<{ count: number }[]>(countSql);
-  const totalRecordsCount = Number(countSqlResult[0].count);
+  const filteredRecordsCount = Number(countSqlResult[0].count);
 
-  return { prospects, totalRecordsCount };
+  return { prospects, filteredRecordsCount };
 };
 
 export default getProspectsBasedOnFilters;
@@ -137,13 +137,13 @@ if (require.main === module) {
       selectedStates: ["New York"],
     };
 
-    const { prospects, totalRecordsCount } = await getProspectsBasedOnFilters(
+    const { prospects, filteredRecordsCount } = await getProspectsBasedOnFilters(
       filters,
       paginationValues,
       user,
     );
     console.log("prospects: ", prospects);
-    console.log("totalRecordsCount: ", totalRecordsCount);
+    console.log("filteredRecordsCount: ", filteredRecordsCount);
     process.exit(0);
   })();
 }

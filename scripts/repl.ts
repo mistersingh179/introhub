@@ -1,9 +1,5 @@
 import prisma from "../prismaClient";
-import prepareProspectsData from "@/services/prepareProspectsData";
-import { getNewProspectsHtml } from "@/email-templates/NewProspects";
-import { subDays } from "date-fns";
-import HighQueue from "@/bull/queues/highQueue";
-import refreshScopes from "@/services/refreshScopes";
+import numeral from "numeral";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -16,11 +12,7 @@ prisma.$on("query", (e) => {
 
 (async () => {
   console.log("Hello world !");
-  const userId = 'cluvta2ke0000fat3dhwdwkim';
-
-  const scopes = await refreshScopes(userId);
-  console.log(scopes);
-
+  console.log(numeral(54).format("0.0a"));
   // const jobObj = await HighQueue.add("onBoardUser", { userId });
   // const { name, id } = jobObj;
   //

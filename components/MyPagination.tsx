@@ -1,14 +1,22 @@
 "use client";
 
-import clsx from "clsx";
 import Link from "next/link";
 
 import { usePathname, useSearchParams } from "next/navigation";
 
-export default function MyPagination() {
+type MyPaginationProps = {
+  totalCount?: number
+}
+
+export default function MyPagination(props: MyPaginationProps) {
+  const { totalCount = Number.MAX_SAFE_INTEGER } = props;
+
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
+  const itemsPerPage = 10;
+  const recordsShownSoFar = currentPage * itemsPerPage;
+
 
   const createPageURL = (pageNumber: number | string) => {
     console.log("in createPageUrl");
@@ -25,7 +33,9 @@ export default function MyPagination() {
       >
         Previous
       </Link>
-      <Link href={createPageURL(currentPage + 1)}>Next</Link>
+      <Link
+        className={`${recordsShownSoFar < totalCount ? "": "pointer-events-none opacity-25" }`}
+        href={createPageURL(currentPage + 1)}>Next</Link>
     </div>
   );
 }

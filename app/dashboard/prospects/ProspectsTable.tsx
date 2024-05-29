@@ -30,10 +30,12 @@ const ProspectsTable = ({
   prospectsWithUser,
   emailToProfile,
   companyUrlToProfile,
+  filteredRecordsCount,
 }: {
   prospectsWithUser: ContactWithUser[];
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
+  filteredRecordsCount: number;
 }) => {
   return (
     <Table>
@@ -59,7 +61,7 @@ const ProspectsTable = ({
       <TableFooter>
         <TableRow>
           <TableCell colSpan={2}>
-            <MyPagination />
+            <MyPagination totalCount={filteredRecordsCount} />
           </TableCell>
         </TableRow>
       </TableFooter>
