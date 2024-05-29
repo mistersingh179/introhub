@@ -218,6 +218,14 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
   return result;
 };
 
+const myNumFormatter = (num: number) => {
+  if (num < 1000) {
+    return numeral(num).format("0");
+  } else {
+    return numeral(num).format("0.0a");
+  }
+};
+
 export default async function Prospects({
   searchParams,
 }: {
@@ -237,7 +245,7 @@ export default async function Prospects({
 
   const paginationValues: PaginatedValues = getPaginationValues(searchParams);
   const filters: SelectedFilterValues = getSelectedFilterValues(searchParams);
-  const { prospects, totalRecordsCount } = await getProspectsBasedOnFilters(
+  const { prospects, filteredRecordsCount } = await getProspectsBasedOnFilters(
     filters,
     paginationValues,
     user,
@@ -288,8 +296,8 @@ export default async function Prospects({
             <div className={"flex flex-row justify-between items-center"}>
               <h1>Filters</h1>
               <div className="text-sm text-muted-foreground">
-                Showing {numeral(totalRecordsCount).format("0,0")} of{" "}
-                {numeral(allProspectsCount).format("0,0")}
+                {myNumFormatter(filteredRecordsCount)} of{" "}
+                {myNumFormatter(allProspectsCount)} records match
               </div>
               <CollapsibleTrigger asChild className={"md:hidden"}>
                 <Button variant="ghost" size="sm" className="w-9 p-0">
@@ -315,6 +323,7 @@ export default async function Prospects({
             prospectsWithUser={prospectsWithUser}
             emailToProfile={emailToProfile}
             companyUrlToProfile={companyUrlToProfile}
+            filteredRecordsCount={filteredRecordsCount}
           />
         </div>
       </div>
