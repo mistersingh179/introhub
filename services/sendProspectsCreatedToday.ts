@@ -25,7 +25,7 @@ const sendProspectsCreatedToday: SendProspectsCreatedToday = async () => {
     itemsPerPage: Number.MAX_SAFE_INTEGER,
     recordsToSkip: 0,
   };
-  const { prospects, totalRecordsCount } = await getProspectsBasedOnFilters(
+  const { prospects, filteredRecordsCount } = await getProspectsBasedOnFilters(
     filters,
     paginationValues,
     nonExistentUser,
