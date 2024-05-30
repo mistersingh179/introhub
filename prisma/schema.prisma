@@ -65,6 +65,7 @@ model User {
   image                    String?
   createdAt                DateTime       @default(now())
   updatedAt                DateTime       @updatedAt
+  Filters                  Filters[]
 
   @@index([email])
 }
@@ -272,4 +273,12 @@ model PostTag {
   tag    Tag    @relation(fields: [tagId], references: [id])
 
   @@id([postId, tagId])
+}
+
+model Filters {
+  id           String @id @default(cuid())
+  userId       String
+  user         User   @relation(fields: [userId], references: [id])
+  name         String
+  searchParams String
 }
