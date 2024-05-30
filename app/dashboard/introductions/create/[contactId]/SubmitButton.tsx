@@ -6,11 +6,20 @@ import { useFormStatus } from "react-dom";
 type SubmitButtonProps = {
   label?: string;
   className?: string;
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined;
+  size?: "default" | "sm" | "lg" | "icon";
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link"
+    | null
+    | undefined;
   beDisabled?: boolean;
 }; /**/
 export default function SubmitButton(props: SubmitButtonProps) {
-  const { label, className, beDisabled, variant } = props;
+  const { size, label, className, beDisabled, variant } = props;
   const { pending } = useFormStatus();
   return (
     <Button
@@ -18,6 +27,7 @@ export default function SubmitButton(props: SubmitButtonProps) {
       type={"submit"}
       variant={variant}
       disabled={pending || beDisabled}
+      size={size}
     >
       {label ?? "Submit"}
     </Button>

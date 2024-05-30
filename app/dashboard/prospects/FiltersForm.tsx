@@ -50,10 +50,10 @@ const FiltersForm = (props: FiltersFormProps) => {
   const { replace } = useRouter();
 
   const [selectedEmail, setSelectedEmail] = useState<string | undefined>(
-    undefined,
+    searchParams.get("selectedEmail") ?? undefined,
   );
   const [selectedWebsite, setSelectedWebsite] = useState<string | undefined>(
-    undefined,
+    searchParams.get("selectedWebsite") ?? undefined,
   );
   const [selectedCities, setSelectedCities] = useState<FancyOption[]>(
     buildOptions(searchParams.getAll("selectedCities")),
@@ -206,7 +206,7 @@ const FiltersForm = (props: FiltersFormProps) => {
             <Button
               variant={"outline"}
               className={cn(
-                "w-[280px] justify-start text-left font-normal",
+                "justify-start text-left font-normal",
                 !date && "text-muted-foreground",
               )}
             >
@@ -237,7 +237,6 @@ const FiltersForm = (props: FiltersFormProps) => {
         {/*<div className={"flex flex-row justify-center"}>*/}
         {/*  <SubmitButton label={"Apply Filter"} />*/}
         {/*</div>*/}
-
       </div>
     </form>
   );

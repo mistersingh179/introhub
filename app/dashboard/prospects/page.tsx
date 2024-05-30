@@ -2,9 +2,8 @@ import prisma from "@/prismaClient";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 
-import { Contact, Prisma, User } from "@prisma/client";
+import { Contact, User } from "@prisma/client";
 import FiltersForm from "@/app/dashboard/prospects/FiltersForm";
-import sleep from "@/lib/sleep";
 
 import ProspectsTable from "@/app/dashboard/prospects/ProspectsTable";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
@@ -23,6 +22,11 @@ import getProspectsBasedOnFilters, {
 } from "@/services/getProspectsBasedOnFilters";
 import getAllProspectsCount from "@/services/getAllProspectsCount";
 import numeral from "numeral";
+import getFiltersFromSearchParams from "@/services/getFiltersFromSearchParams";
+import SaveFiltersForm from "@/app/dashboard/prospects/SaveFiltersForm";
+import FiltersList from "@/app/dashboard/prospects/FiltersList";
+import ShowChildren from "@/components/ShowChildren";
+import querystring from "querystring";
 
 export type ProspectsSearchParams = {
   query?: string;
@@ -43,49 +47,6 @@ export type ContactWithUserInfo = Contact & {
   userImage: string;
   userName: string;
   website: string;
-};
-
-const getValueAsArray = (
-  param: string | string[] | null | undefined,
-): string[] | undefined => {
-  if (!param) {
-    return undefined;
-  } else if (Array.isArray(param)) {
-    return param;
-  } else {
-    return [param];
-  }
-};
-
-export type GetSelectedFilterValues = (
-  searchParams: ProspectsSearchParams | undefined,
-) => SelectedFilterValues;
-
-const getSelectedFilterValues: GetSelectedFilterValues = (searchParams) => {
-  const selectedCities = getValueAsArray(searchParams?.selectedCities);
-  const selectedStates = getValueAsArray(searchParams?.selectedStates);
-  const selectedJobTitles = getValueAsArray(searchParams?.selectedJobTitles);
-  const selectedIndustries = getValueAsArray(searchParams?.selectedIndustries);
-  const selectedCategories = getValueAsArray(searchParams?.selectedCategories);
-  const selectedUserEmails = getValueAsArray(searchParams?.selectedUserEmails);
-  const selectedEmail = searchParams?.selectedEmail;
-  const selectedWebsite = searchParams?.selectedWebsite;
-  const createdAfter = searchParams?.createdAfter;
-
-  const result = {
-    selectedCities,
-    selectedStates,
-    selectedJobTitles,
-    selectedIndustries,
-    selectedCategories,
-    selectedEmail,
-    selectedWebsite,
-    selectedUserEmails,
-    createdAfter,
-  };
-
-  console.log("selected: ", result);
-  return result;
 };
 
 type GetPaginationValues = (
@@ -244,7 +205,9 @@ export default async function Prospects({
     await getAllFilterValues(user);
 
   const paginationValues: PaginatedValues = getPaginationValues(searchParams);
-  const filters: SelectedFilterValues = getSelectedFilterValues(searchParams);
+  const filters: SelectedFilterValues =
+    getFiltersFromSearchParams(searchParams);
+
   const { prospects, filteredRecordsCount } = await getProspectsBasedOnFilters(
     filters,
     paginationValues,
@@ -284,6 +247,12 @@ export default async function Prospects({
 
   // console.log("*** prospectsWithUser: ", prospectsWithUser);
 
+  const savedFilters = await prisma.filters.findMany({
+    where: {
+      user,
+    },
+  });
+
   return (
     <>
       <div className={"flex flex-row justify-start items-center gap-4"}>
@@ -307,14 +276,21 @@ export default async function Prospects({
               </CollapsibleTrigger>
             </div>
             <CollapsibleContent>
-              <FiltersForm
-                cities={cities}
-                states={states}
-                jobTitles={jobTitles}
-                industries={industries}
-                categories={categories}
-                userEmails={userEmails}
-              />
+              <>
+                <FiltersForm
+                  key={querystring.stringify(searchParams)}
+                  cities={cities}
+                  states={states}
+                  jobTitles={jobTitles}
+                  industries={industries}
+                  categories={categories}
+                  userEmails={userEmails}
+                />
+                <SaveFiltersForm />
+                <ShowChildren showIt={savedFilters.length > 0}>
+                  <FiltersList savedFilters={savedFilters} />
+                </ShowChildren>
+              </>
             </CollapsibleContent>
           </Collapsible>
         </div>
