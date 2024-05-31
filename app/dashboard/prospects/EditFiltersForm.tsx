@@ -64,7 +64,7 @@ const EditFiltersForm = (props: EditFiltersFormProps) => {
         ></Input>
 
         <Input type={"hidden"} name={"id"} value={filtersObj.id}></Input>
-        <SubmitButton size="sm" label={"Edit"} />
+        <SubmitButton size="sm" label={"Update"} />
       </div>
     </form>
   );
