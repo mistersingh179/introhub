@@ -9,67 +9,76 @@ import { getNewProspectsHtml } from "@/email-templates/NewProspects";
 import sendEmail from "@/services/sendEmail";
 import { gmail_v1 } from "googleapis";
 
-const processAllFiltersForEmail = async () => {
-  const filters = await prisma.filters.findMany({
-    where: {
-      dailyEmail: true,
-    },
-    include: {
-      user: true,
-    },
-  });
-  const emailResponses: gmail_v1.Schema$Message[] = [];
-  for (const filtersObj of filters) {
-    const searchParamsObj = getFiltersFromSearchParams(filtersObj.searchParams);
-    const createdAfter = subDays(startOfToday(), 1);
-    searchParamsObj.createdAfter = createdAfter.toISOString();
+export type ProcessAllFiltersForEmailOutput = gmail_v1.Schema$Message[];
 
-    console.log("*** working on filter: ", searchParamsObj);
-
-    const paginationValues: PaginatedValues = {
-      currentPage: 1,
-      itemsPerPage: Number.MAX_SAFE_INTEGER,
-      recordsToSkip: 0,
-    };
-    const { prospects, filteredRecordsCount } =
-      await getProspectsBasedOnFilters(
-        searchParamsObj,
-        paginationValues,
-        filtersObj.user,
-      );
-    const { prospectsWithUser, emailToProfile, companyUrlToProfile } =
-      await prepareProspectsData(prospects);
-    const html = getNewProspectsHtml(
-      prospectsWithUser,
-      emailToProfile,
-      companyUrlToProfile,
-      createdAfter,
-    );
-    const systemEmail = "rod@introhub.net";
-    const systemAccount = await prisma.account.findFirstOrThrow({
+const processAllFiltersForEmail =
+  async (): Promise<ProcessAllFiltersForEmailOutput> => {
+    const filters = await prisma.filters.findMany({
       where: {
-        user: {
-          email: systemEmail,
-        },
+        dailyEmail: true,
+      },
+      include: {
+        user: true,
       },
     });
-    const count = prospectsWithUser.length;
-    if (count === 0) {
-      console.log("skipping filter as no new results: ", filtersObj);
-      continue;
+    const emailResponses: gmail_v1.Schema$Message[] = [];
+    for (const filtersObj of filters) {
+      const searchParamsObj = getFiltersFromSearchParams(
+        filtersObj.searchParams,
+      );
+      const createdAfter = subDays(startOfToday(), 1);
+      searchParamsObj.createdAfter = createdAfter.toISOString();
+
+      console.log("*** working on filter: ", searchParamsObj);
+
+      const paginationValues: PaginatedValues = {
+        currentPage: 1,
+        itemsPerPage: Number.MAX_SAFE_INTEGER,
+        recordsToSkip: 0,
+      };
+      const { prospects, filteredRecordsCount } =
+        await getProspectsBasedOnFilters(
+          searchParamsObj,
+          paginationValues,
+          filtersObj.user,
+        );
+      const { prospectsWithUser, emailToProfile, companyUrlToProfile } =
+        await prepareProspectsData(prospects);
+      const html = getNewProspectsHtml(
+        prospectsWithUser,
+        emailToProfile,
+        companyUrlToProfile,
+        createdAfter,
+      );
+      const systemEmail =
+        process.env.NODE_ENV === "production"
+          ? "rod@introhub.net"
+          : "sandeep@introhub.net";
+
+      const systemAccount = await prisma.account.findFirstOrThrow({
+        where: {
+          user: {
+            email: systemEmail,
+          },
+        },
+      });
+      const count = prospectsWithUser.length;
+      if (count === 0) {
+        console.log("skipping filter as no new results: ", filtersObj);
+        continue;
+      }
+      const response = await sendEmail({
+        account: systemAccount,
+        body: html,
+        from: systemEmail,
+        to: filtersObj.user.email!,
+        cc: "rod@introhub.net",
+        subject: `Filter ${filtersObj.name} has ${count} new prospect${count == 1 ? "" : "s"}`,
+      });
+      emailResponses.push(response);
     }
-    const response = await sendEmail({
-      account: systemAccount,
-      body: html,
-      from: systemEmail,
-      to: filtersObj.user.email!,
-      cc: "rod@introhub.net",
-      subject: `Filter ${filtersObj.name} has ${count} new prospect${count == 1 ? "" : "s"}`,
-    });
-    emailResponses.push(response);
-  }
-  return emailResponses;
-};
+    return emailResponses;
+  };
 
 export default processAllFiltersForEmail;
 

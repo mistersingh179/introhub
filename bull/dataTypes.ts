@@ -10,6 +10,7 @@ import { EnrichContactInput } from "@/services/enrichContact";
 import { OnBoardUserInput } from "@/services/onBoardUser";
 import { SendProspectsCreatedTodayOutput } from "@/services/sendProspectsCreatedToday";
 import Schema$Message = gmail_v1.Schema$Message;
+import {ProcessAllFiltersForEmailOutput} from "@/services/processAllFiltersForEmail";
 
 export type HighInputDataType = OnBoardUserInput | undefined;
 
@@ -25,7 +26,7 @@ export type MediumInputDataType =
   | OnBoardUserInput
   | null;
 
-export type HighOutputDataType = void | SendProspectsCreatedTodayOutput;
+export type HighOutputDataType = void | SendProspectsCreatedTodayOutput | ProcessAllFiltersForEmailOutput;
 
 export type ProxyCurlOutputDataType = void;
 
@@ -38,7 +39,7 @@ export type MediumOutputDataType =
   | undefined
   | void;
 
-export type HighJobNames = "onBoardUser" | "sendProspectsCreatedToday";
+export type HighJobNames = "onBoardUser" | "sendProspectsCreatedToday" | "processAllFiltersForEmail";
 
 export type ProxyCurlJobNames = "enrichContact" | "enrichAllContacts";
 
