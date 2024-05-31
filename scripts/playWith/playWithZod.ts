@@ -1,11 +1,11 @@
 import {z, ZodError} from "zod";
 
 // @ts-ignore
-prisma.$on("query", (e) => {
-  const { timestamp, query, params, duration, target } = e;
-  console.log(query, params);
-  // console.log({ timestamp, params, duration, target });
-});
+// prisma.$on("query", (e) => {
+//   const { timestamp, query, params, duration, target } = e;
+//   console.log(query, params);
+//   // console.log({ timestamp, params, duration, target });
+// });
 
 (async () => {
 
@@ -14,6 +14,7 @@ prisma.$on("query", (e) => {
   const schema = z.object({
     name: z.string(),
     age: z.coerce.number(),
+    dailyEmail: z.coerce.boolean(),
     address: z.string().optional()
   })
 
@@ -21,12 +22,14 @@ prisma.$on("query", (e) => {
   fd.set("name", "hi");
   fd.set("age", "5");
   fd.set("address", "hello st");
+  // fd.set("dailyEmail", "true");
 
   try{
     const ans = schema.parse({
       name: fd.get("name"),
       age: fd.get("age"),
-      address: fd.get("address")
+      address: fd.get("address"),
+      dailyEmail: fd.get("dailyEmail")
     });
     console.log("ans: ", ans);
   }catch(e){

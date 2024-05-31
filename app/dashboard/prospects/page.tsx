@@ -27,6 +27,7 @@ import SaveFiltersForm from "@/app/dashboard/prospects/SaveFiltersForm";
 import FiltersList from "@/app/dashboard/prospects/FiltersList";
 import ShowChildren from "@/components/ShowChildren";
 import querystring from "querystring";
+import SaveFiltersDialog from "@/app/dashboard/prospects/SaveFiltersDialog";
 
 export type ProspectsSearchParams = {
   query?: string;
@@ -286,7 +287,7 @@ export default async function Prospects({
                   categories={categories}
                   userEmails={userEmails}
                 />
-                <SaveFiltersForm />
+                <SaveFiltersDialog />
                 <ShowChildren showIt={savedFilters.length > 0}>
                   <FiltersList savedFilters={savedFilters} />
                 </ShowChildren>
