@@ -3,7 +3,7 @@
 import { Filters } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Dot, X } from "lucide-react";
+import { Dot, Pencil, X } from "lucide-react";
 import { useFormState } from "react-dom";
 import deleteFilterAction from "@/app/actions/filters/deleteFilterAction";
 import ErrorMessage from "@/app/dashboard/introductions/create/[contactId]/ErrorMessage";
@@ -11,6 +11,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
+import EditFiltersDialog from "@/app/dashboard/prospects/EditFiltersDialog";
 
 type FiltersListProps = {
   savedFilters: Filters[];
@@ -34,12 +35,13 @@ const FiltersList = (props: FiltersListProps) => {
                 <Dot size={"24"} />
               </div>
               <Link href={`${pathName}?${f.searchParams}`}>{f.name}</Link>
+              <EditFiltersDialog filtersObj={f} />
               <form action={dispatch}>
                 <Input type={"hidden"} name={"id"} value={f.id} />
                 <SubmitButton
-                  label={"x"}
+                  label={<X size={"10"} strokeWidth={'3'} />}
                   variant={"outline"}
-                  size={"sm"}
+                  size={"icon"}
                   className={"ml-2 w-6 h-6 rounded-full"}
                 />
               </form>
