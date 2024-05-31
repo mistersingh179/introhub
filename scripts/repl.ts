@@ -3,6 +3,7 @@ import numeral from "numeral";
 import getFiltersFromSearchParams from "@/services/getFiltersFromSearchParams";
 import querystring from "querystring";
 import getProspectsBasedOnFilters, {PaginatedValues} from "@/services/getProspectsBasedOnFilters";
+import {z} from "zod";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -16,23 +17,30 @@ prisma.$on("query", (e) => {
 (async () => {
   console.log("Hello world !");
 
-  const searchParamsString =
-    "page=1&selectedCities=Hicksville&selectedCities=Denver&selectedStates=New+York&selectedStates=Colorado&selectedStates=Washington&selectedJobTitles=Co-founder&selectedJobTitles=Co-founder+%26+CEO&selectedJobTitles=Entrepreneur+In+Residence&selectedJobTitles=Chief+Technology+Officer&selectedJobTitles=Chief+Executive+Officer&createdAfter=2024-04-01T04%3A00%3A00.000Z";
-
-  const filters = getFiltersFromSearchParams(searchParamsString);
-
-  const user = await prisma.user.findFirstOrThrow({
-    where: {
-      id: "clwrwfkm00000w98m2jfyc4k6"
-    }
+  const testSchema = z.object({
+    dailyEmail: z.coerce.boolean()
   });
-  const paginationValues: PaginatedValues = {
-    currentPage: 1,
-    itemsPerPage: 10,
-    recordsToSkip: 0,
-  };
-  const {prospects, filteredRecordsCount} = await getProspectsBasedOnFilters(filters, paginationValues, user);
-  console.log(prospects);
+
+// Test different values
+  const inputs = [
+    { dailyEmail: "true" },
+    { dailyEmail: "false" },
+    { dailyEmail: "0" },
+    { dailyEmail: "1" },
+    { dailyEmail: "" },
+    { dailyEmail: null },       // This will likely cause an error unless handled as string
+    {},                         // Missing dailyEmail
+    { dailyEmail: undefined },
+  ];
+
+  inputs.forEach(input => {
+    try {
+      const result = testSchema.parse(input);
+      console.log(`Input: ${JSON.stringify(input)} - Parsed: `, result);
+    } catch (error) {
+      console.log(`Error with input ${JSON.stringify(input)}: `, error);
+    }
+  })
 
 })();
 

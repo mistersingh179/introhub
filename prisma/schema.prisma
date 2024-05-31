@@ -276,9 +276,15 @@ model PostTag {
 }
 
 model Filters {
-  id           String @id @default(cuid())
+  id           String  @id @default(cuid())
   userId       String
-  user         User   @relation(fields: [userId], references: [id])
+  user         User    @relation(fields: [userId], references: [id])
   name         String
   searchParams String
+  dailyEmail   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }

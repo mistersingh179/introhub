@@ -22,7 +22,7 @@ const FiltersList = (props: FiltersListProps) => {
   const [errorMessage, dispatch] = useFormState(action, undefined);
   return (
     <div className={"mt-4 px-2"}>
-      <h4>Saved Filters</h4>
+      <h4>Saved Filters :</h4>
       <div className={"flex flex-col gap-1 mt-2"}>
         {errorMessage && (
           <ErrorMessage description={JSON.stringify(errorMessage, null, 2)} />

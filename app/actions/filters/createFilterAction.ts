@@ -10,6 +10,7 @@ import sleep from "@/lib/sleep";
 
 const createFilterActionSchema = z.object({
   name: z.string().min(1).max(50),
+  dailyEmail: z.coerce.boolean(),
   searchParams: z.string().min(1).max(10_000),
 });
 
@@ -29,15 +30,17 @@ const createFilterAction = async (
   });
 
   try {
-    const { name, searchParams } = createFilterActionSchema.parse({
+    const { name, searchParams, dailyEmail } = createFilterActionSchema.parse({
       name: formData.get("name"),
       searchParams: formData.get("searchParams"),
+      dailyEmail: formData.get("dailyEmail")
     });
 
     await prisma.filters.create({
       data: {
         userId: user.id,
         name: name,
+        dailyEmail: dailyEmail,
         searchParams,
       },
     });
