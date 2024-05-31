@@ -2,9 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
+import React from "react";
 
 type SubmitButtonProps = {
-  label?: string;
+  label?: string | React.ReactElement;
   className?: string;
   size?: "default" | "sm" | "lg" | "icon";
   variant?:
