@@ -64,6 +64,14 @@ export default async function Home() {
         <h1 className={"text-2xl mt-6"}>Home</h1>
         {/*<RefreshStatsForm />*/}
       </div>
+
+      <iframe
+        src="https://drive.google.com/file/d/1NeWsPDQktcs23Qttcen46N1rumXKwKc9/preview"
+        allow="autoplay"
+        className="rounded-xl mx-auto w-full aspect-video
+         sm:w-4/5 md:w-1/2 lg:w-1/2"
+      ></iframe>
+
       {foundSendScope && (
         <Alert variant="default">
           <Check className="h-8 w-8" />
@@ -84,6 +92,7 @@ export default async function Home() {
           </AlertDescription>
         </Alert>
       )}
+
       <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36 flex flex-row gap-4 items-center"}>
           Scope : <RefreshScopesForm />{" "}
