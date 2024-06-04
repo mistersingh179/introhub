@@ -16,7 +16,7 @@ const sendProspectsCreatedToday: SendProspectsCreatedToday = async () => {
   const user = await prisma.user.findFirstOrThrow();
   const nonExistentUser = { ...user, id: "-1" };
 
-  const createdAfter = subDays(startOfToday(), 10);
+  const createdAfter = subDays(startOfToday(), 1);
   const filters: SelectedFilterValues = {
     createdAfter: createdAfter.toISOString(),
   };
