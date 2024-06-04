@@ -27,6 +27,7 @@ export default async function NavigationItems({
     "joserodrigofuentes@gmail.com",
     "rod@introhub.net",
     "rod@brandweaver.ai",
+    "yaraarryn.464392@gmail.com",
   ];
   let userAllowed = false;
   if (allowedEmails.includes(user.email!)) {
