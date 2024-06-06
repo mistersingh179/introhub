@@ -6,7 +6,7 @@ import getProspectsBasedOnFilters, {
 } from "@/services/getProspectsBasedOnFilters";
 import prepareProspectsData from "@/services/prepareProspectsData";
 import { getNewProspectsHtml } from "@/email-templates/NewProspects";
-import sendEmail from "@/services/sendEmail";
+import sendEmail, {systemEmail} from "@/services/sendEmail";
 import { gmail_v1 } from "googleapis";
 
 export type ProcessAllFiltersForEmailOutput = gmail_v1.Schema$Message[];
@@ -50,10 +50,6 @@ const processAllFiltersForEmail =
         companyUrlToProfile,
         createdAfter,
       );
-      const systemEmail =
-        process.env.NODE_ENV === "production"
-          ? "rod@introhub.net"
-          : "sandeep@introhub.net";
 
       const systemAccount = await prisma.account.findFirstOrThrow({
         where: {

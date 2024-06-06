@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { SquarePen } from "lucide-react";
 import {
   CompanyBox,
-  getProfiles,
   ProspectBox,
 } from "@/app/dashboard/introductions/list/IntroTable";
 import {
@@ -25,6 +24,7 @@ import {
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import { ContactWithUser } from "@/app/dashboard/introductions/create/[contactId]/page";
 import FacilitatorBox from "@/components/FacilitatorBox";
+import getProfiles from "@/services/getProfiles";
 
 const ProspectsTable = ({
   prospectsWithUser,

@@ -68,8 +68,7 @@ export default async function Home() {
       <iframe
         src="https://drive.google.com/file/d/1NeWsPDQktcs23Qttcen46N1rumXKwKc9/preview"
         allow="autoplay"
-        className="rounded-xl mx-auto w-full aspect-video
-         sm:w-4/5 md:w-1/2 lg:w-1/2"
+        className="rounded-xl mx-auto w-full aspect-video"
       ></iframe>
 
       {foundSendScope && (

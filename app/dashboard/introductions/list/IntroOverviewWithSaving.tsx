@@ -8,7 +8,6 @@ import {
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import {
   CompanyBox,
-  getAllProfiles,
   IntroStatusBadge,
   ProspectBox,
 } from "@/app/dashboard/introductions/list/IntroTable";
@@ -17,6 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import IntroUpdateWithMessagesForm from "@/app/dashboard/introductions/list/IntroUpdateWithMessagesForm";
 import IntroCancelForm from "@/app/dashboard/introductions/list/IntroCancelForm";
 import FacilitatorBox from "@/components/FacilitatorBox";
+import getAllProfiles from "@/services/getAllProfiles";
 
 type IntroOverviewWithSavingProps = {
   user: User;

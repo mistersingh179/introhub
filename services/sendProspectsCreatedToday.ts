@@ -4,7 +4,7 @@ import getProspectsBasedOnFilters, {
   SelectedFilterValues,
 } from "@/services/getProspectsBasedOnFilters";
 import { startOfToday, subDays } from "date-fns";
-import sendEmail from "@/services/sendEmail";
+import sendEmail, {systemEmail} from "@/services/sendEmail";
 import prepareProspectsData from "@/services/prepareProspectsData";
 import { getNewProspectsHtml } from "@/email-templates/NewProspects";
 import { Contact } from "@prisma/client";
@@ -47,7 +47,6 @@ const sendProspectsCreatedToday: SendProspectsCreatedToday = async () => {
   );
   console.log("html: ", html);
 
-  const systemEmail = "sandeep@introhub.net";
   const systemAccount = await prisma.account.findFirstOrThrow({
     where: {
       user: {

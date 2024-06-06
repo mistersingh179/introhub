@@ -8,7 +8,6 @@ import {
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import {
   CompanyBox,
-  getAllProfiles,
   IntroStatusBadge,
   ProspectBox,
   RequesterBox,
@@ -16,6 +15,7 @@ import {
 import IntroApproveWithMessageForm from "@/app/dashboard/introductions/list/IntroApproveWithMessageForm";
 import { Dispatch, SetStateAction } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import getAllProfiles from "@/services/getAllProfiles";
 
 type IntroOverviewWithApprovingProps = {
   user: User;
