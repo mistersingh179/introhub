@@ -17,13 +17,13 @@ import Search from "@/components/Search";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import {
   CompanyBox,
-  getProfiles,
   Profiles,
   ProspectBox,
 } from "@/app/dashboard/introductions/list/IntroTable";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { UserPlus } from "lucide-react";
+import getProfiles from "@/services/getProfiles";
 
 export default async function MyContacts({
   searchParams,

@@ -1,16 +1,11 @@
 import prisma from "@/prismaClient";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { buildS3ImageUrl } from "@/lib/url";
 import Link from "next/link";
-import { ExternalLink, SquarePen } from "lucide-react";
+import { SquarePen } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import getEmailAndCompanyUrlProfiles, {
-  CompanyProfileWithCategories,
-} from "@/services/getEmailAndCompanyUrlProfiles";
+import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import {
   CompanyBox,
   getCategoryNames,
-  getProfiles,
   ProspectBox,
 } from "@/app/dashboard/introductions/list/IntroTable";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +13,7 @@ import { auth } from "@/auth";
 import { Session } from "next-auth";
 import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
 import ShowChildren from "@/components/ShowChildren";
+import getProfiles from "@/services/getProfiles";
 
 export default async function ShowContact({
   params,

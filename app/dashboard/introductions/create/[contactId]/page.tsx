@@ -7,9 +7,9 @@ import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfi
 import {
   CompanyBox,
   getCategoryNames,
-  getProfiles,
   ProspectBox,
 } from "@/app/dashboard/introductions/list/IntroTable";
+import getProfiles from "@/services/getProfiles";
 
 export type ContactWithUser = Contact & { user: User };
 export type PersonProfileWithExperiences = PersonProfile & {
