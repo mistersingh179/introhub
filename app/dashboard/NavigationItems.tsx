@@ -36,9 +36,9 @@ export default async function NavigationItems({
   return (
     <>
       <div className={"mr-4 font-bold text-purple-600"}>IntroHub</div>
+      <NavLink inSheet={inSheet} name={"Home"} url={"/dashboard/home"} />
       <ShowChildren showIt={userAllowed}>
         <>
-          <NavLink inSheet={inSheet} name={"Home"} url={"/dashboard/home"} />
           <NavLink
             inSheet={inSheet}
             name={"My Emails"}
