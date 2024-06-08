@@ -39,7 +39,7 @@ export type MediumOutputDataType =
   | undefined
   | void;
 
-export type HighJobNames = "onBoardUser" | "sendProspectsCreatedToday" | "processAllFiltersForEmail";
+export type HighJobNames = "onBoardUser" | "sendProspectsCreatedToday" | "processAllFiltersForEmail" | "sendEmailForAllApprovedIntros";
 
 export type ProxyCurlJobNames = "enrichContact" | "enrichAllContacts";
 

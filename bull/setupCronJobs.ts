@@ -75,6 +75,22 @@ const addProcessAllFiltersForEmail = async () => {
   console.log("schedule job: ", name, id, opts);
 };
 
+const addSendEmailForAllApprovedIntros = async () => {
+  const jobObj = await highQueue.add(
+    "sendEmailForAllApprovedIntros",
+    undefined,
+    {
+      repeat: {
+        pattern: "0 11 * * *",
+      },
+    },
+  );
+  const { name, id, opts } = jobObj;
+  console.log("schedule job: ", name, id, opts);
+};
+
+
+
 const setupCronJobs = async () => {
   await addDownloadMessagesForAllAccounts();
   await addBuildContactsForAllUsers();
@@ -82,6 +98,7 @@ const setupCronJobs = async () => {
   await addEnrichAllRemainingContactsUsingApollo();
   await addSendProspectsCreateToday();
   await addProcessAllFiltersForEmail();
+  await addSendEmailForAllApprovedIntros();
 };
 
 export default setupCronJobs;

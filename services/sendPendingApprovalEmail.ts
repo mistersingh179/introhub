@@ -84,7 +84,7 @@ const sendPendingApprovalEmail = async (
       from: systemEmail,
       to: intro.facilitator.email!,
       cc: rodEmail,
-      subject: `Pending Your approval – ${contactProfiles.personProfile.fullName} <-> ${requestProfiles.personProfile.fullName ?? "An Introhub user"}`,
+      subject: `Pending Your approval – ${requestProfiles.personProfile.fullName ?? "An IntroHub user"} wants to meet ${contactProfiles.personProfile.fullName ?? "your contact"}`,
     });
   }
 

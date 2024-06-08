@@ -73,7 +73,7 @@ export default async function Home() {
 
       {foundSendScope && (
         <Alert variant="default">
-          <Check className="h-8 w-8" />
+          <Check className="h-8 w-8"/>
           <AlertTitle className={"ml-8"}>Permissions Success</AlertTitle>
           <AlertDescription className={"ml-8"}>
             Send Permission was found. Good to go!
@@ -83,7 +83,7 @@ export default async function Home() {
 
       {!foundSendScope && (
         <Alert variant="destructive">
-          <AlertCircle className="h-8 w-8" />
+          <AlertCircle className="h-8 w-8"/>
           <AlertTitle className={"ml-8"}>Error</AlertTitle>
           <AlertDescription className={"ml-8"}>
             Unable to find Send Permission. You need to Log-out, and log back in
@@ -94,7 +94,7 @@ export default async function Home() {
 
       <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36 flex flex-row gap-4 items-center"}>
-          Scope : <RefreshScopesForm />{" "}
+          Scope : <RefreshScopesForm/>{" "}
         </div>
         <ul className={"list-disc ml-4"}>
           {scopes.map((x) => (
@@ -105,6 +105,12 @@ export default async function Home() {
       <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36"}>User Id :</div>
         <div>{user.id}</div>
+      </div>
+      <div className={"flex flex-col gap-2 md:flex-row"}>
+        <div className={"min-w-36"}>Credits:</div>
+        <div>
+          {user.credits}
+        </div>
       </div>
       <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36"}>Name / Email :</div>
@@ -118,10 +124,10 @@ export default async function Home() {
           <li>Contacts: {contactsCount}</li>
           <li>Emails: {emailsCount}</li>
           <li>
-            <OnBoardUserForm />
+            <OnBoardUserForm/>
           </li>
           <li>
-            <ProspectsCountForm />
+            <ProspectsCountForm/>
           </li>
         </ul>
       </div>

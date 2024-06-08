@@ -8,6 +8,7 @@ import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import LogoutButton from "@/components/LogoutButton";
+import CreditsBadge from "@/components/CreditsBadge";
 
 export default async function NavigationItems({
   inSheet,
@@ -78,6 +79,7 @@ export default async function NavigationItems({
       <div className={"grow"}></div>
       <ModeToggle />
       <UserProfileImageNav />
+      <CreditsBadge credits={user.credits} />
       <LogoutButton />
     </>
   );
