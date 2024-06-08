@@ -8,6 +8,7 @@ import {
 import onBoardUser, { OnBoardUserInput } from "@/services/onBoardUser";
 import sendProspectsCreatedToday from "@/services/sendProspectsCreatedToday";
 import processAllFiltersForEmail from "@/services/processAllFiltersForEmail";
+import sendEmailForAllApprovedIntros from "@/services/sendEmailForAllApprovedIntros";
 
 const queueName = "high";
 const highWorker = new Worker<
@@ -29,6 +30,9 @@ const highWorker = new Worker<
       }
       case "processAllFiltersForEmail": {
         return await processAllFiltersForEmail();
+      }
+      case "sendEmailForAllApprovedIntros": {
+        return await sendEmailForAllApprovedIntros()
       }
       default:
         console.error("got unknown job!");

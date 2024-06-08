@@ -71,7 +71,6 @@ const IntroOverviewHtml = (props: IntroOverviewHtmlProps) => {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
         <Preview>
-          {" "}
           {requestProfiles.personProfile.fullName ?? "An Introhub user"} wants
           to meet {contactProfiles.personProfile.fullName ?? "your contact"}{" "}
         </Preview>

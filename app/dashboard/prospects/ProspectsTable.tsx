@@ -11,9 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import MyPagination from "@/components/MyPagination";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { SquarePen } from "lucide-react";
 import {
   CompanyBox,
   ProspectBox,
@@ -25,8 +22,15 @@ import {
 import { ContactWithUser } from "@/app/dashboard/introductions/create/[contactId]/page";
 import FacilitatorBox from "@/components/FacilitatorBox";
 import getProfiles from "@/services/getProfiles";
+import CreateIntroButton from "@/components/CreateIntroButton";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
+import prisma from "@/prismaClient";
+import { User } from "@prisma/client";
+import NegativeBalanceAlert from "@/components/NegativeBalanceAlert";
+import ShowChildren from "@/components/ShowChildren";
 
-const ProspectsTable = ({
+const ProspectsTable = async ({
   prospectsWithUser,
   emailToProfile,
   companyUrlToProfile,
@@ -37,35 +41,47 @@ const ProspectsTable = ({
   companyUrlToProfile: CompanyUrlToProfile;
   filteredRecordsCount: number;
 }) => {
+  const session = (await auth()) as Session;
+  const user = await prisma.user.findFirstOrThrow({
+    where: {
+      email: session.user?.email ?? "",
+    },
+  });
   return (
-    <Table>
-      <TableCaption>Prospects</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className={"w-1/2"}>Prospect</TableHead>
-          <TableHead className={"w-1/2"}>Introducer</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {prospectsWithUser.map((prospect) => {
-          return (
-            <ProspectRow
-              key={prospect.id}
-              prospect={prospect}
-              emailToProfile={emailToProfile}
-              companyUrlToProfile={companyUrlToProfile}
-            />
-          );
-        })}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={2}>
-            <MyPagination totalCount={filteredRecordsCount} />
-          </TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
+    <>
+      <ShowChildren showIt={user.credits <= 0}>
+        <NegativeBalanceAlert />
+      </ShowChildren>
+      <Table>
+        <TableCaption>Prospects</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className={"w-1/2"}>Prospect</TableHead>
+            <TableHead className={"w-1/2"}>Introducer</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {prospectsWithUser.map((prospect) => {
+            return (
+              <ProspectRow
+                key={prospect.id}
+                prospect={prospect}
+                emailToProfile={emailToProfile}
+                companyUrlToProfile={companyUrlToProfile}
+                user={user}
+              />
+            );
+          })}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={2}>
+              <MyPagination totalCount={filteredRecordsCount} />
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </>
   );
 };
 
@@ -73,9 +89,10 @@ type ProspectRowProps = {
   prospect: ContactWithUser;
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
+  user: User;
 };
 export const ProspectRow = (props: ProspectRowProps) => {
-  const { prospect, emailToProfile, companyUrlToProfile } = props;
+  const { prospect, emailToProfile, companyUrlToProfile, user } = props;
   const contactProfiles = getProfiles(
     prospect.email,
     emailToProfile,
@@ -114,12 +131,7 @@ export const ProspectRow = (props: ProspectRowProps) => {
               <div>Received: {prospect.receivedCount}</div>
               <div>Ratio: {prospect.sentReceivedRatio / 100}</div>
             </div>
-            <Button asChild className={"w-fit"}>
-              <Link href={`/dashboard/introductions/create/${prospect.id}`}>
-                Create Intro
-                <SquarePen size={18} className={"ml-2"} />
-              </Link>
-            </Button>
+            <CreateIntroButton prospect={prospect} user={user} />
           </div>
         </TableCell>
       </TableRow>

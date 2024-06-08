@@ -5,6 +5,8 @@ import getProspectsBasedOnFilters, {
 } from "@/services/getProspectsBasedOnFilters";
 import { startOfToday, subDays } from "date-fns";
 import prepareProspectsData from "@/services/prepareProspectsData";
+import {IntroStates} from "@/lib/introStates";
+import {IntroWithContactFacilitatorAndRequester} from "@/app/dashboard/introductions/list/page";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -16,33 +18,27 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-  console.log("Hello world !");
-
-  const filtersObj = await prisma.filters.findFirstOrThrow({
+  const user = await prisma.user.findFirstOrThrow({
     where: {
-      dailyEmail: true,
+      id: "clwrwfkm00000w98m2jfyc4k6"
+    }
+  })
+  console.log("user.credits: ", user.credits);
+  const usersRequestedPendingIntros: IntroWithContactFacilitatorAndRequester[] = await prisma.introduction.findMany({
+    where: {
+      requesterId: user.id,
+      status: IntroStates["pending credits"],
     },
+    include: {
+      requester: true,
+      facilitator: true,
+      contact: true,
+    },
+    take: user.credits,
   });
-  console.log("filtersObj: ", filtersObj);
-  const searchParamsObj = getFiltersFromSearchParams(filtersObj.searchParams);
-  searchParamsObj.createdAfter = subDays(startOfToday(), 1).toISOString();
-  console.log("searchParamsObj: ", searchParamsObj);
-  const user = await prisma.user.findFirstOrThrow();
-  user.id = "does-not-exist";
-  const paginationValues: PaginatedValues = {
-    currentPage: 1,
-    itemsPerPage: 10,
-    recordsToSkip: 0,
-  };
-  const { prospects, filteredRecordsCount } = await getProspectsBasedOnFilters(
-    searchParamsObj,
-    paginationValues,
-    user,
-  );
-  const { prospectsWithUser, emailToProfile, companyUrlToProfile } =
-    await prepareProspectsData(prospects);
+  console.log("usersRequestedPendingIntros:" , usersRequestedPendingIntros);
 
-  console.log("prospects: ", prospects);
+
 })();
 
 export {};

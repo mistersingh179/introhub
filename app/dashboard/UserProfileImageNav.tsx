@@ -58,6 +58,7 @@ const UserProfileImageNav = async () => {
             <AvatarImage
               src={user.image ?? undefined}
               alt={user.name ?? user.email ?? undefined}
+              referrerPolicy={'no-referrer'}
             />
             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>

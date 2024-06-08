@@ -2,10 +2,31 @@ import { IntroStates } from "@/lib/introStates";
 import { Introduction } from "@prisma/client";
 import prisma from "@/prismaClient";
 
-// todo
-// when user clicks approve we move to approved or pending credits
-// when user gains more credits, we will take its pending credit ones & move them to approved
-// when it is approved we pickup & send email
+/*
+Here is how it works:
+
+when requester clicks on "create intro" in the UI – createIntroductionAction.ts
+  -> intro is update to "pending approval"
+  -> email is sent to facilitator – sendPendingApprovalEmail.ts
+
+when facilitator clicks on "approve" in the UI – approveIntroAction.ts
+ -> if facilitator updated the pre-draft message, then update it
+ -> if requester has money, then update it to "approved".
+ -> if requester does not have money update it to "pending credit"
+ -> always take 1 credit from requester & give 1 credit to facilitator.
+ -> after getting credits if facilitator's own credit balance becomes positive:
+    -> then we take its own "pending credit" intros and move them to "approved".
+
+Daily Cron Job – sendEmailForAllApprovedIntros
+ -> to go over all introductions which are approved and send those emails.
+
+Note:
+Credit is paid by requester when its intro is approved.
+This is also when the facilitator got the credit.
+Intro is put in "pending credit" state temporarily since balance of requester is negative.
+the second balance is not negative we will change state from "pending credit" to "approved"
+at this later time no credits exchange hands, as that has already happened.
+*/
 
 type Transitions = {
   [key in IntroStates]: IntroStates[];

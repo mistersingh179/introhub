@@ -9,6 +9,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
 import IntroductionUncheckedCreateInput = Prisma.IntroductionUncheckedCreateInput;
+import sendPendingApprovalEmail from "@/services/sendPendingApprovalEmail";
+import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 
 const containsPlaceHolderValue = (input: string): boolean => {
   if (process.env.NODE_ENV === "development") {
@@ -74,9 +76,17 @@ export default async function createIntroductionAction(
       status,
     };
 
-    await prisma.introduction.create({
-      data: input,
-    });
+    const intro: IntroWithContactFacilitatorAndRequester =
+      await prisma.introduction.create({
+        data: input,
+        include: {
+          contact: true,
+          facilitator: true,
+          requester: true,
+        },
+      });
+
+    await sendPendingApprovalEmail(intro);
   } catch (e) {
     console.log("an error occurred!: ", e);
     if (e instanceof ZodError) {

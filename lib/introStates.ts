@@ -17,7 +17,7 @@ export enum IntroStatesWithMeaning {
 
   approved = "The introduction has been approved by the facilitator and is awaiting email sending by the system. The email will be sent shortly.",
 
-  "pending credits" = "The introduction has been approved by the facilitator, but the introducer needs to acquire sufficient credits before sending the email.",
+  "pending credits" = "The introduction has been approved by the facilitator, but the requester needs to acquire sufficient credits before sending the email.",
 
   "email sent" = "The email associated with the introduction has been successfully sent.",
 

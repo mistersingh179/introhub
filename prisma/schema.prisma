@@ -66,6 +66,7 @@ model User {
   createdAt                DateTime       @default(now())
   updatedAt                DateTime       @updatedAt
   Filters                  Filters[]
+  credits                  Int            @default(0)
 
   @@index([email])
 }
