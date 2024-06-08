@@ -49,7 +49,7 @@ const ProspectsTable = async ({
   });
   return (
     <>
-      <ShowChildren showIt={user.credits <= 0}>
+      <ShowChildren showIt={user.credits < 0}>
         <NegativeBalanceAlert />
       </ShowChildren>
       <Table>
