@@ -100,5 +100,5 @@ export default async function createIntroductionAction(
 
   console.log("going to revalidated & redirect now");
   revalidatePath("/dashboard/introductions/list");
-  redirect("/dashboard/introductions/list");
+  redirect("/dashboard/introductions/list?selectedTab=sent");
 }

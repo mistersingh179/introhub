@@ -6,6 +6,7 @@ import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfi
 import IntroListTabs from "@/app/dashboard/introductions/list/IntroListTabs";
 import { IntroStates } from "@/lib/introStates";
 import ScopeMissingMessage from "@/app/dashboard/home/ScopeMissingMessage";
+import YouHaveIntroWithPendingCreditAlert from "@/app/dashboard/introductions/list/YouHaveIntroWithPendingCreditAlert";
 
 export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
@@ -97,6 +98,9 @@ export default async function IntroductionsRequested({
   return (
     <div className={"flex flex-col gap-4 mt-4"}>
       <ScopeMissingMessage />
+
+      <YouHaveIntroWithPendingCreditAlert />
+
       <IntroListTabs
         introsSent={introsSent}
         pendingCreditsCount={pendingCreditsCount}
