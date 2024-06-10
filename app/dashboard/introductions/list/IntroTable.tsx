@@ -52,6 +52,9 @@ const IntroTable = ({
   companyUrlToProfile,
   showRequester = true,
   showFacilitator = true,
+  showPagination = true,
+  showCaption = true,
+  showHeader = true,
 }: {
   introductions: IntroWithContactFacilitatorAndRequester[];
   user: User;
@@ -59,20 +62,25 @@ const IntroTable = ({
   companyUrlToProfile: CompanyUrlToProfile;
   showRequester?: boolean;
   showFacilitator?: boolean;
+  showPagination?: boolean;
+  showCaption?: boolean;
+  showHeader?: boolean;
 }) => {
   return (
     <>
       <Table>
-        <TableCaption>Introductions</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className={"p-2 w-1/2"}>Prospect</TableHead>
-            <TableHead className={"p-2 w-1/2"}>
-              {showRequester && <>Requester</>}
-              {showFacilitator && <>Facilitator</>}
-            </TableHead>
-          </TableRow>
-        </TableHeader>
+        {showCaption && <TableCaption>Introductions</TableCaption>}
+        {showHeader && (
+          <TableHeader>
+            <TableRow>
+              <TableHead className={"p-2"}>Prospect</TableHead>
+              <TableHead className={"p-2"}>
+                {showRequester && <>Requester</>}
+                {showFacilitator && <>Facilitator</>}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+        )}
         <TableBody>
           {introductions.map((introduction) => {
             return (
@@ -88,13 +96,15 @@ const IntroTable = ({
             );
           })}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={2}>
-              <MyPagination />
-            </TableCell>
-          </TableRow>
-        </TableFooter>
+        {showPagination && (
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={2}>
+                <MyPagination />
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+        )}
       </Table>
     </>
   );
@@ -293,21 +303,21 @@ const IntroRow = ({
   return (
     <>
       <TableRow className={""} key={introduction.id}>
-        <TableCell
-          className={"p-2 flex flex-col gap-4 overflow-hidden text-ellipsis"}
-        >
-          <ProspectBox
-            contact={introduction.contact}
-            personProfile={contactProfiles.personProfile}
-            personExp={contactProfiles.personExp}
-          />
-          <CompanyBox
-            companyProfile={contactProfiles.companyProfile}
-            personExp={contactProfiles.personExp}
-          />
+        <TableCell className={"p-2 w-1/2"}>
+          <div className={"flex flex-col gap-4 overflow-hidden text-ellipsis"}>
+            <ProspectBox
+              contact={introduction.contact}
+              personProfile={contactProfiles.personProfile}
+              personExp={contactProfiles.personExp}
+            />
+            <CompanyBox
+              companyProfile={contactProfiles.companyProfile}
+              personExp={contactProfiles.personExp}
+            />
+          </div>
         </TableCell>
 
-        <TableCell className={"p-2"}>
+        <TableCell className={"p-2 w-1/2"}>
           <div className={"flex flex-col gap-4"}>
             {showRequester && (
               <RequesterBox
@@ -344,7 +354,6 @@ const IntroRow = ({
             )}
           </div>
         </TableCell>
-
       </TableRow>
     </>
   );
