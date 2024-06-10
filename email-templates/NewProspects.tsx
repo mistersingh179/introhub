@@ -51,8 +51,11 @@ const NewProspects = (props: NewProspectsProps) => {
   const { prospectsWithUser, emailToProfile, companyUrlToProfile, date } =
     props;
   const personProfiles = Object.values(emailToProfile || {});
-  const companyNames = personProfiles
-    .map((pp) => pp.personExperiences?.[0]?.companyName ?? "")
+
+  const companyNames = prospectsWithUser
+    .map(
+      (p) => emailToProfile[p.email]?.personExperiences?.[0]?.companyName ?? "",
+    )
     .join(", ");
   const count = prospectsWithUser.length;
   return (
