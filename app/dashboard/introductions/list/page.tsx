@@ -67,6 +67,24 @@ export default async function IntroductionsRequested({
       take: itemsPerPage,
     });
 
+  const introsReceivedAndPendingMyApproval: IntroWithContactFacilitatorAndRequester[] =
+    await prisma.introduction.findMany({
+      where: {
+        facilitatorId: user.id,
+        status: IntroStates["pending approval"]
+      },
+      include: {
+        contact: true,
+        facilitator: true,
+        requester: true,
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+      skip: recordsToSkip,
+      take: itemsPerPage,
+    });
+
   const pendingApprovalCount = await prisma.introduction.count({
     where: {
       facilitatorId: user.id,
@@ -106,6 +124,7 @@ export default async function IntroductionsRequested({
         pendingCreditsCount={pendingCreditsCount}
         introsReceived={introsReceived}
         pendingApprovalCount={pendingApprovalCount}
+        introsReceivedAndPendingMyApproval={introsReceivedAndPendingMyApproval}
         user={user}
         emailToProfile={emailToProfile}
         companyUrlToProfile={companyUrlToProfile}

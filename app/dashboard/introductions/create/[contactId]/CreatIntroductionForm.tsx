@@ -2,17 +2,21 @@
 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
 import ErrorMessage from "@/app/dashboard/introductions/create/[contactId]/ErrorMessage";
 import createIntroductionAction from "@/app/actions/introductions/createIntroductionAction";
 import { TypographyMuted } from "@/components/TypographyMuted";
-import {CompanyProfile, PersonExperience, PersonProfile, User} from "@prisma/client";
 import {
-  ContactWithUser,
-  PersonProfileWithExperiences,
-} from "@/app/dashboard/introductions/create/[contactId]/page";
+  CompanyProfile,
+  PersonExperience,
+  PersonProfile,
+  User,
+} from "@prisma/client";
+import { ContactWithUser } from "@/app/dashboard/introductions/create/[contactId]/page";
+import { useState } from "react";
+import IntroCreateConfirmationDialog from "@/app/dashboard/introductions/create/[contactId]/IntroCreateConfirmationDialog";
 
 export default function CreateIntroductionForm({
   contact,
@@ -46,10 +50,17 @@ export default function CreateIntroductionForm({
 
 cc: ${requesterName}, please take it from here.`;
 
+  const [submittedAt, setSubmittedAt] = useState<undefined | number>();
+
+  const formActionHandler = async (formData: FormData) => {
+    setSubmittedAt(Date.now());
+    await dispatch(formData);
+  };
+
   return (
     <>
       <form
-        action={dispatch}
+        action={formActionHandler}
         className={"bg-gray-50 dark:bg-slate-950 p-4 flex flex-col gap-6"}
       >
         {errorMessage && (
@@ -80,8 +91,8 @@ cc: ${requesterName}, please take it from here.`;
             />
             <TypographyMuted className={"text-center"}>
               Ghost write an introduction from the Facilitator to the Prospect.
-              Highlight what makes your request relevant to {contactName}.
-              Think about what you can offer or discuss that aligns with their
+              Highlight what makes your request relevant to {contactName}. Think
+              about what you can offer or discuss that aligns with their
               interests.
             </TypographyMuted>
           </div>
@@ -91,6 +102,7 @@ cc: ${requesterName}, please take it from here.`;
           <SubmitButton label={"Create Introduction"} />
         </div>
       </form>
+      <IntroCreateConfirmationDialog open={!!(submittedAt && !errorMessage)} />
     </>
   );
 }
