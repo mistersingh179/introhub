@@ -8,8 +8,10 @@ import {
   EmailToProfile,
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import { usePathname, useSearchParams } from "next/navigation";
+import Typography from "@/components/Typography";
 
 type IntroListTabsProps = {
+  introsReceivedAndPendingMyApproval: IntroWithContactFacilitatorAndRequester[];
   introsSent: IntroWithContactFacilitatorAndRequester[];
   pendingCreditsCount: number;
   introsReceived: IntroWithContactFacilitatorAndRequester[];
@@ -27,6 +29,7 @@ const IntroListTabs = (props: IntroListTabsProps) => {
     companyUrlToProfile,
     pendingApprovalCount,
     pendingCreditsCount,
+    introsReceivedAndPendingMyApproval,
   } = props;
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -40,36 +43,79 @@ const IntroListTabs = (props: IntroListTabsProps) => {
   };
 
   return (
-    <Tabs
-      onValueChange={tabChangeHandler}
-      defaultValue={selectedTab}
-    >
+    <Tabs onValueChange={tabChangeHandler} defaultValue={selectedTab}>
       <TabsList>
+        <TabsTrigger value="sent-pending-approval">
+          Action Required{" "}
+          {pendingApprovalCount ? `(${pendingApprovalCount})` : ""}
+        </TabsTrigger>
         <TabsTrigger value="sent">
-          Intros Sent {pendingCreditsCount ? `(${pendingCreditsCount})` : ""}
+          Requested {pendingCreditsCount ? `(${pendingCreditsCount})` : ""}
         </TabsTrigger>
         <TabsTrigger value="received">
-          Intros Received{" "}
+          Facilitating{" "}
           {pendingApprovalCount ? `(${pendingApprovalCount})` : ""}
         </TabsTrigger>
       </TabsList>
+      <TabsContent value="sent-pending-approval">
+
+        <div>
+          <Typography
+            affects={"lead"}
+            variant={"p"}
+            className={"mt-4 mx-2 text-center"}
+          >
+            These introductions are {" "}
+            <span className={"font-semibold"}>pending your approval</span>.
+            Please review and decide.
+          </Typography>
+          <IntroTable
+            introductions={introsReceivedAndPendingMyApproval}
+            user={user}
+            emailToProfile={emailToProfile}
+            companyUrlToProfile={companyUrlToProfile}
+            showFacilitator={false}
+          />
+        </div>
+      </TabsContent>
       <TabsContent value="sent">
-        <IntroTable
-          introductions={introsSent}
-          user={user}
-          emailToProfile={emailToProfile}
-          companyUrlToProfile={companyUrlToProfile}
-          showRequester={false}
-        />
+        <div>
+          <Typography
+            affects={"lead"}
+            variant={"p"}
+            className={"mt-4 mx-2 text-center"}
+          >
+            You are the <span className={"font-semibold"}>requester</span> of
+            all these introductions. Approved ones are emailed out with you{" "}
+            {`cc'ed`}.
+          </Typography>
+          <IntroTable
+            introductions={introsSent}
+            user={user}
+            emailToProfile={emailToProfile}
+            companyUrlToProfile={companyUrlToProfile}
+            showRequester={false}
+          />
+        </div>
       </TabsContent>
       <TabsContent value="received">
-        <IntroTable
-          introductions={introsReceived}
-          user={user}
-          emailToProfile={emailToProfile}
-          companyUrlToProfile={companyUrlToProfile}
-          showFacilitator={false}
-        />
+        <div>
+          <Typography
+            affects={"lead"}
+            variant={"p"}
+            className={"mt-4 mx-2 text-center"}
+          >
+            You are the <span className={"font-semibold"}>facilitator</span> of
+            all these introductions. Approving them earns you credits.
+          </Typography>
+          <IntroTable
+            introductions={introsReceived}
+            user={user}
+            emailToProfile={emailToProfile}
+            companyUrlToProfile={companyUrlToProfile}
+            showFacilitator={false}
+          />
+        </div>
       </TabsContent>
     </Tabs>
   );

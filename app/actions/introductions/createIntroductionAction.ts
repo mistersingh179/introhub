@@ -98,7 +98,9 @@ export default async function createIntroductionAction(
     }
   }
 
-  console.log("going to revalidated & redirect now");
+  console.log("going to revalidate introductions page");
   revalidatePath("/dashboard/introductions/list");
-  redirect("/dashboard/introductions/list?selectedTab=sent");
+  revalidatePath("/dashboard/prospects");
+  // console.log("going to redirect to prospects page");
+  // redirect("/dashboard/prospects");
 }
