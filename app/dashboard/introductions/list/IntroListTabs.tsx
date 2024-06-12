@@ -33,7 +33,7 @@ const IntroListTabs = (props: IntroListTabsProps) => {
   } = props;
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const selectedTab = searchParams.get("selectedTab") ?? "received";
+  const selectedTab = searchParams.get("selectedTab") ?? "sent-pending-approval";
 
   const tabChangeHandler = (newValue: string) => {
     const updatedSearchParams = new URLSearchParams(searchParams);

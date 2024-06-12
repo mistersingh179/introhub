@@ -40,11 +40,11 @@ export default async function NavigationItems({
       <NavLink inSheet={inSheet} name={"Home"} url={"/dashboard/home"} />
       <ShowChildren showIt={userAllowed}>
         <>
-          <NavLink
-            inSheet={inSheet}
-            name={"My Emails"}
-            url={"/dashboard/my-emails"}
-          />
+          {/*<NavLink*/}
+          {/*  inSheet={inSheet}*/}
+          {/*  name={"My Emails"}*/}
+          {/*  url={"/dashboard/my-emails"}*/}
+          {/*/>*/}
           <NavLink
             inSheet={inSheet}
             name={"My Contacts"}
