@@ -7,6 +7,7 @@ import IntroListTabs from "@/app/dashboard/introductions/list/IntroListTabs";
 import { IntroStates } from "@/lib/introStates";
 import ScopeMissingMessage from "@/app/dashboard/home/ScopeMissingMessage";
 import YouHaveIntroWithPendingCreditAlert from "@/app/dashboard/introductions/list/YouHaveIntroWithPendingCreditAlert";
+import IntroApproveConfirmationDialog from "@/app/dashboard/introductions/list/IntroApproveConfirmationDialog";
 
 export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
@@ -14,7 +15,7 @@ export type IntroWithContactFacilitatorAndRequester = Introduction & {
   requester: User;
 };
 
-export default async function IntroductionsRequested({
+export default async function IntroList({
   searchParams,
 }: {
   searchParams?: {
@@ -71,7 +72,7 @@ export default async function IntroductionsRequested({
     await prisma.introduction.findMany({
       where: {
         facilitatorId: user.id,
-        status: IntroStates["pending approval"]
+        status: IntroStates["pending approval"],
       },
       include: {
         contact: true,
@@ -114,21 +115,26 @@ export default async function IntroductionsRequested({
     await getEmailAndCompanyUrlProfiles(emails);
 
   return (
-    <div className={"flex flex-col gap-4 mt-4"}>
-      <ScopeMissingMessage />
+    <>
+      <IntroApproveConfirmationDialog />
+      <div className={"flex flex-col gap-4 mt-4"}>
+        <ScopeMissingMessage />
 
-      <YouHaveIntroWithPendingCreditAlert />
+        <YouHaveIntroWithPendingCreditAlert />
 
-      <IntroListTabs
-        introsSent={introsSent}
-        pendingCreditsCount={pendingCreditsCount}
-        introsReceived={introsReceived}
-        pendingApprovalCount={pendingApprovalCount}
-        introsReceivedAndPendingMyApproval={introsReceivedAndPendingMyApproval}
-        user={user}
-        emailToProfile={emailToProfile}
-        companyUrlToProfile={companyUrlToProfile}
-      />
-    </div>
+        <IntroListTabs
+          introsSent={introsSent}
+          pendingCreditsCount={pendingCreditsCount}
+          introsReceived={introsReceived}
+          pendingApprovalCount={pendingApprovalCount}
+          introsReceivedAndPendingMyApproval={
+            introsReceivedAndPendingMyApproval
+          }
+          user={user}
+          emailToProfile={emailToProfile}
+          companyUrlToProfile={companyUrlToProfile}
+        />
+      </div>
+    </>
   );
 }

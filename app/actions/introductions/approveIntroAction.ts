@@ -16,7 +16,7 @@ const approveIntroActionSchema = z.object({
   messageForContact: z.string().max(5000).min(10).optional(),
 });
 
-type ApproveIntroActionFlattenErrorType = z.inferFlattenedErrors<
+export type ApproveIntroActionFlattenErrorType = z.inferFlattenedErrors<
   typeof approveIntroActionSchema
 >;
 
@@ -79,5 +79,7 @@ export default async function approveIntroAction(
   }
 
   revalidatePath("/dashboard/introductions/list");
-  redirect("/dashboard/introductions/list");
+  redirect(
+    "/dashboard/introductions/list?showIntroApproveConfirmationDialog=true",
+  );
 }
