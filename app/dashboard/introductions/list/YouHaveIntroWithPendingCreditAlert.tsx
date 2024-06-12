@@ -8,16 +8,24 @@ import { Drum } from "lucide-react";
 import IntroTable from "@/app/dashboard/introductions/list/IntroTable";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 
-const YouHaveIntroWithPendingCreditAlert = async () => {
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
+const YouHaveIntroWithPendingCreditAlert = async () => {
   const session = (await auth()) as Session;
   const user = await prisma.user.findFirstOrThrow({
     where: {
       email: session.user?.email ?? "",
     },
   });
-  const intro: IntroWithContactFacilitatorAndRequester | null =
-    await prisma.introduction.findFirst({
+  const pendingCreditIntros: IntroWithContactFacilitatorAndRequester[] =
+    await prisma.introduction.findMany({
       where: {
         requesterId: user.id,
         status: IntroStates["pending credits"],
@@ -30,49 +38,75 @@ const YouHaveIntroWithPendingCreditAlert = async () => {
       orderBy: {
         updatedAt: "desc",
       },
-      take: 1,
     });
 
-  if (!intro) {
+  if (pendingCreditIntros.length === 0) {
     return <></>;
   }
 
   const emails = [
-    intro.contact.email!,
-    intro.facilitator.email!,
-    intro.requester.email!,
+    ...new Set(
+      pendingCreditIntros.reduce<string[]>((acc, intro) => {
+        acc.push(intro.contact.email);
+        acc.push(intro.requester.email!);
+        acc.push(intro.facilitator.email!);
+        return acc;
+      }, []),
+    ),
   ];
 
   const { emailToProfile, companyUrlToProfile } =
     await getEmailAndCompanyUrlProfiles(emails);
+
+  const count = pendingCreditIntros.length;
 
   return (
     <Alert>
       <AlertTitle>
         <div className={"flex flex-row gap-4 items-center"}>
           <Drum className={"w-8 h-8"} />
-          Your intro is one step away from going out!
+          {count} Approved Intro{count === 1 ? "" : "s"} Pending Due to Negative
+          Credit!
         </div>
       </AlertTitle>
       <AlertDescription>
         <div className={"my-4"}>
-          The following introduction you asked for is sitting in a queue and
-          waiting for you to earn a credit. When you earn a credit it will be
-          emailed out with you {`cc'ed`}.
+          You have {count} intro request{count === 1 ? "" : "s"} approved and
+          waiting to be sent. Please approve any intros which need your approval
+          to earn credits and restore a positive balance. Once positive, all
+          your intros will be sent automatically and you will be {`cc'ed`}.
         </div>
       </AlertDescription>
-      <div>
-        <IntroTable
-          introductions={[intro]}
-          user={user}
-          emailToProfile={emailToProfile}
-          companyUrlToProfile={companyUrlToProfile}
-          showRequester={true}
-          showFacilitator={false}
-          showPagination={false}
-          showCaption={false}
-          showHeader={false}
-        />
+      <div className={'mx-4'}>
+        <Carousel orientation={'horizontal'}>
+          <CarouselContent>
+            {Array.from({ length: count }).map((_, index) => (
+              <CarouselItem key={index} className={'sm:basis-full md:basis-1/2 lg:basis-1/3'}>
+                  <Card>
+                    <CardContent className="p-4">
+                      <IntroTable
+                        introductions={pendingCreditIntros.slice(
+                          0 + index,
+                          1 + index,
+                        )}
+                        user={user}
+                        emailToProfile={emailToProfile}
+                        companyUrlToProfile={companyUrlToProfile}
+                        showRequester={false}
+                        showFacilitator={false}
+                        showPagination={false}
+                        showCaption={false}
+                        showHeader={false}
+                      />
+                    </CardContent>
+                  </Card>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious variant={'secondary'} />
+          <CarouselNext variant={'secondary'} />
+        </Carousel>
+
       </div>
     </Alert>
   );
