@@ -2,6 +2,7 @@ import prisma from "@/prismaClient";
 import { IntroStates } from "@/lib/introStates";
 import { goingToChangeIntroStatus } from "@/services/canStateChange";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
+import sendEmailForApprovedIntro from "@/services/sendEmailForApprovedIntro";
 
 const moveIntroToBeApproved = async (
   intro: IntroWithContactFacilitatorAndRequester,
@@ -24,6 +25,7 @@ const moveIntroToBeApproved = async (
       status: IntroStates.approved,
     },
   });
+  await sendEmailForApprovedIntro(intro);
 };
 
 export default moveIntroToBeApproved;
