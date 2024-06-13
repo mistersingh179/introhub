@@ -17,6 +17,7 @@ import {
 import { ContactWithUser } from "@/app/dashboard/introductions/create/[contactId]/page";
 import { useState } from "react";
 import IntroCreateConfirmationDialog from "@/app/dashboard/introductions/create/[contactId]/IntroCreateConfirmationDialog";
+import getFirstName from "@/services/getFirstName";
 
 export default function CreateIntroductionForm({
   contact,
@@ -35,11 +36,11 @@ export default function CreateIntroductionForm({
   const action = createIntroductionAction.bind(null, params.contactId);
   const [errorMessage, dispatch] = useFormState(action, undefined);
 
-  const facilitatorName = contact.user.name;
-  const contactName = personProfile.fullName;
+  const facilitatorName = getFirstName(contact.user.name, "IntroHub User");
+  const contactName = getFirstName(personProfile.fullName, "you");
   const contactCompanyName = personExperience.companyName;
   const contactCompanyIndustry = companyProfile.industry;
-  const requesterName = user.name;
+  const requesterName = getFirstName(user.name);
 
   const defaultMessageForFacilitator = `Hi ${facilitatorName}, I noticed you're connected to ${contactName} at ${contactCompanyName}. I'm really impressed by their work in ${contactCompanyIndustry} and believe my **[Product/Service]** could offer them great value, particularly in **[Specific Area]**. I'd greatly appreciate your help in facilitating an intro.
 `;

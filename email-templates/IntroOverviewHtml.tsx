@@ -12,7 +12,7 @@ import {
 } from "@react-email/components";
 import { buildS3ImageUrl } from "@/lib/url";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
-import ShowChildren from "@/components/ShowChildren";
+import getFirstName from "@/services/getFirstName";
 
 type IntroOverviewHtmlProps = {
   intro: IntroWithContactFacilitatorAndRequester;
@@ -64,6 +64,11 @@ const IntroOverviewHtml = (props: IntroOverviewHtmlProps) => {
     facilitatorsPendingIntro,
     facilitatorsPendingIntroContactProfiles,
   } = props;
+  const requesterName = getFirstName(
+    requestProfiles.personProfile.fullName,
+    "IntroHub User",
+  );
+  const contactName = getFirstName(contactProfiles.personProfile.fullName);
   return (
     <>
       <Html lang="en" dir="ltr">
@@ -71,13 +76,11 @@ const IntroOverviewHtml = (props: IntroOverviewHtmlProps) => {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
         <Preview>
-          {requestProfiles.personProfile.fullName ?? "An Introhub user"} wants
-          to meet {contactProfiles.personProfile.fullName ?? "your contact"}{" "}
+          {requesterName} wants to meet {contactName}
         </Preview>
         <Container>
           <Heading as="h2">
-            {requestProfiles.personProfile.fullName ?? "An Introhub user"} wants
-            to meet {contactProfiles.personProfile.fullName ?? "your contact"}
+            {requesterName} wants to meet {contactName}
           </Heading>
           <Hr />
           <Tailwind>

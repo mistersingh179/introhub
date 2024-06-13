@@ -6,6 +6,7 @@ import sendEmail, { systemEmail } from "@/services/sendEmail";
 import introOverviewHtml from "@/email-templates/IntroOverviewHtml";
 import { IntroStates } from "@/lib/introStates";
 import { Profiles } from "@/app/dashboard/introductions/list/IntroTable";
+import getFirstName from "@/services/getFirstName";
 
 export const rodEmail = "rod@introhub.net";
 
@@ -77,6 +78,15 @@ const sendPendingApprovalEmail = async (
 
   console.log("*** actuallySendEmail: ", actuallySendEmail);
 
+  const requesterName = getFirstName(
+    requestProfiles.personProfile.fullName,
+    "An IntroHub user",
+  );
+  const contactName = getFirstName(
+    contactProfiles.personProfile.fullName,
+    "your contact",
+  );
+
   if (actuallySendEmail) {
     await sendEmail({
       account: systemAccount,
@@ -84,7 +94,7 @@ const sendPendingApprovalEmail = async (
       from: systemEmail,
       to: intro.facilitator.email!,
       cc: rodEmail,
-      subject: `Pending Your approval – ${requestProfiles.personProfile.fullName ?? "An IntroHub user"} wants to meet ${contactProfiles.personProfile.fullName ?? "your contact"}`,
+      subject: `Pending Your approval – ${requesterName} wants to meet ${contactName}`,
     });
   }
 
