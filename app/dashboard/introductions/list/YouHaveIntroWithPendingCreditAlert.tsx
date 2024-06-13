@@ -77,36 +77,39 @@ const YouHaveIntroWithPendingCreditAlert = async () => {
           your intros will be sent automatically and you will be {`cc'ed`}.
         </div>
       </AlertDescription>
-      <div className={'mx-4'}>
-        <Carousel orientation={'horizontal'}>
+      <div className={"mx-4"}>
+        <Carousel orientation={"horizontal"}>
           <CarouselContent>
             {Array.from({ length: count }).map((_, index) => (
-              <CarouselItem key={index} className={'sm:basis-full md:basis-1/2 lg:basis-1/3'}>
-                  <Card>
-                    <CardContent className="p-4">
-                      <IntroTable
-                        introductions={pendingCreditIntros.slice(
-                          0 + index,
-                          1 + index,
-                        )}
-                        user={user}
-                        emailToProfile={emailToProfile}
-                        companyUrlToProfile={companyUrlToProfile}
-                        showRequester={false}
-                        showFacilitator={false}
-                        showPagination={false}
-                        showCaption={false}
-                        showHeader={false}
-                      />
-                    </CardContent>
-                  </Card>
+              <CarouselItem
+                key={index}
+                className={`sm:basis-full ${count >= 2 ? "md:basis-1/2" : ""} 
+                  ${count >= 3 ? "lg:basis-1/3" : ""} `}
+              >
+                <Card>
+                  <CardContent className="p-4">
+                    <IntroTable
+                      introductions={pendingCreditIntros.slice(
+                        0 + index,
+                        1 + index,
+                      )}
+                      user={user}
+                      emailToProfile={emailToProfile}
+                      companyUrlToProfile={companyUrlToProfile}
+                      showRequester={false}
+                      showFacilitator={false}
+                      showPagination={false}
+                      showCaption={false}
+                      showHeader={false}
+                    />
+                  </CardContent>
+                </Card>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious variant={'secondary'} />
-          <CarouselNext variant={'secondary'} />
+          <CarouselPrevious variant={"secondary"} />
+          <CarouselNext variant={"secondary"} />
         </Carousel>
-
       </div>
     </Alert>
   );
