@@ -24,7 +24,7 @@ const IntroApproveWithMessageForm = (
   const canChange = canStateChange(
     intro.status as IntroStates,
     IntroStates.approved,
-  );
+  ) && intro.status !== IntroStates["pending credits"];
   const action = approveIntroAction.bind(null, intro.id);
   const [errorMessage, dispatch] = useFormState(action, undefined);
   console.log("errorMessage: ", errorMessage);
