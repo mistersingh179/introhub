@@ -5,6 +5,7 @@ import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introdu
 import { SendEmailInput } from "@/services/sendEmail";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import getAllProfiles from "@/services/getAllProfiles";
+import getFirstName from "@/services/getFirstName";
 
 const sendEmailForApprovedIntro = async (
   intro: IntroWithContactFacilitatorAndRequester,
@@ -38,9 +39,12 @@ const sendEmailForApprovedIntro = async (
   const { contactProfiles, requestProfiles, facilitatorProfiles } =
     getAllProfiles(intro, emailToProfile, companyUrlToProfile);
 
+  const contactName = getFirstName(contactProfiles.personProfile.fullName);
+  const requesterName = getFirstName(intro.requester.name);
+
   const sendEmailInput: SendEmailInput = {
     account,
-    subject: `Intro request: ${contactProfiles.personProfile.fullName} <-> ${intro.requester.name}`,
+    subject: `Connecting You Both: ${contactName} & ${requesterName}`,
     body: intro.messageForContact,
     from: intro.facilitator.email!,
     cc: intro.requester.email!,

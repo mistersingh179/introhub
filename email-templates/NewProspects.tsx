@@ -22,6 +22,7 @@ import { buildS3ImageUrl } from "@/lib/url";
 import { PersonExperience } from "@prisma/client";
 import getClosestPersonExp from "@/services/helpers/getClosestPersonExp";
 import { lightFormat } from "date-fns";
+import getFirstName from "@/services/getFirstName";
 
 type NewProspectsProps = {
   prospectsWithUser: ContactWithUser[];
@@ -100,7 +101,7 @@ const NewProspects = (props: NewProspectsProps) => {
                           width="50"
                           height="50"
                         />
-                        <div>{contactProfiles.personProfile.fullName}</div>
+                        <div>{getFirstName(contactProfiles.personProfile.fullName)}</div>
                         <div>{contactProfiles.personExp.jobTitle}</div>
                       </a>
                     </td>
