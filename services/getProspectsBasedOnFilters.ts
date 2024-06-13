@@ -1,5 +1,6 @@
 import { Contact, Prisma, User } from "@prisma/client";
 import prisma from "@/prismaClient";
+import { IntroStates } from "@/lib/introStates";
 
 export type PaginatedValues = {
   currentPage: number;
@@ -88,10 +89,12 @@ const getProspectsBasedOnFilters = async (
                inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
-      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} \
-            ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} \
-            ${createdAfterFilterSql}
+               left join public."Introduction" I
+                         on I."contactId" = C.id and I."requesterId" = ${user.id} and
+                            (I.status = ${IntroStates.approved} or I.status = ${IntroStates["pending credits"]} or I.status = ${IntroStates["email sent"]})
+      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql}
         and C."userId" != ${user.id}
+        and I.id is null
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
@@ -110,9 +113,7 @@ const getProspectsBasedOnFilters = async (
                inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
-      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} \
-            ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} \
-            ${createdAfterFilterSql}
+      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql}
         and C."userId" != ${user.id}
   `;
   const countSqlResult = await prisma.$queryRaw<{ count: number }[]>(countSql);
@@ -137,11 +138,8 @@ if (require.main === module) {
       selectedStates: ["New York"],
     };
 
-    const { prospects, filteredRecordsCount } = await getProspectsBasedOnFilters(
-      filters,
-      paginationValues,
-      user,
-    );
+    const { prospects, filteredRecordsCount } =
+      await getProspectsBasedOnFilters(filters, paginationValues, user);
     console.log("prospects: ", prospects);
     console.log("filteredRecordsCount: ", filteredRecordsCount);
     process.exit(0);
