@@ -130,7 +130,7 @@ const IntroOverviewHtml = (props: IntroOverviewHtmlProps) => {
               <Hr />
               <div className={"text-center mt-5"}>
                 <a
-                  href={`${process.env.BASE_API_URL}/dashboard/introductions/list`}
+                  href={`${process.env.BASE_API_URL}/dashboard/introductions/list?selectedTab=received-and-pending-my-approval&showIntro=${intro.id}`}
                   target={"_blank"}
                   className={"text-current text-xl"}
                 >
