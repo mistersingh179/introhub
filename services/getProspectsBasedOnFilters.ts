@@ -80,6 +80,11 @@ const getProspectsBasedOnFilters = async (
     ? Prisma.sql`and C."createdAt" >= ${new Date(createdAfter)}`
     : Prisma.sql``;
 
+  const introsMustBeNullRequirement =
+    process.env.NODE_ENV === "development"
+      ? Prisma.sql``
+      : Prisma.sql`and I.id is null`;
+
   const sql = Prisma.sql`
       select distinct on (C.email) C.*
       from "Contact" C
@@ -94,7 +99,7 @@ const getProspectsBasedOnFilters = async (
                             (I.status = ${IntroStates.approved} or I.status = ${IntroStates["pending credits"]} or I.status = ${IntroStates["email sent"]})
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql}
         and C."userId" != ${user.id}
-        and I.id is null
+        ${introsMustBeNullRequirement}
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
