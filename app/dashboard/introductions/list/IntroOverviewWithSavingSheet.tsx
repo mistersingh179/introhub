@@ -11,6 +11,7 @@ import {
 import IntroOverviewWithSaving from "@/app/dashboard/introductions/list/IntroOverviewWithSaving";
 import React, { useState } from "react";
 import { ChevronRightCircle } from "lucide-react";
+import useUrlToTriggerOpen from "@/hooks/useUrlToTriggerOpen";
 
 type IntroApproveWithMessageSheetProps = {
   user: User;
@@ -24,6 +25,8 @@ const IntroOverviewWithSavingSheet = (
 ) => {
   const { user, intro, emailToProfile, companyUrlToProfile } = props;
   const [open, setOpen] = useState(false);
+  useUrlToTriggerOpen(setOpen, "showIntro", intro.id);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>

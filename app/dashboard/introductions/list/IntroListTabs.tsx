@@ -33,7 +33,7 @@ const IntroListTabs = (props: IntroListTabsProps) => {
   } = props;
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const selectedTab = searchParams.get("selectedTab") ?? "sent-pending-approval";
+  const selectedTab = searchParams.get("selectedTab") ?? "received-and-pending-my-approval";
 
   const tabChangeHandler = (newValue: string) => {
     const updatedSearchParams = new URLSearchParams(searchParams);
@@ -45,7 +45,7 @@ const IntroListTabs = (props: IntroListTabsProps) => {
   return (
     <Tabs onValueChange={tabChangeHandler} defaultValue={selectedTab}>
       <TabsList>
-        <TabsTrigger value="sent-pending-approval">
+        <TabsTrigger value="received-and-pending-my-approval">
           Action Required{" "}
           {pendingApprovalCount ? `(${pendingApprovalCount})` : ""}
         </TabsTrigger>
@@ -57,7 +57,7 @@ const IntroListTabs = (props: IntroListTabsProps) => {
           {pendingApprovalCount ? `(${pendingApprovalCount})` : ""}
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="sent-pending-approval">
+      <TabsContent value="received-and-pending-my-approval">
 
         <div>
           <Typography
