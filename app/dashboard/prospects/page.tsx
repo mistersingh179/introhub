@@ -193,6 +193,7 @@ export default async function Prospects({
 }: {
   searchParams?: ProspectsSearchParams;
 }) {
+  console.log("*** in Prospects Page");
   const session = (await auth()) as Session;
   const user = await prisma.user.findFirstOrThrow({
     where: {

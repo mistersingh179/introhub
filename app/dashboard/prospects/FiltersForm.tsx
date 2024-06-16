@@ -79,23 +79,23 @@ const FiltersForm = (props: FiltersFormProps) => {
     createdAfter ? new Date(createdAfter) : undefined,
   );
 
-  useEffect(() => {
-    console.log("we have a change!");
-    formHandler();
-  }, [
-    selectedEmail,
-    selectedWebsite,
-    selectedCities,
-    selectedStates,
-    selectedJobTitles,
-    selectedIndustries,
-    selectedCategories,
-    selectedUserEmails,
-    date,
-  ]);
+  // useEffect(() => {
+  //   console.log("*** we have a change!");
+  //   formHandler();
+  // }, [
+  //   selectedEmail,
+  //   selectedWebsite,
+  //   selectedCities,
+  //   selectedStates,
+  //   selectedJobTitles,
+  //   selectedIndustries,
+  //   selectedCategories,
+  //   selectedUserEmails,
+  //   date,
+  // ]);
 
   const formHandler = (formData?: FormData) => {
-    console.log("in formHandler: ", formData);
+    console.log("*** in formHandler: ", formData);
     if (formData) {
       formData.forEach((value, key) => {
         console.log("key: ", key, "value: ", value);
@@ -127,9 +127,10 @@ const FiltersForm = (props: FiltersFormProps) => {
       params.set("createdAfter", date.toISOString());
     }
 
+    console.log("*** setting page to 1")
     params.set("page", "1");
 
-    console.log("params: ", params.toString());
+    console.log("*** replacing url with params: ", params.toString());
     replace(`${pathname}?${params.toString()}`);
   };
 
@@ -234,9 +235,9 @@ const FiltersForm = (props: FiltersFormProps) => {
           </PopoverContent>
         </Popover>
 
-        {/*<div className={"flex flex-row justify-center"}>*/}
-        {/*  <SubmitButton label={"Apply Filter"} />*/}
-        {/*</div>*/}
+        <div className={"flex flex-row justify-center"}>
+          <SubmitButton label={"Apply Filter"} />
+        </div>
       </div>
     </form>
   );
