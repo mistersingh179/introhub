@@ -28,6 +28,9 @@ const sendEmail: SendEmail = async (input) => {
   const gmail = await getGmailObject(account);
   const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString("base64")}?=`;
   const htmlBody = body.replaceAll("\r\n", "<br>");
+  // htmlBody.concat(
+  //   "foo bar <img src='http://localhost:3000/api/intros/3/opened'></img>",
+  // );
   const toFixed =
     process.env.NODE_ENV === "production" ? to : "mistersingh179@gmail.com";
   const ccFixed =
@@ -82,7 +85,7 @@ if (require.main === module) {
   (async () => {
     const user = await prisma.user.findFirstOrThrow({
       where: {
-        email: "kytamal@gmail.com",
+        email: "sandeep@introhub.net",
       },
       include: {
         accounts: true,

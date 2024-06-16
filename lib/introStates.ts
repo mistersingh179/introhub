@@ -9,6 +9,7 @@ export enum IntroStates {
   rejected = "rejected",
   cancelled = "cancelled",
   expired = "expired",
+  "email opened" = "email opened",
 }
 export enum IntroStatesWithMeaning {
   draft = "The introduction has been started but has not yet been submitted for approval. It's in a draft state, allowing the requester to make changes before submission.",
@@ -20,6 +21,8 @@ export enum IntroStatesWithMeaning {
   "pending credits" = "The introduction has been approved by the facilitator, but the requester needs to acquire sufficient credits before sending the email.",
 
   "email sent" = "The email associated with the introduction has been successfully sent.",
+
+  "email opened" = "The email associated with the introduction has been opened.",
 
   rejected = "The introduction has been rejected by the facilitator.",
 
