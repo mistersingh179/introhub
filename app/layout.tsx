@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <Script id={"clarity"} strategy={"afterInteractive"}>
+      <Script id={"my-clarity-tag"} strategy={"afterInteractive"}>
         {`(function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
