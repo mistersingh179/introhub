@@ -5,8 +5,8 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
 type MyPaginationProps = {
-  totalCount?: number
-}
+  totalCount?: number;
+};
 
 export default function MyPagination(props: MyPaginationProps) {
   const { totalCount = Number.MAX_SAFE_INTEGER } = props;
@@ -14,9 +14,8 @@ export default function MyPagination(props: MyPaginationProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
-  const itemsPerPage = 10;
+  const itemsPerPage = process.env.NODE_ENV === "development" ? 2 : 10;
   const recordsShownSoFar = currentPage * itemsPerPage;
-
 
   const createPageURL = (pageNumber: number | string) => {
     console.log("in createPageUrl");
