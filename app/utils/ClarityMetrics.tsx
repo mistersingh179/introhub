@@ -17,7 +17,11 @@ const ClarityMetrics = (props: ClarityMetricsProps) => {
   const { user } = props;
   useEffect(() => {
     if (window?.clarity && user?.email) {
-      window.clarity("identify", user.email);
+      try{
+        window.clarity("identify", user.email);
+      }catch(err){
+        console.error('error reporting to clarity: ', err);
+      }
     }
   }, [user, user.email]);
   return <></>;
