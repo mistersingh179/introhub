@@ -7,6 +7,8 @@ import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import LogoutButton from "@/components/LogoutButton";
 import CreditsBadge from "@/components/CreditsBadge";
+import ShowChildren from "@/components/ShowChildren";
+import { superUsers } from "@/app/utils/constants";
 
 export default async function NavigationItems({
   inSheet,
@@ -43,12 +45,11 @@ export default async function NavigationItems({
         name={"Introductions"}
         url={"/dashboard/introductions/list"}
       />
-      <NavLink
-        inSheet={inSheet}
-        name={"Settings"}
-        url={"/dashboard/settings"}
-      />
-      <NavLink inSheet={inSheet} name={"Profile"} url={"/dashboard/profile"} />
+
+      <ShowChildren showIt={superUsers.includes(user.email!)}>
+        <NavLink inSheet={inSheet} name={"Super"} url={"/dashboard/super"} />
+      </ShowChildren>
+
       <div className={"grow"}></div>
       <ModeToggle />
       <UserProfileImageNav />

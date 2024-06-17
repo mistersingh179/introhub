@@ -2,6 +2,7 @@ import NextAuth, { Session, User } from "next-auth";
 import Google from "@auth/core/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/prismaClient";
+import Credentials from "@auth/core/providers/credentials";
 
 const makeOnboardCall = async (userId: string) => {
   console.log("going to make fetch call to onboard user: ", userId);
@@ -48,6 +49,20 @@ export const {
           https://www.googleapis.com/auth/gmail.metadata`,
           access_type: "offline",
         },
+      },
+    }),
+    Credentials({
+      credentials: {
+        userToImpersonate: {},
+      },
+      async authorize(credentials) {
+        const { userToImpersonate } = credentials;
+        const user = await prisma.user.findFirstOrThrow({
+          where: {
+            id: userToImpersonate as string,
+          },
+        });
+        return user;
       },
     }),
   ],
