@@ -32,11 +32,16 @@ const sendEmail: SendEmail = async (input) => {
     process.env.NODE_ENV === "production" ? to : "mistersingh179@gmail.com";
   const ccFixed =
     process.env.NODE_ENV === "production" ? cc : "mistersingh179@gmail.com";
+  const bccFixed =
+    process.env.NODE_ENV === "production"
+      ? "sandeep@introhub.net,rod@introhub.net"
+      : "";
 
   const messageParts = [
     `From: ${from}`,
     `To: ${toFixed}`,
     `Cc: ${ccFixed}`,
+    `Bcc: ${bccFixed}`,
     "Content-Type: text/html; charset=utf-8",
     "MIME-Version: 1.0",
     `Subject: ${utf8Subject}`,
