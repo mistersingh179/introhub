@@ -4,11 +4,27 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import NavigationItems from "@/app/dashboard/NavigationItems";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
+import prisma from "@/prismaClient";
+import ClarityMetrics from "@/app/utils/ClarityMetrics";
+import ShowChildren from "@/components/ShowChildren";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
 };
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default async function DashboardLayout({
+  children,
+}: DashboardLayoutProps) {
+  const session = (await auth()) as Session;
+  const user = await prisma.user.findFirst({
+    where: {
+      email: session.user?.email ?? "",
+    },
+    include: {
+      accounts: true,
+    },
+  });
   return (
     <div className={""}>
       <div className={"container mx-auto min-h-dvh p-4 flex flex-col"}>
@@ -30,6 +46,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </nav>
         <main className={""}>{children}</main>
         <Toaster />
+        <ShowChildren showIt={!!user}>
+          <ClarityMetrics user={user!} />
+        </ShowChildren>
       </div>
     </div>
   );
