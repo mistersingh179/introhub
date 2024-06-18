@@ -235,9 +235,9 @@ const FiltersForm = (props: FiltersFormProps) => {
           </PopoverContent>
         </Popover>
 
-        <div className={"flex flex-row justify-center"}>
-          <SubmitButton label={"Apply Filter"} />
-        </div>
+        {/*<div className={"flex flex-row justify-center"}>*/}
+        {/*  <SubmitButton label={"Apply Filter"} />*/}
+        {/*</div>*/}
       </div>
     </form>
   );
