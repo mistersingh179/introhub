@@ -79,20 +79,20 @@ const FiltersForm = (props: FiltersFormProps) => {
     createdAfter ? new Date(createdAfter) : undefined,
   );
 
-  // useEffect(() => {
-  //   console.log("*** we have a change!");
-  //   formHandler();
-  // }, [
-  //   selectedEmail,
-  //   selectedWebsite,
-  //   selectedCities,
-  //   selectedStates,
-  //   selectedJobTitles,
-  //   selectedIndustries,
-  //   selectedCategories,
-  //   selectedUserEmails,
-  //   date,
-  // ]);
+  useEffect(() => {
+    console.log("*** we have a change!");
+    formHandler();
+  }, [
+    selectedEmail,
+    selectedWebsite,
+    selectedCities,
+    selectedStates,
+    selectedJobTitles,
+    selectedIndustries,
+    selectedCategories,
+    selectedUserEmails,
+    date,
+  ]);
 
   const formHandler = (formData?: FormData) => {
     console.log("*** in formHandler: ", formData);
@@ -179,7 +179,7 @@ const FiltersForm = (props: FiltersFormProps) => {
           placeholder={"Job Titles"}
           options={buildOptions(jobTitles)}
           selected={selectedJobTitles}
-          limit={5}
+          limit={50}
           setSelected={setSelectedJobTitles}
         />
         <MyDropDown

@@ -34,7 +34,7 @@ const FiltersList = (props: FiltersListProps) => {
               <div className={"relative top-[2px]"}>
                 <Dot size={"24"} />
               </div>
-              <Link href={`${pathName}?${f.searchParams}`}>{f.name}</Link>
+              <a href={`${pathName}?${f.searchParams}`}>{f.name}</a>
               <EditFiltersDialog filtersObj={f} />
               <form action={dispatch}>
                 <Input type={"hidden"} name={"id"} value={f.id} />

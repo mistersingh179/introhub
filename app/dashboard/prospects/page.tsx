@@ -23,10 +23,8 @@ import getProspectsBasedOnFilters, {
 import getAllProspectsCount from "@/services/getAllProspectsCount";
 import numeral from "numeral";
 import getFiltersFromSearchParams from "@/services/getFiltersFromSearchParams";
-import SaveFiltersForm from "@/app/dashboard/prospects/SaveFiltersForm";
 import FiltersList from "@/app/dashboard/prospects/FiltersList";
 import ShowChildren from "@/components/ShowChildren";
-import querystring from "querystring";
 import SaveFiltersDialog from "@/app/dashboard/prospects/SaveFiltersDialog";
 
 export type ProspectsSearchParams = {
@@ -280,7 +278,6 @@ export default async function Prospects({
             <CollapsibleContent>
               <>
                 <FiltersForm
-                  key={querystring.stringify(searchParams)}
                   cities={cities}
                   states={states}
                   jobTitles={jobTitles}
