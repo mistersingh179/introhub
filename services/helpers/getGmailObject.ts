@@ -43,7 +43,7 @@ if (require.main === module) {
   (async () => {
     const user = await prisma.user.findFirstOrThrow({
       where: {
-        email: "sandeep@brandweaver.ai",
+        email: "sandeep@introhub.net",
       },
       include: {
         accounts: {

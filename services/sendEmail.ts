@@ -16,7 +16,7 @@ export type SendEmailInput = {
   intro?: Introduction;
 };
 
-export const systemEmail = "sandeep@introhub.net";
+export const systemEmail = "rod@introhub.net";
 
 type SendEmail = (input: SendEmailInput) => Promise<Schema$Message>;
 const sendEmail: SendEmail = async (input) => {
