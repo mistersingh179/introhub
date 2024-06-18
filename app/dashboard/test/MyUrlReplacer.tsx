@@ -31,9 +31,9 @@ const MyUrlReplacer = () => {
       <h2>MyUrlReplacer</h2>
       <div className={"space-x-4 m-4"}>
         <Button onClick={addFooBarHandler}>AddFooBar</Button>
-        <Link href={"/dashboard/test?foo=bar"}>AddFooBar</Link>
+        <Link href={`${pathName}?foo=bar`}>AddFooBar</Link>
         <Button onClick={removeFooBarHandler}>RemoveFooBar</Button>
-        <Link href={"/dashboard/test"}>RemoveFooBar</Link>
+        <Link href={`${pathName}`}>RemoveFooBar</Link>
       </div>
     </>
   );

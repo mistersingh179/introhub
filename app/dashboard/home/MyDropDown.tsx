@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, {useEffect} from "react";
 import {
   ActionMeta,
   CSSObjectWithLabel,
@@ -187,7 +187,7 @@ const MyDropDown = (props: MyDropDownProps): React.ReactElement => {
         loadOptions={loadOptions}
         onChange={changeHandler}
         onInputChange={inputChangeHandler}
-        defaultValue={selected}
+        value={selected}
         components={{ DropdownIndicator: null }}
       />
     </>

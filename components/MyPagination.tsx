@@ -18,7 +18,6 @@ export default function MyPagination(props: MyPaginationProps) {
   const recordsShownSoFar = currentPage * itemsPerPage;
 
   const createPageURL = (pageNumber: number | string) => {
-    console.log("in createPageUrl");
     const params = new URLSearchParams(searchParams);
     params.set("page", pageNumber.toString());
     return `${pathname}?${params.toString()}`;
