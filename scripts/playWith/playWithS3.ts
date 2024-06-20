@@ -7,11 +7,14 @@ import {
   paginateListObjectsV2,
   GetObjectCommand,
   HeadObjectCommand,
-  NotFound,
+  NotFound, ListObjectsCommand,
 } from "@aws-sdk/client-s3";
+import loadEnvVariables from "@/lib/loadEnvVariables";
 
 (async () => {
   console.log("hello world from repl");
+  loadEnvVariables();
+
   const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env;
   console.log(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
 
@@ -24,15 +27,44 @@ import {
   });
 
   const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
+  console.log("bucketName: ", bucketName);
 
-  const resp = await fetch(
-    "https://introhub-production.s3.us-east-2.amazonaws.com/avatar/fca8b528c5b75b9ba1afb4454a1432d8",
-  );
-  console.log(resp.headers.get("content-type"));
-  const arrayBuffer = await resp.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
+  const listAns = await s3Client.send(
+    new ListObjectsCommand({
+      Bucket: bucketName,
+      MaxKeys: 100000
+    })
+  )
+  const images = listAns?.Contents ?? [];
+  for(const item of images){
+    const HeadAns = await s3Client.send(
+      new HeadObjectCommand({
+        Bucket: bucketName,
+        Key: item.Key
+      })
+    );
+    console.log(item.Key, HeadAns.ContentType);
+    const badHeaders = ["application/xml", "image/svg+xml", "text/plain"]
+    if(HeadAns.ContentType && badHeaders.includes(HeadAns.ContentType)){
+      console.log("delete!");
+      const DeleteAns = await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: bucketName,
+          Key: item.Key
+        })
+      );
+      console.log(DeleteAns)
+    }
+  }
 
-  console.log(buffer);
+  // const resp = await fetch(
+  //   "https://introhub-production.s3.us-east-2.amazonaws.com/avatar/fca8b528c5b75b9ba1afb4454a1432d8",
+  // );
+  // console.log(resp.headers.get("content-type"));
+  // const arrayBuffer = await resp.arrayBuffer();
+  // const buffer = Buffer.from(arrayBuffer);
+  //
+  // console.log(buffer);
 
   // const result = await s3Client.send(
   //   new PutObjectCommand({

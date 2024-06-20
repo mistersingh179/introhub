@@ -61,6 +61,12 @@ const copyImageUrlToS3: CopyImageUrlToS3 = async (url, dirName, fileName) => {
   if (contentType?.startsWith("application/xml")) {
     console.log("skipping upload to s3 as image is no longer available");
     return;
+  } else if (contentType?.startsWith("image/svg+xml")) {
+    console.log("skipping upload to s3 as image is an svg image");
+    return;
+  } else if (contentType?.startsWith("text/plain")) {
+    console.log("skipping upload to s3 as image is text");
+    return;
   }
 
   const result = await s3Client.send(
