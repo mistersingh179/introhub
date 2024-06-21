@@ -79,17 +79,27 @@ const IntroOverviewHtml = (props: IntroOverviewHtmlProps) => {
           {requesterName} wants to meet {contactName}
         </Preview>
         <Container>
-          <Heading as="h2">
-            {requesterName} wants to meet {contactName}
-          </Heading>
-          <Hr />
           <Tailwind>
             <div>
+              <h2 className={"text-2xl"}>
+                {requesterName} wants to meet {contactName}
+              </h2>
+              <Hr />
               <h4>Your Contact:</h4>
               <ProfileLinkBox profile={contactProfiles} />
               <Hr />
               <h4>The Requester:</h4>
               <ProfileLinkBox profile={requestProfiles} />
+              <Hr />
+              <div className={"text-center mt-5"}>
+                <a
+                  href={`${process.env.BASE_API_URL}/dashboard/introductions/list?selectedTab=received-and-pending-my-approval&showIntro=${intro.id}`}
+                  target={"_blank"}
+                  className={"text-current text-xl"}
+                >
+                  View more here to Approve or Reject
+                </a>
+              </div>
               <Hr />
               <h4>Message for you:</h4>
               <div className={"leading-normal"}>
@@ -128,16 +138,6 @@ const IntroOverviewHtml = (props: IntroOverviewHtmlProps) => {
                   </>
                 )}
               <Hr />
-              <div className={"text-center mt-5"}>
-                <a
-                  href={`${process.env.BASE_API_URL}/dashboard/introductions/list?selectedTab=received-and-pending-my-approval&showIntro=${intro.id}`}
-                  target={"_blank"}
-                  className={"text-current text-xl"}
-                >
-                  View more here to Approve or Reject
-                </a>
-              </div>
-              <Hr />
             </div>
           </Tailwind>
         </Container>
@@ -168,7 +168,7 @@ const introOverviewHtml = (
     {
       pretty: true,
     },
-  );
+  ).replaceAll("\r\n", "");
 };
 
 export default introOverviewHtml;

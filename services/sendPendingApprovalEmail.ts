@@ -93,7 +93,7 @@ const sendPendingApprovalEmail = async (
       body: html,
       from: systemEmail,
       to: intro.facilitator.email!,
-      cc: rodEmail,
+      cc: "",
       subject: `Pending Your approval – ${requesterName} wants to meet ${contactName}`,
     });
   }
