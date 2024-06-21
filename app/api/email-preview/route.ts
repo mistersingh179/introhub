@@ -23,9 +23,9 @@ export async function GET(request: Request) {
         requester: true,
       },
     });
-  const html = await sendPendingApprovalEmail(intro, true);
+  const html = await sendPendingApprovalEmail(intro, false);
 
-  console.log("htmlFixed: ", html);
+  console.log("html: ", html);
 
   const response = new Response(html, {
     status: 200,
