@@ -36,6 +36,8 @@ export type ProspectsSearchParams = {
   selectedCategories?: string | string[];
   selectedUserEmails?: string | string[];
   selectedEmail?: string;
+  sizeFrom?: string;
+  sizeTo?: string;
   selectedWebsite?: string;
   page?: string | string[];
   createdAfter?: string;

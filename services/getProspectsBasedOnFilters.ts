@@ -16,6 +16,8 @@ export type SelectedFilterValues = {
   selectedCategories?: string[] | undefined;
   selectedUserEmails?: string[] | undefined;
   selectedEmail?: string | undefined;
+  sizeFrom?: string | undefined;
+  sizeTo?: string | undefined;
   selectedWebsite?: string | undefined;
   createdAfter?: string | undefined;
 };
@@ -35,6 +37,8 @@ const getProspectsBasedOnFilters = async (
     selectedStates,
     selectedJobTitles,
     selectedEmail,
+    sizeFrom,
+    sizeTo,
     selectedWebsite,
     selectedIndustries,
     selectedCategories,
@@ -80,6 +84,14 @@ const getProspectsBasedOnFilters = async (
     ? Prisma.sql`and C."createdAt" >= ${new Date(createdAfter)}`
     : Prisma.sql``;
 
+  const sizeFromSql = sizeFrom
+    ? Prisma.sql`and CP."sizeFrom" >= ${Number(sizeFrom)}`
+    : Prisma.sql``;
+
+  const sizeToSql = sizeTo
+    ? Prisma.sql`and CP."sizeTo" <= ${Number(sizeTo)}`
+    : Prisma.sql``;
+
   const introsMustBeNullRequirement =
     process.env.NODE_ENV === "development"
       ? Prisma.sql``
@@ -97,9 +109,8 @@ const getProspectsBasedOnFilters = async (
                left join public."Introduction" I
                          on I."contactId" = C.id and I."requesterId" = ${user.id} and
                             (I.status = ${IntroStates.approved} or I.status = ${IntroStates["pending credits"]} or I.status = ${IntroStates["email sent"]})
-      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql}
+      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
         and C."userId" != ${user.id}
-        ${introsMustBeNullRequirement}
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
@@ -118,7 +129,10 @@ const getProspectsBasedOnFilters = async (
                inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
-      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql}
+               left join public."Introduction" I
+                         on I."contactId" = C.id and I."requesterId" = ${user.id} and
+                            (I.status = ${IntroStates.approved} or I.status = ${IntroStates["pending credits"]} or I.status = ${IntroStates["email sent"]})
+      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
         and C."userId" != ${user.id}
   `;
   const countSqlResult = await prisma.$queryRaw<{ count: number }[]>(countSql);

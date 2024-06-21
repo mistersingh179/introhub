@@ -33,6 +33,8 @@ const getFiltersFromSearchParams: GetFiltersFromSearchParams = (
   const selectedUserEmails = getValueAsArray(searchParams?.selectedUserEmails);
   const selectedEmail = searchParams?.selectedEmail;
   const selectedWebsite = searchParams?.selectedWebsite;
+  const sizeFrom = searchParams?.sizeFrom;
+  const sizeTo = searchParams?.sizeTo;
   const createdAfter = searchParams?.createdAfter;
 
   const result = {
@@ -45,6 +47,8 @@ const getFiltersFromSearchParams: GetFiltersFromSearchParams = (
     selectedWebsite,
     selectedUserEmails,
     createdAfter,
+    sizeFrom,
+    sizeTo
   };
 
   console.log("getFiltersFromSearchParams: ", result);

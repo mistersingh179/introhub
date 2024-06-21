@@ -49,6 +49,12 @@ const FiltersForm = (props: FiltersFormProps) => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  const [sizeFrom, setSizeFrom] = useState<string | undefined>(
+    searchParams.get("sizeFrom") ?? undefined,
+  );
+  const [sizeTo, setSizeTo] = useState<string | undefined>(
+    searchParams.get("sizeTo") ?? undefined,
+  );
   const [selectedEmail, setSelectedEmail] = useState<string | undefined>(
     searchParams.get("selectedEmail") ?? undefined,
   );
@@ -91,6 +97,8 @@ const FiltersForm = (props: FiltersFormProps) => {
     selectedIndustries,
     selectedCategories,
     selectedUserEmails,
+    sizeFrom,
+    sizeTo,
     date,
   ]);
 
@@ -127,7 +135,17 @@ const FiltersForm = (props: FiltersFormProps) => {
       params.set("createdAfter", date.toISOString());
     }
 
-    console.log("*** setting page to 1")
+    params.delete("sizeFrom");
+    if (sizeFrom) {
+      params.set("sizeFrom", sizeFrom);
+    }
+
+    params.delete("sizeTo");
+    if (sizeTo) {
+      params.set("sizeTo", sizeTo);
+    }
+
+    console.log("*** setting page to 1");
     params.set("page", "1");
 
     console.log("*** replacing url with params: ", params.toString());
@@ -234,7 +252,26 @@ const FiltersForm = (props: FiltersFormProps) => {
             />
           </PopoverContent>
         </Popover>
-
+        <div className={"flex flex-row items-center gap-4 whitespace-nowrap"}>
+          <Input
+            type="number"
+            name="sizeFrom"
+            onChange={(evt) => {
+              setSizeFrom(evt.target.value);
+            }}
+            value={sizeFrom}
+            placeholder="Size From"
+          />
+          <Input
+            type="number"
+            name="sizeTo"
+            onChange={(evt) => {
+              setSizeTo(evt.target.value);
+            }}
+            value={sizeTo}
+            placeholder="Size To"
+          />
+        </div>
         {/*<div className={"flex flex-row justify-center"}>*/}
         {/*  <SubmitButton label={"Apply Filter"} />*/}
         {/*</div>*/}
