@@ -68,7 +68,7 @@ const processAllFiltersForEmail =
         body: html,
         from: systemEmail,
         to: filtersObj.user.email!,
-        cc: "rod@introhub.net",
+        cc: "",
         subject: `Filter ${filtersObj.name} has ${count} new prospect${count == 1 ? "" : "s"}`,
       });
       emailResponses.push(response);

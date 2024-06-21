@@ -60,7 +60,7 @@ const sendProspectsCreatedToday: SendProspectsCreatedToday = async () => {
     body: html,
     from: systemEmail,
     to: "rod@introhub.net",
-    cc: "sandeep@introhub.net",
+    cc: "",
     subject: `${count} New Prospect${count == 1 ? "" : "s"}`,
   });
 

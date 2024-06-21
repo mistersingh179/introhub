@@ -155,5 +155,5 @@ export const getNewProspectsHtml = (
     {
       pretty: true,
     },
-  );
+  ).replaceAll("\r\n", "");
 };
