@@ -1,4 +1,5 @@
 import prisma from "@/prismaClient";
+import capitalize from 'capitalize';
 
 type RecordWithCount<Key extends string> = {
   _count: Record<Key, number>;
@@ -13,7 +14,7 @@ const getUniqueValuesWithOrderPreserved = <Key extends string>(
   records.forEach(rec => {
     const trimmedValue = rec[key]?.trim();
     if (trimmedValue && trimmedValue !== "") {
-      uniqueJobTitles.set(trimmedValue, null);
+      uniqueJobTitles.set(capitalize.words(trimmedValue), null);
     }
   });
   return [...uniqueJobTitles.keys()];
