@@ -45,11 +45,11 @@ const getProspectsBasedOnFilters = async (
   const { recordsToSkip, currentPage, itemsPerPage } = paginatedValues;
 
   const cityFilterSql = selectedCities
-    ? Prisma.sql`and PP.city in (${Prisma.join(selectedCities)})`
+    ? Prisma.sql`and lower(PP.city) in (${Prisma.join(selectedCities.map((x) => x.toLowerCase()))})`
     : Prisma.sql``;
 
   const stateFilterSql = selectedStates
-    ? Prisma.sql`and PP.state in (${Prisma.join(selectedStates)})`
+    ? Prisma.sql`and lower(PP.state) in (${Prisma.join(selectedStates.map((x) => x.toLowerCase()))})`
     : Prisma.sql``;
 
   const jobTitleFilterSql = selectedJobTitles
@@ -57,15 +57,15 @@ const getProspectsBasedOnFilters = async (
     : Prisma.sql``;
 
   const industryFilterSql = selectedIndustries
-    ? Prisma.sql`and CP."industry" in (${Prisma.join(selectedIndustries)})`
+    ? Prisma.sql`and lower(CP."industry") in (${Prisma.join(selectedIndustries.map((x) => x.toLowerCase()))})`
     : Prisma.sql``;
 
   const categoriesFilterSql = selectedCategories
-    ? Prisma.sql`and CAT."name" in (${Prisma.join(selectedCategories)})`
+    ? Prisma.sql`and lower(CAT."name") in (${Prisma.join(selectedCategories.map((x) => x.toLowerCase()))})`
     : Prisma.sql``;
 
   const userEmailsFilterSql = selectedUserEmails
-    ? Prisma.sql`and U."email" in (${Prisma.join(selectedUserEmails)})`
+    ? Prisma.sql`and lower(U."email") in (${Prisma.join(selectedUserEmails.map((x) => x.toLowerCase()))})`
     : Prisma.sql``;
 
   const emailFilterSql = selectedEmail
