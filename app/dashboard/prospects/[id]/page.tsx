@@ -14,6 +14,17 @@ import { Session } from "next-auth";
 import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
 import ShowChildren from "@/components/ShowChildren";
 import getProfiles from "@/services/getProfiles";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import * as React from "react";
+import { lightFormat } from "date-fns";
 
 export default async function ShowContact({
   params,
@@ -41,6 +52,31 @@ export default async function ShowContact({
     companyUrlToProfile,
   );
   const categoryNames = getCategoryNames(companyProfile);
+  const messages = await prisma.message.findMany({
+    where: {
+      user: user,
+      OR: [
+        {
+          fromAddress: {
+            contains: email,
+            mode: "insensitive",
+          },
+        },
+        {
+          replyToAddress: {
+            contains: email,
+            mode: "insensitive",
+          },
+        },
+        {
+          toAddress: {
+            contains: email,
+            mode: "insensitive",
+          },
+        },
+      ],
+    },
+  });
   return (
     <>
       <div className={"flex flex-col gap-4 mt-6"}>
@@ -127,6 +163,30 @@ export default async function ShowContact({
               ))}
             </div>
           </div>
+        </ShowChildren>
+
+        <ShowChildren showIt={messages.length > 0}>
+          <Table className={"caption-top w-fit"}>
+            <TableCaption>Your previous Email Correspondence</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Subject</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {messages.map((m) => {
+                return (
+                  <TableRow key={m.id} className={""}>
+                    <TableCell className={"p-2"}>
+                      {lightFormat(m.createdAt, "MM-dd-yyyy")}
+                    </TableCell>
+                    <TableCell className={"p-2"}>{m.subject}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         </ShowChildren>
       </div>
     </>

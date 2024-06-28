@@ -16,6 +16,9 @@ import IntroApproveWithMessageForm from "@/app/dashboard/introductions/list/Intr
 import { Dispatch, SetStateAction } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import getAllProfiles from "@/services/getAllProfiles";
+import getFirstName from "@/services/getFirstName";
+import Link from "next/link";
+import * as React from "react";
 
 type IntroOverviewWithApprovingProps = {
   user: User;
@@ -61,6 +64,17 @@ const IntroOverviewWithApproving = (props: IntroOverviewWithApprovingProps) => {
               companyProfile={contactProfiles.companyProfile}
               personExp={contactProfiles.personExp}
             />
+          </div>
+          <div className={"text-center"}>
+            PS: You have exchanged emails with{" "}
+            {getFirstName(
+              contactProfiles.personProfile.fullName,
+              "this person",
+            )}{" "}
+            before.{" "}
+            <Link href={`/dashboard/prospects/${intro.contact.id}`}>
+              See full profile here.
+            </Link>{" "}
           </div>
           <h2 className={"text-xl mb-2"}> Message to Prospect </h2>
           <IntroApproveWithMessageForm intro={intro} setOpen={setOpen} />
