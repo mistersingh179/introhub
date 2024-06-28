@@ -45,7 +45,8 @@ export type ProxyCurlJobNames = "enrichContact" | "enrichAllContacts";
 
 export type ApolloJobNames =
   | "enrichContactUsingApollo"
-  | "enrichAllRemainingContactsUsingApollo";
+  | "enrichAllRemainingContactsUsingApollo"
+  | "enrichAllRemainingUsersUsingApollo";
 
 export type MediumJobNames =
   | "downloadMessages"

@@ -47,6 +47,20 @@ const addEnrichAllRemainingContactsUsingApollo = async () => {
   console.log("schedule job: ", name, id, opts);
 };
 
+const addEnrichAllRemainingUsersUsingApollo = async () => {
+  const jobObj = await apolloQueue.add(
+    "enrichAllRemainingUsersUsingApollo",
+    null,
+    {
+      repeat: {
+        pattern: "30 10 * * *",
+      },
+    },
+  );
+  const { name, id, opts } = jobObj;
+  console.log("schedule job: ", name, id, opts);
+};
+
 const addSendProspectsCreateToday = async () => {
   const jobObj = await highQueue.add(
     "sendProspectsCreatedToday",
@@ -96,6 +110,7 @@ const setupCronJobs = async () => {
   await addBuildContactsForAllUsers();
   await addEnrichAllContacts();
   await addEnrichAllRemainingContactsUsingApollo();
+  await addEnrichAllRemainingUsersUsingApollo();
   await addSendProspectsCreateToday();
   await addProcessAllFiltersForEmail();
   // await addSendEmailForAllApprovedIntros();
