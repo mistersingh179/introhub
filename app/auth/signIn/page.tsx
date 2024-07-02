@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, {Suspense} from "react";
+import React, { Suspense } from "react";
 import Typography from "@/components/Typography";
 import networking from "./networking.png";
 import SignInWithGoogleForm from "@/app/auth/signIn/SignInWithGoogleForm";
+import SignInWithLinkedInForm from "@/app/auth/signIn/SignInWithLinkedInForm";
 
 export default function AuthenticationPage() {
   return (
@@ -41,7 +42,10 @@ export default function AuthenticationPage() {
         </Typography>
         <div className={"my-4"}>
           <Suspense>
-            <SignInWithGoogleForm />
+            <div className={'flex flex-col gap-4 items-center'}>
+              <SignInWithGoogleForm />
+              {/*<SignInWithLinkedInForm />*/}
+            </div>
           </Suspense>
         </div>
         <Typography

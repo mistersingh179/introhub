@@ -3,6 +3,7 @@
 pgdata
 redisdata
 .env
+.env.second.production
 .env.production
 
 # dependencies

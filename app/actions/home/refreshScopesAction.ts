@@ -8,15 +8,25 @@ import refreshScopes from "@/services/refreshScopes";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
+import {ZodError} from "zod";
 
-export default async function refreshScopesAction(formData: FormData) {
+export default async function refreshScopesAction(prevState: string|undefined, formData: FormData) {
   const session = (await auth()) as Session;
   const user = await prisma.user.findFirstOrThrow({
     where: {
       email: session.user?.email ?? "",
     },
   });
-  await refreshScopes(user.id);
+  try{
+    await refreshScopes(user.id);
+  }catch (e) {
+    if (e instanceof Error) {
+      return e.message;
+    } else {
+      return "Unable to Refresh Scopes!";
+    }
+  }
+
   revalidatePath("/dashboard/home");
   redirect("/dashboard/home");
 }
