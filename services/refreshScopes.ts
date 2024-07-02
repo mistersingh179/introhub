@@ -6,6 +6,7 @@ const refreshScopes = async (userId: string): Promise<string[]> => {
   let account = await prisma.account.findFirstOrThrow({
     where: {
       userId,
+      provider: "google",
     },
   });
 

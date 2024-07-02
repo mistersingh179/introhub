@@ -10,6 +10,7 @@ import * as React from "react";
 import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
 import OnBoardUserForm from "@/app/dashboard/home/OnBoardUserForm";
 import ProspectsCountForm from "@/app/dashboard/home/ProspectsCountForm";
+import ShowChildren from "@/components/ShowChildren";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -21,7 +22,8 @@ export default async function Home() {
       accounts: true,
     },
   });
-  const scopes = user.accounts?.[0]?.scope?.split(" ") ?? [];
+  const googleAccount = user.accounts?.find((a) => a.provider === "google");
+  const scopes = googleAccount?.scope?.split(" ") ?? [];
   const sendScope = `https://www.googleapis.com/auth/gmail.send`;
   const foundSendScope = !!scopes.find((val) => val === sendScope);
   // const contactStats = await getContactStats();
@@ -73,34 +75,39 @@ export default async function Home() {
 
       {foundSendScope && (
         <Alert variant="default">
-          <Check className="h-8 w-8"/>
+          <Check className="h-8 w-8" />
           <AlertTitle className={"ml-8"}>Permissions Success</AlertTitle>
           <AlertDescription className={"ml-8"}>
-            Send Permission was found. Good to go!
+            Google Send Permission was found. Good to go!
           </AlertDescription>
         </Alert>
       )}
 
       {!foundSendScope && (
         <Alert variant="destructive">
-          <AlertCircle className="h-8 w-8"/>
+          <AlertCircle className="h-8 w-8" />
           <AlertTitle className={"ml-8"}>Error</AlertTitle>
           <AlertDescription className={"ml-8"}>
-            Unable to find Send Permission. You need to Log-out, and log back in
-            while granting permissions.
+            Unable to find Google Send Permission. You need to Log-out, and log
+            back in while granting permissions.
           </AlertDescription>
         </Alert>
       )}
 
-      <div className={"flex flex-col gap-2 md:flex-row"}>
+      <div className={"flex flex-col gap-2 md:flex-row items-center"}>
         <div className={"min-w-36 flex flex-row gap-4 items-center"}>
-          Scope : <RefreshScopesForm/>{" "}
+          Google Scope : <RefreshScopesForm />{" "}
         </div>
-        <ul className={"list-disc ml-4"}>
-          {scopes.map((x) => (
-            <li key={x}>{x}</li>
-          ))}
-        </ul>
+        <ShowChildren showIt={scopes.length > 0}>
+          <ul className={"list-disc ml-4"}>
+            {scopes.map((x) => (
+              <li key={x}>{x}</li>
+            ))}
+          </ul>
+        </ShowChildren>
+        <ShowChildren showIt={scopes.length == 0}>
+          None
+        </ShowChildren>
       </div>
       <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36"}>User Id :</div>
@@ -108,9 +115,7 @@ export default async function Home() {
       </div>
       <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36"}>Credits:</div>
-        <div>
-          {user.credits}
-        </div>
+        <div>{user.credits}</div>
       </div>
       <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36"}>Name / Email :</div>
@@ -124,10 +129,10 @@ export default async function Home() {
           <li>Contacts: {contactsCount}</li>
           <li>Emails: {emailsCount}</li>
           <li>
-            <OnBoardUserForm/>
+            <OnBoardUserForm />
           </li>
           <li>
-            <ProspectsCountForm/>
+            <ProspectsCountForm />
           </li>
         </ul>
       </div>

@@ -19,6 +19,14 @@ export async function signInWithGoogleAction(formData: FormData) {
   });
 }
 
+export async function signInWithLinkedInAction(formData: FormData) {
+  console.log("in signInWithLinkedIAction");
+  const callbackUrl = formData.get("callbackUrl") as string;
+  await signIn("linkedin", {
+    redirectTo: callbackUrl ? callbackUrl : "/dashboard/home",
+  });
+}
+
 export async function SignInWithCredentials(formData: FormData) {
   console.log("in SignInWithCredentials");
   const session = (await auth()) as Session;

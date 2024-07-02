@@ -3,6 +3,7 @@ import Google from "@auth/core/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/prismaClient";
 import Credentials from "@auth/core/providers/credentials";
+import LinkedIn, { LinkedInProfile } from "@auth/core/providers/linkedin";
 
 const makeOnboardCall = async (userId: string) => {
   console.log("going to make fetch call to onboard user: ", userId);
@@ -37,6 +38,36 @@ export const {
     signIn: "/auth/signIn",
   },
   providers: [
+    LinkedIn({
+      clientId: process.env.AUTH_LINKEDIN_ID,
+      clientSecret: process.env.AUTH_LINKEDIN_SECRET,
+      client: { token_endpoint_auth_method: "client_secret_post" },
+      authorization: {
+        url: "https://www.linkedin.com/oauth/v2/authorization",
+        params: { scope: "openid profile email" },
+      },
+      token: {
+        url: "https://www.linkedin.com/oauth/v2/accessToken",
+      },
+      wellKnown:
+        "https://www.linkedin.com/oauth/.well-known/openid-configuration",
+      userinfo: {
+        url: "https://api.linkedin.com/v2/userinfo",
+      },
+      issuer: "https://www.linkedin.com/oauth",
+      jwks_endpoint: "https://www.linkedin.com/oauth/openid/jwks",
+      profile(profile: LinkedInProfile) {
+        console.log("*** in profile with: ", profile);
+        return {
+          id: profile.sub,
+          name: `${profile.given_name} ${profile.family_name}`,
+          email: profile.email,
+          image: profile.picture,
+        };
+      },
+      checks: ["none"],
+      allowDangerousEmailAccountLinking: true,
+    }),
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
