@@ -25,19 +25,30 @@ type IntroOverviewHtmlProps = {
 
 type ProfileLinkBoxProps = {
   profile: Profiles;
+  profileImageUrl?: string | null;
 };
 
 const ProfileLinkBox = (props: ProfileLinkBoxProps) => {
   const { profile } = props;
+  let { profileImageUrl } = props;
+
+  if (!profileImageUrl) {
+    profileImageUrl = buildS3ImageUrl(
+      "avatar",
+      profile.personProfile.email ?? "",
+    );
+  }
+
   return (
     <div>
       <div className={"mb-5"}>
         <img
           className={"rounded-full mr-5"}
-          src={buildS3ImageUrl("avatar", profile.personProfile.email ?? "")}
+          src={profileImageUrl}
           alt={"avatar"}
           width="50"
           height="50"
+          referrerPolicy={'no-referrer'}
         />
         <img
           className={"rounded-full"}
@@ -89,7 +100,10 @@ const IntroOverviewHtml = (props: IntroOverviewHtmlProps) => {
               <ProfileLinkBox profile={contactProfiles} />
               <Hr />
               <h4>The Requester:</h4>
-              <ProfileLinkBox profile={requestProfiles} />
+              <ProfileLinkBox
+                profile={requestProfiles}
+                profileImageUrl={intro.requester.image}
+              />
               <Hr />
               <div className={"text-center mt-5"}>
                 <a
