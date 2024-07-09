@@ -2,6 +2,7 @@ import prisma from "../prismaClient";
 
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import { IntroStates } from "@/lib/introStates";
+import getGmailObject from "@/services/helpers/getGmailObject";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -13,35 +14,33 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-  // let introsToProcess: IntroWithContactFacilitatorAndRequester[] | undefined =
-  //   await prisma.introduction.findMany({
-  //     include: {
-  //       requester: true,
-  //       facilitator: true,
-  //       contact: true
-  //     },
-  //     take: 100
-  //   });
-  // const introsToProcess: IntroWithContactFacilitatorAndRequester[] | undefined =
-  //   undefined;
-  // // console.log("introsToProcess?.length: ", introsToProcess?.length);
-  // console.log(
-  //   introsToProcess?.map((x: IntroWithContactFacilitatorAndRequester) => x.id),
-  // );
-  let a = undefined;
-  const intros: IntroWithContactFacilitatorAndRequester[] =
-    await prisma.introduction.findMany({
-      where: {
-        status: IntroStates.approved,
+  const users = await prisma.user.findMany({
+    where: {
+      accounts: {
+        some: {
+          provider: "google",
+        },
       },
-      include: {
-        facilitator: true,
-        contact: true,
-        requester: true,
-      },
-    });
+    },
+    include: {
+      accounts: true,
+    },
+  });
+  const result: { [key: string]: boolean } = {};
+  // const result2: Record<string, boolean> = {};
 
-  console.log("intros: ", intros.length);
+  for (const user of users) {
+    const account = user.accounts[0];
+    try {
+      const gmail = await getGmailObject(account);
+      console.log("got gmail object for: ", user.email);
+      result[user.email!] = true;
+    } catch (err) {
+      console.log("failed to gmail object for: ", user.email);
+      result[user.email!] = false;
+    }
+  }
+  console.table(result);
 })();
 
 export {};
