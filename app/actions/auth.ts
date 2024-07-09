@@ -3,7 +3,7 @@
 import { auth, signIn, signOut } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
-import {superUsers} from "@/app/utils/constants";
+import { superUsers } from "@/app/utils/constants";
 
 export async function signOutAction() {
   await signOut({
@@ -14,9 +14,15 @@ export async function signOutAction() {
 export async function signInWithGoogleAction(formData: FormData) {
   console.log("in signInWithGoogle");
   const callbackUrl = formData.get("callbackUrl") as string;
-  await signIn("google", {
-    redirectTo: callbackUrl ? callbackUrl : "/dashboard/home",
-  });
+  await signIn(
+    "google",
+    {
+      redirectTo: callbackUrl ? callbackUrl : "/dashboard/home",
+    },
+    {
+      prompt: "consent",
+    },
+  );
 }
 
 export async function signInWithLinkedInAction(formData: FormData) {
@@ -45,6 +51,6 @@ export async function SignInWithCredentials(formData: FormData) {
     });
   } else {
     console.log("sorry you are not allowed to use SignInWithCredentials");
-    return "sorry you are not allowed here!"
+    return "sorry you are not allowed here!";
   }
 }
