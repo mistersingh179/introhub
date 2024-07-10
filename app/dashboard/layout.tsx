@@ -9,6 +9,8 @@ import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import ClarityMetrics from "@/app/utils/ClarityMetrics";
 import ShowChildren from "@/components/ShowChildren";
+import checkUserPermissions from "@/services/checkUserPermissions";
+import MissingPermissionsDialog from "@/app/dashboard/MissingPermissionsDialog";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -25,6 +27,7 @@ export default async function DashboardLayout({
       accounts: true,
     },
   });
+  const weHavePermissions = await checkUserPermissions(user!);
   return (
     <div className={""}>
       <div className={"container mx-auto min-h-dvh p-4 flex flex-col"}>
@@ -48,6 +51,10 @@ export default async function DashboardLayout({
         <Toaster />
         <ShowChildren showIt={!!user}>
           <ClarityMetrics user={user!} />
+        </ShowChildren>
+
+        <ShowChildren showIt={!weHavePermissions}>
+          <MissingPermissionsDialog />
         </ShowChildren>
       </div>
     </div>
