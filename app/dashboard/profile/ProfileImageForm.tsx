@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getS3Url } from "@/lib/url";
 import { getInitials } from "@/app/dashboard/UserProfileImageNav";
 import { User } from "@prisma/client";
+import {userProfileS3DirName} from "@/app/utils/constants";
 
 type ProfileImageFormProps = {
   user: User;
@@ -33,7 +34,7 @@ const ProfileImageForm = (props: ProfileImageFormProps) => {
       >
         <Avatar className={"w-24 h-24"}>
           <AvatarImage
-            src={getS3Url("user-profile-images", user.profileImageName ?? "")}
+            src={getS3Url(userProfileS3DirName, user.profileImageName ?? "")}
             alt={user.name ?? undefined}
             referrerPolicy={"no-referrer"}
           />

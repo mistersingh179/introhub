@@ -33,7 +33,7 @@ import {
   EmailToProfile,
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { buildS3ImageUrl } from "@/lib/url";
+import { buildS3ImageUrl, getS3Url } from "@/lib/url";
 import { getInitials } from "@/app/dashboard/UserProfileImageNav";
 import { Badge } from "@/components/ui/badge";
 import IntroOverviewWithApprovingSheet from "@/app/dashboard/introductions/list/IntroOverviewWithApprovingSheet";
@@ -44,6 +44,7 @@ import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
 import ShowChildren from "@/components/ShowChildren";
 import FacilitatorBox from "@/components/FacilitatorBox";
 import getAllProfiles from "@/services/getAllProfiles";
+import { userProfileS3DirName } from "@/app/utils/constants";
 
 const IntroTable = ({
   introductions,
@@ -115,7 +116,14 @@ export default IntroTable;
 export const UserAvatar = ({ user }: { user: User }) => {
   return (
     <Avatar className={"h-8 w-8"}>
-      <AvatarImage src={user.image ?? ""} title={user.name ?? ""} />
+      <AvatarImage
+        src={
+          (getS3Url(userProfileS3DirName, user.profileImageName ?? "") ||
+            user.image) ??
+          ""
+        }
+        title={user.name ?? ""}
+      />
       <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
     </Avatar>
   );
