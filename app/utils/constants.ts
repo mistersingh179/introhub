@@ -3,3 +3,5 @@ export const superUsers = [
   'rod@introhub.net',
   'mistersingh179@gmail.com'
 ]
+
+export const userProfileS3DirName = "user-profile-images";

@@ -11,12 +11,11 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { signOutAction } from "@/app/actions/auth";
-import { LogOut } from "lucide-react";
-import LogoutButton from "@/components/LogoutButton";
+import { getS3Url } from "@/lib/url";
+import { userProfileS3DirName } from "@/app/utils/constants";
+import Link from "next/link";
 
 export const getInitials = (input: string | null | undefined) => {
   if (!input) {
@@ -56,9 +55,13 @@ const UserProfileImageNav = async () => {
         >
           <Avatar className={"w-8 h-8"}>
             <AvatarImage
-              src={user.image ?? undefined}
+              src={
+                (getS3Url(userProfileS3DirName, user.profileImageName ?? "") ||
+                  user.image) ??
+                undefined
+              }
               alt={user.name ?? user.email ?? undefined}
-              referrerPolicy={'no-referrer'}
+              referrerPolicy={"no-referrer"}
             />
             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
@@ -75,24 +78,10 @@ const UserProfileImageNav = async () => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Billing
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>New Team</DropdownMenuItem>
+          <Link href={"/dashboard/profile"}>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <LogoutButton />
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

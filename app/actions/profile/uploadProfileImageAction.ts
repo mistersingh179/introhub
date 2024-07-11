@@ -7,6 +7,7 @@ import prisma from "@/prismaClient";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { randomUUID } from "node:crypto";
+import { userProfileS3DirName } from "@/app/utils/constants";
 
 const {
   AWS_ACCESS_KEY_ID,
@@ -39,7 +40,7 @@ export default async function uploadProfileImageAction(
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  const dirName = "user-profile-images";
+  const dirName = userProfileS3DirName;
   const fileName = randomUUID();
   const key = `${dirName}/${fileName}`;
   console.log("key: ", key);

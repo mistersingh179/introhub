@@ -10,9 +10,10 @@ import {
   Preview,
   Tailwind,
 } from "@react-email/components";
-import { buildS3ImageUrl } from "@/lib/url";
+import { buildS3ImageUrl, getS3Url } from "@/lib/url";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import getFirstName from "@/services/getFirstName";
+import { userProfileS3DirName } from "@/app/utils/constants";
 
 type IntroOverviewHtmlProps = {
   intro: IntroWithContactFacilitatorAndRequester;
@@ -48,7 +49,7 @@ const ProfileLinkBox = (props: ProfileLinkBoxProps) => {
           alt={"avatar"}
           width="50"
           height="50"
-          referrerPolicy={'no-referrer'}
+          referrerPolicy={"no-referrer"}
         />
         <img
           className={"rounded-full"}
@@ -102,7 +103,12 @@ const IntroOverviewHtml = (props: IntroOverviewHtmlProps) => {
               <h4>The Requester:</h4>
               <ProfileLinkBox
                 profile={requestProfiles}
-                profileImageUrl={intro.requester.image}
+                profileImageUrl={
+                  getS3Url(
+                    userProfileS3DirName,
+                    intro.requester.profileImageName ?? "",
+                  ) || intro.requester.image
+                }
               />
               <Hr />
               <div className={"text-center mt-5"}>
