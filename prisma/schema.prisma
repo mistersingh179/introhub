@@ -67,6 +67,7 @@ model User {
   updatedAt                DateTime       @updatedAt
   Filters                  Filters[]
   credits                  Int            @default(0)
+  profileImageName         String?
 
   @@index([email])
 }

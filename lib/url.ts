@@ -2,16 +2,21 @@ import prisma from "@/prismaClient";
 import enrichContact from "@/services/enrichContact";
 import md5 from "md5";
 
-export const buildS3ImageUrl = (dirName: string, key:string): string => {
-  // const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
-  const cloutFrontDomain = process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN;
-  if(key){
+// const bucketName = process.env.NEXT_PUBLIC_BUCKET_NAME;
+const cloutFrontDomain = process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN;
+
+export const getS3Url = (dirName: string, key?: string): string => {
+  return key ? `https://${cloutFrontDomain}/${dirName}/${key}` : ``;
+};
+
+export const buildS3ImageUrl = (dirName: string, key: string): string => {
+  if (key) {
     // return `https://${bucketName}.s3.amazonaws.com/${dirName}/${md5(key)}`
-    return `https://${cloutFrontDomain}/${dirName}/${md5(key)}`
-  }else{
-    return ``
+    return `https://${cloutFrontDomain}/${dirName}/${md5(key)}`;
+  } else {
+    return ``;
   }
-}
+};
 
 type UrlProperties = {
   origin: string;
