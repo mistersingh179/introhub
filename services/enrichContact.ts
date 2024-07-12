@@ -55,7 +55,7 @@ const enrichContact: EnrichContact = async (input) => {
           companyLinkedInUrl: exp.company_linkedin_profile_url,
           companyName: exp.company,
           jobDescription: exp.description,
-          jobTitle: exp.title,
+          jobTitle: exp.title.replaceAll("|", ""),
         })),
       },
     },
@@ -127,7 +127,7 @@ export default enrichContact;
 
 if (require.main === module) {
   (async () => {
-    const ans = await enrichContact({ email: "bill@gates.com" });
+    const ans = await enrichContact({ email: "k.singh@ml.com" });
     console.log("ans: ", ans);
   })();
 }
