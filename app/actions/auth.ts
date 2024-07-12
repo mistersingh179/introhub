@@ -12,16 +12,24 @@ export async function signOutAction() {
 }
 
 export async function signInWithGoogleAction(formData: FormData) {
-  console.log("in signInWithGoogle");
+  console.log("in signInWithGoogle with: ", [...formData.entries()]);
   const callbackUrl = formData.get("callbackUrl") as string;
+  const metaKey = formData.get("metaKey") as string;
+  const authorizationParams: { prompt?: string } = {
+    prompt: "consent",
+  };
+  if (metaKey === "true") {
+    console.log("meta key was pressed. will remove consent prompt property");
+    delete authorizationParams["prompt"];
+  }
+  console.log("authorizationParams: ", authorizationParams);
+
   await signIn(
     "google",
     {
       redirectTo: callbackUrl ? callbackUrl : "/dashboard/home",
     },
-    {
-      prompt: "consent",
-    },
+    authorizationParams,
   );
 }
 

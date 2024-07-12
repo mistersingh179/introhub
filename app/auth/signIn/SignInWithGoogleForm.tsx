@@ -1,19 +1,28 @@
 "use client";
 
-import {useSearchParams} from "next/navigation";
-import {signInWithGoogleAction} from "@/app/actions/auth";
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
+import { signInWithGoogleAction } from "@/app/actions/auth";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import googleImage from "@/app/auth/web_light_sq_ctn@1x.png";
-import React from "react";
+import React, {useState} from "react";
 
 const SignInWithGoogleForm = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
   return (
-    <form action={signInWithGoogleAction}>
+    <form
+      onClick={async (e) => {
+        e.preventDefault();
+        console.log("in on click with e: ", e.metaKey, e.currentTarget, e);
+        const formData = new FormData(e.currentTarget);
+        formData.set("metaKey", String(e.metaKey));
+        console.table([...formData.entries()]);
+        await signInWithGoogleAction(formData);
+      }}
+    >
       <Input
         type={"hidden"}
         name={"callbackUrl"}
