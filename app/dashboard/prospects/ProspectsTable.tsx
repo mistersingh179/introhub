@@ -126,11 +126,6 @@ export const ProspectRow = (props: ProspectRowProps) => {
               user={prospect.user}
               personExp={facilitatorProfiles.personExp}
             />
-            <div className={"flex flex-col whitespace-nowrap"}>
-              <div>Sent: {prospect.sentCount}</div>
-              <div>Received: {prospect.receivedCount}</div>
-              <div>Ratio: {prospect.sentReceivedRatio / 100}</div>
-            </div>
             <CreateIntroButton prospect={prospect} user={user} />
           </div>
         </TableCell>
