@@ -24,10 +24,10 @@ export async function GET(request: Request) {
       },
     });
   const html = await sendPendingApprovalEmail(intro, false);
+  const htmlBody = html.replaceAll("\r\n", "<br>");
+  console.log("htmlBody: ", htmlBody);
 
-  console.log("html: ", html);
-
-  const response = new Response(html, {
+  const response = new Response(htmlBody, {
     status: 200,
     headers: {
       "content-type": "text/html",
