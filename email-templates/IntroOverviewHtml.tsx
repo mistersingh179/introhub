@@ -184,11 +184,8 @@ const introOverviewHtml = (
       facilitatorsPendingIntroContactProfiles={
         facilitatorsPendingIntroContactProfiles
       }
-    />,
-    {
-      pretty: true,
-    },
-  ).replaceAll("\r\n", "");
+    />
+  )
 };
 
 export default introOverviewHtml;
