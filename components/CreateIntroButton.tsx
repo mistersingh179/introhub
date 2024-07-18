@@ -21,7 +21,7 @@ const CreateIntroButton = (props: CreateIntroButtonProps) => {
         router.push(`/dashboard/introductions/create/${prospect.id}`);
       }}
     >
-      Create Intro
+      Request Intro
       <SquarePen size={18} className={"ml-2"} />
     </Button>
   );
