@@ -73,9 +73,10 @@ model User {
 }
 
 model Profile {
-  id     String @id @default(cuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id               String @id @default(cuid())
+  userId           String @unique
+  user             User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  forwardableBlurb String
 }
 
 model Introduction {
@@ -90,6 +91,7 @@ model Introduction {
   messageForContact     String
   status                String  @default("draft")
   rejectionReason       String?
+  approvalKey           String  @default(dbgenerated("gen_random_uuid()"))
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
