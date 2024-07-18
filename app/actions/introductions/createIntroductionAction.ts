@@ -11,6 +11,7 @@ import { Prisma } from "@prisma/client";
 import IntroductionUncheckedCreateInput = Prisma.IntroductionUncheckedCreateInput;
 import sendPendingApprovalEmail from "@/services/sendPendingApprovalEmail";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
+import sendAskingPermissionToMakeIntroEmail from "@/services/sendAskingPermissionToMakeIntroEmail";
 
 const containsPlaceHolderValue = (input: string): boolean => {
   if (process.env.NODE_ENV === "development") {
@@ -86,7 +87,8 @@ export default async function createIntroductionAction(
         },
       });
 
-    await sendPendingApprovalEmail(intro);
+    // await sendPendingApprovalEmail(intro);
+    await sendAskingPermissionToMakeIntroEmail(intro);
   } catch (e) {
     console.log("an error occurred!: ", e);
     if (e instanceof ZodError) {

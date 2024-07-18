@@ -1,7 +1,8 @@
 import prisma from "@/prismaClient";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import { IntroStates } from "@/lib/introStates";
-import sendPendingApprovalEmail from "@/services/sendPendingApprovalEmail";
+import sendAskingPermissionToMakeIntroEmail from "@/services/sendAskingPermissionToMakeIntroEmail";
+import sendIntroducingBothEmail from "@/services/sendIntroducingBothEmail";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 
@@ -14,8 +15,8 @@ export async function GET(request: Request) {
   const intro: IntroWithContactFacilitatorAndRequester =
     await prisma.introduction.findFirstOrThrow({
       where: {
-        facilitator: user,
-        status: IntroStates["pending approval"],
+        // facilitator: user,
+        // status: IntroStates["approved"],
       },
       include: {
         contact: true,
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
         requester: true,
       },
     });
-  const html = await sendPendingApprovalEmail(intro, false);
+  const html = await sendIntroducingBothEmail(intro, false);
   const htmlBody = html.replaceAll("\r\n", "<br>");
   console.log("htmlBody: ", htmlBody);
 
