@@ -19,7 +19,8 @@ services:
 #      - POSTGRES_USER=alice
 #      - POSTGRES_DB=ih_shadow
   redis:
-    image: redis:7.2-alpine
+#    image: redis:7.2-alpine
+    image: redis@sha256:1b503bb77079ba644371969e06e1a6a1670bb34c2251107c0fc3a21ef9fdaeca
     ports:
       - 63790:6379
     volumes:
