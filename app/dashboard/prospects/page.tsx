@@ -50,6 +50,11 @@ export type ContactWithUserInfo = Contact & {
   website: string;
 };
 
+export type ContactWithUserAndIsWanted = Contact & {
+  user: User;
+  isWanted: boolean;
+};
+
 type GetPaginationValues = (
   searchParams: ProspectsSearchParams | undefined,
 ) => PaginatedValues;
@@ -255,6 +260,31 @@ export default async function Prospects({
     },
   });
 
+  const wantedContacts = await prisma.wantedContact.findMany({
+    where: {
+      userId: user.id,
+      contactId: {
+        in: prospects.map((p) => p.id),
+      },
+    },
+  });
+
+  const wantedContactsHash = wantedContacts.reduce<Record<string, boolean>>(
+    (acc, cv) => {
+      acc[cv.contactId] = true;
+      return acc;
+    },
+    {},
+  );
+
+  const prospectsWithUserAndIsWanted =
+    prospectsWithUser.map<ContactWithUserAndIsWanted>((p) => {
+      return {
+        ...p,
+        isWanted: wantedContactsHash[p.id] ?? false,
+      };
+    });
+
   return (
     <>
       <div className={"flex flex-row justify-start items-center gap-4"}>
@@ -297,7 +327,7 @@ export default async function Prospects({
         </div>
         <div className={"w-full"}>
           <ProspectsTable
-            prospectsWithUser={prospectsWithUser}
+            prospectsWithUser={prospectsWithUserAndIsWanted}
             emailToProfile={emailToProfile}
             companyUrlToProfile={companyUrlToProfile}
             filteredRecordsCount={filteredRecordsCount}
