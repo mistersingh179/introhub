@@ -30,7 +30,11 @@ const AskPermissionToMakeIntroHtml = (
     requestProfiles.personProfile.fullName,
     "An IntroHub User",
   );
+  const requesterLinkedInUrl = requestProfiles.personProfile.linkedInUrl;
   const contactName = getFirstName(contactProfiles.personProfile.fullName);
+  const contactCompanyName = contactProfiles.personExp.companyName;
+  const facilitatorName = getFirstName(intro.facilitator.name);
+
   return (
     <>
       <Html>
@@ -49,12 +53,35 @@ const AskPermissionToMakeIntroHtml = (
               Hi {contactName},
               <br />
               <br />
-              {requesterName} reached out to me asking for an introduction to
-              you. Before I make the intro I wanted to check in with you and
-              confirm if you are okay with me making the intro.
+              <Link
+                href={`${requesterLinkedInUrl}`}
+                style={{ color: "blue", textDecoration: "underline" }}
+              >
+                {requesterName}
+              </Link>{" "}
+              reached out to me asking for an introduction to you. Before I make
+              the intro I wanted to check-in with you and confirm that you are
+              okay with me introducing you.
+            </Text>
+            <Text
+              style={{
+                marginLeft: "20px",
+                borderLeft: "2px solid #ccc",
+                paddingLeft: "10px",
+                color: "#555",
+              }}
+            >
+              Hi {facilitatorName}, I noticed {"you're"} connected to{" "}
+              {contactName}. {"I'm"} really impressed by their work at{" "}
+              {contactCompanyName}.
+              <br />
+              <br />
+              Can you introduce us? {"I'm"} looking for a 15-minute chat to hear{" "}
+              their thoughts.
             </Text>
             <Text>
-              Please click below to let me know & I will act accordingly:
+              Please click below to let me know if you are okay with me
+              introducing you and I will act accordingly.
             </Text>
             <Section>
               <Link
@@ -71,19 +98,17 @@ const AskPermissionToMakeIntroHtml = (
                 No, don{"'"}t make the intro
               </Link>
             </Section>
-            <Text>
-              Btw, here is what Jerry sent me on why I should make the intro.
-            </Text>
-            <Text
-              style={{
-                marginLeft: "20px",
-                borderLeft: "2px solid #ccc",
-                paddingLeft: "10px",
-                color: "#555",
-              }}
+            <br />- {facilitatorName}
+            <br />
+            <br />
+            p.s. {"I'm"} using{" "}
+            <Link
+              href={`https://introhub.net`}
+              style={{ color: "blue", textDecoration: "underline" }}
             >
-              {intro.messageForContact}
-            </Text>
+              introhub
+            </Link>{" "}
+            to help manage introductions i make.
           </Container>
         </Body>
       </Html>

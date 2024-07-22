@@ -1,4 +1,4 @@
-import {z, ZodError} from "zod";
+import { z, ZodError } from "zod";
 
 // @ts-ignore
 // prisma.$on("query", (e) => {
@@ -8,47 +8,41 @@ import {z, ZodError} from "zod";
 // });
 
 (async () => {
-
   console.log("in repl");
 
   const schema = z.object({
     name: z.string(),
     age: z.coerce.number(),
-    dailyEmail: z.coerce.boolean(),
-    address: z.string().optional()
-  })
+    dailyEmail: z.string().transform((s) => s.toLowerCase() === "true"),
+    address: z.string().optional(),
+  });
 
-  const fd = new FormData()
+  const fd = new FormData();
   fd.set("name", "hi");
   fd.set("age", "5");
   fd.set("address", "hello st");
-  // fd.set("dailyEmail", "true");
+  fd.set("dailyEmail", "true");
 
-  try{
+  try {
     const ans = schema.parse({
       name: fd.get("name"),
       age: fd.get("age"),
       address: fd.get("address"),
-      dailyEmail: fd.get("dailyEmail")
+      dailyEmail: fd.get("dailyEmail"),
     });
-    console.log("ans: ", ans);
-  }catch(e){
+    console.table(ans);
+  } catch (e) {
     console.log("got error parsing");
-    if(e instanceof ZodError){
+    if (e instanceof ZodError) {
       // console.log(e.errors)
       // console.log(e.format()?.name._errors);
-      console.log(e.flatten())
-    }else if (e instanceof Error){
-      console.log(e.message)
-    }else{
+      console.log(e.flatten());
+    } else if (e instanceof Error) {
+      console.log(e.message);
+    } else {
       console.log("an unknown error has occurred: ", e);
     }
-
   }
-
-
-
-
 })();
 
 export {};
