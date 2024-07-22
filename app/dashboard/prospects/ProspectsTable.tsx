@@ -19,16 +19,17 @@ import {
   CompanyUrlToProfile,
   EmailToProfile,
 } from "@/services/getEmailAndCompanyUrlProfiles";
-import { ContactWithUser } from "@/app/dashboard/introductions/create/[contactId]/page";
 import FacilitatorBox from "@/components/FacilitatorBox";
 import getProfiles from "@/services/getProfiles";
-import CreateIntroButton from "@/components/CreateIntroButton";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import { User } from "@prisma/client";
 import NegativeBalanceAlert from "@/components/NegativeBalanceAlert";
 import ShowChildren from "@/components/ShowChildren";
+import WantToMeetForm from "@/app/dashboard/prospects/WantToMeetForm";
+import { ContactWithUserAndIsWanted } from "@/app/dashboard/prospects/page";
+import WantToNotMeetForm from "@/app/dashboard/prospects/WantToNotMeetForm";
 
 const ProspectsTable = async ({
   prospectsWithUser,
@@ -36,7 +37,7 @@ const ProspectsTable = async ({
   companyUrlToProfile,
   filteredRecordsCount,
 }: {
-  prospectsWithUser: ContactWithUser[];
+  prospectsWithUser: ContactWithUserAndIsWanted[];
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
   filteredRecordsCount: number;
@@ -86,7 +87,7 @@ const ProspectsTable = async ({
 };
 
 type ProspectRowProps = {
-  prospect: ContactWithUser;
+  prospect: ContactWithUserAndIsWanted;
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
   user: User;
@@ -126,7 +127,11 @@ export const ProspectRow = (props: ProspectRowProps) => {
               user={prospect.user}
               personExp={facilitatorProfiles.personExp}
             />
-            <CreateIntroButton prospect={prospect} user={user} />
+            {prospect.isWanted ? (
+              <WantToNotMeetForm contactId={prospect.id} />
+            ) : (
+              <WantToMeetForm contactId={prospect.id} />
+            )}
           </div>
         </TableCell>
       </TableRow>

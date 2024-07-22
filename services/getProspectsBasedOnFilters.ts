@@ -109,7 +109,9 @@ const getProspectsBasedOnFilters = async (
                left join public."Introduction" I
                          on I."contactId" = C.id and I."requesterId" = ${user.id} and
                             (I.status = ${IntroStates.approved} or I.status = ${IntroStates["pending credits"]} or I.status = ${IntroStates["email sent"]})
-      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
+      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} 
+            ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} 
+            ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
         and C."userId" != ${user.id}
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
