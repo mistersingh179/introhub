@@ -61,7 +61,7 @@ type GetPaginationValues = (
 
 const getPaginationValues: GetPaginationValues = (searchParams) => {
   const currentPage = Number(searchParams?.page) || 1;
-  const itemsPerPage = process.env.NODE_ENV === "development" ? 2 : 10;
+  const itemsPerPage = process.env.NODE_ENV === "development" ? 10 : 10;
   const recordsToSkip = (currentPage - 1) * itemsPerPage;
 
   const result = { currentPage, itemsPerPage, recordsToSkip };
