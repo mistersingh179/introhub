@@ -110,6 +110,7 @@ export const ProspectRow = (props: ProspectRowProps) => {
       <TableRow key={prospect.email}>
         <TableCell className={""}>
           <div className={"flex flex-col gap-4 overflow-hidden"}>
+            {prospect.id}
             <ProspectBox
               contact={prospect}
               personProfile={contactProfiles.personProfile}
