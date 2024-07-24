@@ -3,6 +3,7 @@ import { IntroStates } from "@/lib/introStates";
 import { goingToChangeIntroStatus } from "@/services/canStateChange";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import sendEmailForApprovedIntro from "@/services/sendEmailForApprovedIntro";
+import sendIntroducingBothEmail from "@/services/sendIntroducingBothEmail";
 
 const moveIntroToBeApproved = async (
   intro: IntroWithContactFacilitatorAndRequester,
@@ -25,7 +26,7 @@ const moveIntroToBeApproved = async (
       status: IntroStates.approved,
     },
   });
-  await sendEmailForApprovedIntro(intro);
+  await sendIntroducingBothEmail(intro);
 };
 
 export default moveIntroToBeApproved;
