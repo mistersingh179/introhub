@@ -1,9 +1,12 @@
-import { Contact, User } from "@prisma/client";
+import { Contact, Introduction, User } from "@prisma/client";
 import prisma from "@/prismaClient";
-import {IntroStates} from "@/lib/introStates";
+import { IntroStates } from "@/lib/introStates";
 import sendAskingPermissionToMakeIntroEmail from "@/services/sendAskingPermissionToMakeIntroEmail";
 
-const generateAnIntroduction = async (requester: User, prospect: Contact) => {
+const generateAnIntroduction = async (
+  requester: User,
+  prospect: Contact,
+): Promise<Introduction> => {
   console.log("going to generate an intro for: ", requester, prospect);
   const intro = await prisma.introduction.create({
     data: {
@@ -11,16 +14,17 @@ const generateAnIntroduction = async (requester: User, prospect: Contact) => {
       facilitatorId: prospect.userId,
       requesterId: requester.id,
       status: IntroStates["pending approval"],
-      messageForContact: '',
-      messageForFacilitator: '',
+      messageForContact: "",
+      messageForFacilitator: "",
     },
     include: {
       contact: true,
       facilitator: true,
       requester: true,
-    }
+    },
   });
   await sendAskingPermissionToMakeIntroEmail(intro);
+  return intro;
 };
 
 export default generateAnIntroduction;

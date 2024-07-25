@@ -62,26 +62,32 @@ const addEnrichAllRemainingUsersUsingApollo = async () => {
 };
 
 const addSendProspectsCreateToday = async () => {
-  const jobObj = await highQueue.add(
-    "sendProspectsCreatedToday",
-    undefined,
-    {
-      repeat: {
-        pattern: "0 11 * * *",
-      },
+  const jobObj = await highQueue.add("sendProspectsCreatedToday", undefined, {
+    repeat: {
+      pattern: "0 11 * * *",
     },
-  );
+  });
   const { name, id, opts } = jobObj;
   console.log("schedule job: ", name, id, opts);
 };
 
 const addProcessAllFiltersForEmail = async () => {
+  const jobObj = await highQueue.add("processAllFiltersForEmail", undefined, {
+    repeat: {
+      pattern: "15 11 * * *",
+    },
+  });
+  const { name, id, opts } = jobObj;
+  console.log("schedule job: ", name, id, opts);
+};
+
+const addProcessAllUsersForAutoProspecting = async () => {
   const jobObj = await highQueue.add(
-    "processAllFiltersForEmail",
+    "processAllUsersForAutoProspecting",
     undefined,
     {
       repeat: {
-        pattern: "15 11 * * *",
+        pattern: "0 9 * * *",
       },
     },
   );
@@ -103,8 +109,6 @@ const addProcessAllFiltersForEmail = async () => {
 //   console.log("schedule job: ", name, id, opts);
 // };
 
-
-
 const setupCronJobs = async () => {
   await addDownloadMessagesForAllAccounts();
   await addBuildContactsForAllUsers();
@@ -114,6 +118,7 @@ const setupCronJobs = async () => {
   await addSendProspectsCreateToday();
   await addProcessAllFiltersForEmail();
   // await addSendEmailForAllApprovedIntros();
+  await addProcessAllUsersForAutoProspecting();
 };
 
 export default setupCronJobs;
