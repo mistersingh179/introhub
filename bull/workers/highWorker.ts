@@ -9,6 +9,9 @@ import onBoardUser, { OnBoardUserInput } from "@/services/onBoardUser";
 import sendProspectsCreatedToday from "@/services/sendProspectsCreatedToday";
 import processAllFiltersForEmail from "@/services/processAllFiltersForEmail";
 import sendEmailForAllApprovedIntros from "@/services/sendEmailForAllApprovedIntros";
+import { User } from "@prisma/client";
+import processUserForAutoProspecting from "@/services/processUserForAutoProspecting";
+import processAllUsersForAutoProspecting from "@/services/processAllUsersForAutoProspecting";
 
 const queueName = "high";
 const highWorker = new Worker<
@@ -32,7 +35,14 @@ const highWorker = new Worker<
         return await processAllFiltersForEmail();
       }
       case "sendEmailForAllApprovedIntros": {
-        return await sendEmailForAllApprovedIntros()
+        return await sendEmailForAllApprovedIntros();
+      }
+      case "processUserForAutoProspecting": {
+        const user = data as User;
+        return await processUserForAutoProspecting(user);
+      }
+      case "processAllUsersForAutoProspecting": {
+        return processAllUsersForAutoProspecting();
       }
       default:
         console.error("got unknown job!");
