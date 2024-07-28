@@ -13,7 +13,6 @@ import Typography from "@/components/Typography";
 type IntroListTabsProps = {
   introsReceivedAndPendingMyApproval: IntroWithContactFacilitatorAndRequester[];
   introsSent: IntroWithContactFacilitatorAndRequester[];
-  pendingCreditsCount: number;
   introsReceived: IntroWithContactFacilitatorAndRequester[];
   pendingApprovalCount: number;
   user: User;
@@ -28,12 +27,11 @@ const IntroListTabs = (props: IntroListTabsProps) => {
     emailToProfile,
     companyUrlToProfile,
     pendingApprovalCount,
-    pendingCreditsCount,
     introsReceivedAndPendingMyApproval,
   } = props;
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const selectedTab = searchParams.get("selectedTab") ?? "received-and-pending-my-approval";
+  const selectedTab = searchParams.get("selectedTab") ?? "sent";
 
   const tabChangeHandler = (newValue: string) => {
     const updatedSearchParams = new URLSearchParams(searchParams);
@@ -45,49 +43,22 @@ const IntroListTabs = (props: IntroListTabsProps) => {
   return (
     <Tabs onValueChange={tabChangeHandler} defaultValue={selectedTab}>
       <TabsList>
-        <TabsTrigger value="received-and-pending-my-approval">
-          Action Required{" "}
-          {pendingApprovalCount ? `(${pendingApprovalCount})` : ""}
-        </TabsTrigger>
         <TabsTrigger value="sent">
-          Requested {pendingCreditsCount ? `(${pendingCreditsCount})` : ""}
+          Requested
         </TabsTrigger>
         <TabsTrigger value="received">
           Facilitating{" "}
           {pendingApprovalCount ? `(${pendingApprovalCount})` : ""}
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="received-and-pending-my-approval">
-
-        <div>
-          <Typography
-            affects={"lead"}
-            variant={"p"}
-            className={"mt-4 mx-2 text-center"}
-          >
-            These introductions are {" "}
-            <span className={"font-semibold"}>pending your approval</span>.
-            Please review and decide.
-          </Typography>
-          <IntroTable
-            introductions={introsReceivedAndPendingMyApproval}
-            user={user}
-            emailToProfile={emailToProfile}
-            companyUrlToProfile={companyUrlToProfile}
-            showFacilitator={false}
-          />
-        </div>
-      </TabsContent>
       <TabsContent value="sent">
         <div>
           <Typography
             affects={"lead"}
             variant={"p"}
-            className={"mt-4 mx-2 text-center"}
+            className={"my-4 mx-2 text-center"}
           >
-            You are the <span className={"font-semibold"}>requester</span> of
-            all these introductions. Approved ones are emailed out with you{" "}
-            {`cc'ed`}.
+            All these introduction have been <span className={"font-semibold"}>requested</span> for you. You are {"cc'ed"} on the approved ones.
           </Typography>
           <IntroTable
             introductions={introsSent}
@@ -106,7 +77,7 @@ const IntroListTabs = (props: IntroListTabsProps) => {
             className={"mt-4 mx-2 text-center"}
           >
             You are the <span className={"font-semibold"}>facilitator</span> of
-            all these introductions. Approving them earns you credits.
+            all these introductions.
           </Typography>
           <IntroTable
             introductions={introsReceived}

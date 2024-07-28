@@ -1,8 +1,6 @@
 import prisma from "@/prismaClient";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
-import { IntroStates } from "@/lib/introStates";
-import sendAskingPermissionToMakeIntroEmail from "@/services/sendAskingPermissionToMakeIntroEmail";
-import sendIntroducingBothEmail from "@/services/sendIntroducingBothEmail";
+import sendAskingPermissionToMakeIntroEmail from "@/services/emails/sendAskingPermissionToMakeIntroEmail";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 

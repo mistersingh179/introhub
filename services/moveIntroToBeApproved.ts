@@ -2,8 +2,7 @@ import prisma from "@/prismaClient";
 import { IntroStates } from "@/lib/introStates";
 import { goingToChangeIntroStatus } from "@/services/canStateChange";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
-import sendEmailForApprovedIntro from "@/services/sendEmailForApprovedIntro";
-import sendIntroducingBothEmail from "@/services/sendIntroducingBothEmail";
+import sendIntroducingBothEmail from "@/services/emails/sendIntroducingBothEmail";
 
 const moveIntroToBeApproved = async (
   intro: IntroWithContactFacilitatorAndRequester,
@@ -35,7 +34,7 @@ if (require.main === module) {
   (async () => {
     const intros = await prisma.introduction.findMany({
       where: {
-        status: IntroStates["pending credits"],
+        status: IntroStates["permission email sent"],
         requester: {
           credits: {
             gt: 1,

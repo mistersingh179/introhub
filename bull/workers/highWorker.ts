@@ -6,12 +6,12 @@ import {
   HighOutputDataType,
 } from "@/bull/dataTypes";
 import onBoardUser, { OnBoardUserInput } from "@/services/onBoardUser";
-import sendProspectsCreatedToday from "@/services/sendProspectsCreatedToday";
-import processAllFiltersForEmail from "@/services/processAllFiltersForEmail";
-import sendEmailForAllApprovedIntros from "@/services/sendEmailForAllApprovedIntros";
+import sendProspectsCreatedToday from "@/services/emails/sendProspectsCreatedToday";
+import processAllFiltersForEmail from "@/services/process/processAllFiltersForEmail";
+import sendEmailForAllApprovedIntros from "@/services/emails/sendEmailForAllApprovedIntros";
 import { User } from "@prisma/client";
-import processUserForAutoProspecting from "@/services/processUserForAutoProspecting";
-import processAllUsersForAutoProspecting from "@/services/processAllUsersForAutoProspecting";
+import processUserForAutoProspecting from "@/services/process/processUserForAutoProspecting";
+import processAllUsersForAutoProspecting from "@/services/process/processAllUsersForAutoProspecting";
 
 const queueName = "high";
 const highWorker = new Worker<

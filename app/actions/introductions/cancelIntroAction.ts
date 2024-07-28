@@ -1,6 +1,5 @@
 "use server";
 
-import { z, ZodError } from "zod";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
@@ -9,8 +8,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Introduction, Prisma } from "@prisma/client";
 import IntroductionUncheckedUpdateInput = Prisma.IntroductionUncheckedUpdateInput;
-import {goingToChangeIntroStatus} from "@/services/canStateChange";
-
+import { goingToChangeIntroStatus } from "@/services/canStateChange";
 
 export default async function cancelIntroAction(
   introductionId: string,
@@ -30,7 +28,7 @@ export default async function cancelIntroAction(
 
     await prisma.introduction.update({
       data: {
-        status: IntroStates.cancelled
+        status: IntroStates.cancelled,
       },
       where: {
         id: introductionId,

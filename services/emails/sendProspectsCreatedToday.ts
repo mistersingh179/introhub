@@ -4,7 +4,7 @@ import getProspectsBasedOnFilters, {
   SelectedFilterValues,
 } from "@/services/getProspectsBasedOnFilters";
 import { startOfToday, subDays } from "date-fns";
-import sendEmail, { systemEmail } from "@/services/sendEmail";
+import sendEmail, { systemEmail } from "@/services/emails/sendEmail";
 import prepareProspectsData from "@/services/prepareProspectsData";
 import { getNewProspectsHtml } from "@/email-templates/NewProspects";
 import { Contact } from "@prisma/client";

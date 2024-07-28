@@ -107,8 +107,7 @@ const getProspectsBasedOnFilters = async (
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
                left join public."Introduction" I
-                         on I."contactId" = C.id and I."requesterId" = ${user.id} and
-                            (I.status = ${IntroStates.approved} or I.status = ${IntroStates["pending credits"]} or I.status = ${IntroStates["email sent"]})
+                         on I."contactId" = C.id and I."requesterId" = ${user.id}
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} 
             ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} 
             ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
@@ -132,8 +131,7 @@ const getProspectsBasedOnFilters = async (
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
                left join public."Introduction" I
-                         on I."contactId" = C.id and I."requesterId" = ${user.id} and
-                            (I.status = ${IntroStates.approved} or I.status = ${IntroStates["pending credits"]} or I.status = ${IntroStates["email sent"]})
+                         on I."contactId" = C.id and I."requesterId" = ${user.id}
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
         and C."userId" != ${user.id}
   `;

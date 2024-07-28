@@ -6,8 +6,6 @@ import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfi
 import IntroListTabs from "@/app/dashboard/introductions/list/IntroListTabs";
 import { IntroStates } from "@/lib/introStates";
 import ScopeMissingMessage from "@/app/dashboard/home/ScopeMissingMessage";
-import YouHaveIntroWithPendingCreditAlert from "@/app/dashboard/introductions/list/YouHaveIntroWithPendingCreditAlert";
-import IntroApproveConfirmationDialog from "@/app/dashboard/introductions/list/IntroApproveConfirmationDialog";
 
 export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
@@ -93,13 +91,6 @@ export default async function IntroList({
     },
   });
 
-  const pendingCreditsCount = await prisma.introduction.count({
-    where: {
-      requesterId: user.id,
-      status: IntroStates["pending credits"],
-    },
-  });
-
   let emails = [
     ...new Set(
       introsSent.concat(introsReceived).reduce<string[]>((acc, intro) => {
@@ -116,15 +107,11 @@ export default async function IntroList({
 
   return (
     <>
-      <IntroApproveConfirmationDialog />
       <div className={"flex flex-col gap-4 mt-4"}>
         <ScopeMissingMessage />
 
-        <YouHaveIntroWithPendingCreditAlert />
-
         <IntroListTabs
           introsSent={introsSent}
-          pendingCreditsCount={pendingCreditsCount}
           introsReceived={introsReceived}
           pendingApprovalCount={pendingApprovalCount}
           introsReceivedAndPendingMyApproval={
