@@ -3,30 +3,34 @@ export type IntroStatesKey = keyof typeof IntroStates;
 export enum IntroStates {
   draft = "draft",
   "pending approval" = "pending approval",
+  "permission email sent" = "permission email sent",
+  "permission email send failure" = "permission email send failure",
+  "permission email opened" = "permission email opened",
   approved = "approved",
-  "pending credits" = "pending credits",
-  "email sent" = "email sent",
   rejected = "rejected",
   cancelled = "cancelled",
-  expired = "expired",
-  "email opened" = "email opened",
+  "introducing email sent" = "introducing email sent",
+  "introducing email send failure" = "introducing email send failure",
 }
+
 export enum IntroStatesWithMeaning {
-  draft = "The introduction has been started but has not yet been submitted for approval. It's in a draft state, allowing the requester to make changes before submission.",
+  draft = "The introduction is in draft state, allowing changes before submission for approval.",
 
-  "pending approval" = "The introduction has been submitted for approval by the requester and is awaiting approval or rejection from the facilitator.",
+  "pending approval" = "The introduction is awaiting approval from the prospect.",
 
-  approved = "The introduction has been approved by the facilitator and is awaiting email sending by the system. The email will be sent shortly.",
+  "permission email sent" = "An email requesting the prospect's permission for an introduction has been sent.",
 
-  "pending credits" = "The introduction has been approved by the facilitator, but the requester needs to acquire sufficient credits before sending the email.",
+  "permission email send failure" = "Failed to send the email requesting the prospect's permission for an introduction.",
 
-  "email sent" = "The email associated with the introduction has been successfully sent.",
+  "permission email opened" = "The email requesting the prospect's permission for an introduction has been opened.",
 
-  "email opened" = "The email associated with the introduction has been opened.",
+  approved = "The prospect has approved the introduction. An email introducing both parties will be sent shortly.",
 
-  rejected = "The introduction has been rejected by the facilitator.",
+  rejected = "The prospect has rejected the introduction. An email introducing both parties will not be sent.",
 
-  cancelled = "The introduction has been cancelled.",
+  cancelled = "This introduction has been cancelled",
 
-  expired = "The introduction has been expired.",
+  "introducing email sent" = "An email introducing the prospect to the user has been sent.",
+
+  "introducing email send failure" = "Failed to send the email introducing the prospect to the user.",
 }

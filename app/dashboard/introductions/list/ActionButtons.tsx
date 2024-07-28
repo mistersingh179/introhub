@@ -1,5 +1,3 @@
-import IntroApproveForm from "@/app/dashboard/introductions/list/IntroApproveForm";
-import IntroRejectDialog from "@/app/dashboard/introductions/list/IntroRejecDialog";
 import IntroCancelForm from "@/app/dashboard/introductions/list/IntroCancelForm";
 import { User } from "@prisma/client";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
@@ -17,13 +15,6 @@ const ActionButtons = (props: ActionButtonProps) => {
   return (
     <>
       <div className={cn("flex flex-col gap-4", className)}>
-        {introduction.facilitatorId === user.id && (
-          <>
-            <IntroApproveForm intro={introduction} />
-            <IntroRejectDialog intro={introduction} />
-          </>
-        )}
-
         {introduction.requesterId === user.id && (
           <>
             <IntroCancelForm intro={introduction} />

@@ -1,7 +1,7 @@
 import { Contact, Introduction, User } from "@prisma/client";
 import prisma from "@/prismaClient";
 import { IntroStates } from "@/lib/introStates";
-import sendAskingPermissionToMakeIntroEmail from "@/services/sendAskingPermissionToMakeIntroEmail";
+import sendAskingPermissionToMakeIntroEmail from "@/services/emails/sendAskingPermissionToMakeIntroEmail";
 
 const generateAnIntroduction = async (
   requester: User,

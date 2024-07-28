@@ -16,26 +16,6 @@ const addCreditsToUser = async (user: User, amount: number) => {
       },
     },
   });
-  const usersRequestedPendingIntros: IntroWithContactFacilitatorAndRequester[] =
-    await prisma.introduction.findMany({
-      where: {
-        requesterId: user.id,
-        status: IntroStates["pending credits"],
-        requester: {
-          credits: {
-            gte: 0,
-          },
-        },
-      },
-      include: {
-        requester: true,
-        facilitator: true,
-        contact: true,
-      },
-    });
-  for (const intro of usersRequestedPendingIntros) {
-    await moveIntroToBeApproved(intro);
-  }
   return user;
 };
 

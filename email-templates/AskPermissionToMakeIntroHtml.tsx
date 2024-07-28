@@ -14,7 +14,7 @@ import {
   Section,
 } from "@react-email/components";
 
-const { BASE_API_URL } = process.env;
+const { BASE_API_URL, ZROK_BASE_API_URL } = process.env;
 
 type AskPermissionToMakeIntroHtmlProps = {
   intro: IntroWithContactFacilitatorAndRequester;
@@ -109,6 +109,12 @@ const AskPermissionToMakeIntroHtml = (
               introhub
             </Link>{" "}
             to help manage introductions i make.
+            <br />
+            <br />
+            <img
+              src={`${process.env.NODE_ENV === "development" ? ZROK_BASE_API_URL : BASE_API_URL}/api/intros/${intro.id}/opened`}
+              alt=""
+            ></img>
           </Container>
         </Body>
       </Html>

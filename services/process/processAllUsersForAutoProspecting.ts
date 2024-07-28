@@ -1,6 +1,4 @@
-import processRateLimitedRequest from "@/services/processRateLimitedRequest";
 import prisma from "@/prismaClient";
-import processUserForAutoProspecting from "@/services/processUserForAutoProspecting";
 import HighQueue from "@/bull/queues/highQueue";
 
 const processAllUsersForAutoProspecting = async () => {

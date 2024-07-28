@@ -1,8 +1,7 @@
 import prisma from "@/prismaClient";
 import { IntroStates } from "@/lib/introStates";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
-import sendEmailForApprovedIntro from "@/services/sendEmailForApprovedIntro";
-import sendIntroducingBothEmail from "@/services/sendIntroducingBothEmail";
+import sendIntroducingBothEmail from "@/services/emails/sendIntroducingBothEmail";
 
 const sendEmailForAllApprovedIntros = async () => {
   console.log("in sendEmailForAllApprovedIntros");

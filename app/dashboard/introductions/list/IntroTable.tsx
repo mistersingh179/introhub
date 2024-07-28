@@ -36,10 +36,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { buildS3ImageUrl, getS3Url } from "@/lib/url";
 import { getInitials } from "@/app/dashboard/UserProfileImageNav";
 import { Badge } from "@/components/ui/badge";
-import IntroOverviewWithApprovingSheet from "@/app/dashboard/introductions/list/IntroOverviewWithApprovingSheet";
 import Link from "next/link";
-import getClosestPersonExp from "@/services/helpers/getClosestPersonExp";
-import IntroOverviewWithSavingSheet from "./IntroOverviewWithSavingSheet";
 import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
 import ShowChildren from "@/components/ShowChildren";
 import FacilitatorBox from "@/components/FacilitatorBox";
@@ -342,24 +339,6 @@ const IntroRow = ({
             )}
 
             <IntroStatusBadge introduction={introduction} />
-
-            {user.id === introduction.facilitator.id && (
-              <IntroOverviewWithApprovingSheet
-                intro={introduction}
-                user={user}
-                emailToProfile={emailToProfile}
-                companyUrlToProfile={companyUrlToProfile}
-              />
-            )}
-
-            {user.id === introduction.requester.id && (
-              <IntroOverviewWithSavingSheet
-                intro={introduction}
-                user={user}
-                emailToProfile={emailToProfile}
-                companyUrlToProfile={companyUrlToProfile}
-              />
-            )}
           </div>
         </TableCell>
       </TableRow>
