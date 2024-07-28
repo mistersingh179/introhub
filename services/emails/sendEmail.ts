@@ -1,10 +1,15 @@
 import prisma from "@/prismaClient";
 import getGmailObject from "@/services/helpers/getGmailObject";
 import { gmail_v1 } from "googleapis";
-import Gmail = gmail_v1.Gmail;
-import Schema$Message = gmail_v1.Schema$Message;
 import { Account, Introduction } from "@prisma/client";
 import { IntroStates } from "@/lib/introStates";
+import Schema$Message = gmail_v1.Schema$Message;
+
+export type PostEmailActionData = {
+  intro: Introduction;
+  successState: IntroStates;
+  failureState: IntroStates;
+};
 
 export type SendEmailInput = {
   account: Account;
@@ -13,7 +18,7 @@ export type SendEmailInput = {
   cc: string;
   subject: string;
   body: string;
-  intro?: Introduction;
+  postEmailActionData?: PostEmailActionData;
 };
 
 export const systemEmail =
@@ -21,16 +26,12 @@ export const systemEmail =
     ? "rod@introhub.net"
     : "sandeep@introhub.net";
 
-type SendEmail = (input: SendEmailInput) => Promise<Schema$Message>;
+type SendEmail = (input: SendEmailInput) => Promise<Schema$Message | undefined>;
 const sendEmail: SendEmail = async (input) => {
-  const { account, from, to, cc, subject, body, intro } = input;
+  const { account, from, to, cc, subject, body, postEmailActionData } = input;
 
-  const gmail = await getGmailObject(account);
   const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString("base64")}?=`;
   const htmlBody = body.replaceAll("\r\n", "<br>");
-  // htmlBody.concat(
-  //   "foo bar <img src='http://localhost:3000/api/intros/3/opened'></img>",
-  // );
   const toFixed =
     process.env.NODE_ENV === "production" ? to : "mistersingh179@gmail.com";
   const ccFixed =
@@ -66,24 +67,35 @@ const sendEmail: SendEmail = async (input) => {
   );
   console.log(encodedMessage);
 
-  const res = await gmail.users.messages.send({
-    userId: "me",
-    requestBody: {
-      raw: encodedMessage,
-    },
-  });
-  console.log("message sent: ", res.data);
-  if (intro && res.data.id) {
+  try {
+    const gmail = await getGmailObject(account);
+    const res = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: {
+        raw: encodedMessage,
+      },
+    });
+    console.log("message sent: ", res.data);
+    await takePostEmailAction(!!res.data.id, postEmailActionData);
+    return res.data;
+  } catch (err) {
+    await takePostEmailAction(false, postEmailActionData)
+  }
+};
+
+const takePostEmailAction = async (success: boolean, postEmailActionData?: PostEmailActionData) => {
+  if (postEmailActionData) {
+    const { intro, successState, failureState } = postEmailActionData;
+    const newState = success ? successState : failureState;
     await prisma.introduction.update({
       where: {
         id: intro.id,
       },
       data: {
-        status: IntroStates["email sent"],
+        status: newState,
       },
     });
   }
-  return res.data;
 };
 
 if (require.main === module) {

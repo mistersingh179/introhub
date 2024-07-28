@@ -17,7 +17,7 @@ import processRateLimitedRequest from "@/services/processRateLimitedRequest";
 import { User } from "@prisma/client";
 import buildContacts from "@/services/buildContacts";
 import buildContactsForAllUsers from "@/services/buildContactsForAllUsers";
-import sendEmail, { SendEmailInput } from "@/services/sendEmail";
+import sendEmail, { SendEmailInput } from "@/services/emails/sendEmail";
 import onBoardUser, { OnBoardUserInput } from "@/services/onBoardUser";
 
 const queueName = "medium";

@@ -1,11 +1,9 @@
 import prisma from "@/prismaClient";
-import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
+import {IntroWithContactFacilitatorAndRequester} from "@/app/dashboard/introductions/list/page";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import getAllProfiles from "@/services/getAllProfiles";
-import sendEmail, { systemEmail } from "@/services/sendEmail";
-import introOverviewHtml from "@/email-templates/IntroOverviewHtml";
-import { IntroStates } from "@/lib/introStates";
-import { Profiles } from "@/app/dashboard/introductions/list/IntroTable";
+import sendEmail from "@/services/emails/sendEmail";
+import {IntroStates} from "@/lib/introStates";
 import getFirstName from "@/services/getFirstName";
 import askPermissionToMakeIntroHtml from "@/email-templates/AskPermissionToMakeIntroHtml";
 
@@ -54,6 +52,11 @@ const sendAskingPermissionToMakeIntroEmail = async (
       to: intro.contact.email!,
       cc: "",
       subject: `Can I introduce you to ${requesterName}?`,
+      postEmailActionData: {
+        intro: intro,
+        successState: IntroStates['permission email sent'],
+        failureState: IntroStates["permission email send failure"]
+      }
     });
   }
 

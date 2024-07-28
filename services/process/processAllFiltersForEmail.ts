@@ -6,7 +6,7 @@ import getProspectsBasedOnFilters, {
 } from "@/services/getProspectsBasedOnFilters";
 import prepareProspectsData from "@/services/prepareProspectsData";
 import { getNewProspectsHtml } from "@/email-templates/NewProspects";
-import sendEmail, {systemEmail} from "@/services/sendEmail";
+import sendEmail, {systemEmail} from "@/services/emails/sendEmail";
 import { gmail_v1 } from "googleapis";
 
 export type ProcessAllFiltersForEmailOutput = gmail_v1.Schema$Message[];

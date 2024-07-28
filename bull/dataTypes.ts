@@ -4,13 +4,13 @@ import {
   DownloadMessagesOutput,
 } from "@/services/downloadMessages";
 import { Introduction, User } from "@prisma/client";
-import { SendEmailInput } from "@/services/sendEmail";
+import { SendEmailInput } from "@/services/emails/sendEmail";
 import { gmail_v1 } from "googleapis";
 import { EnrichContactInput } from "@/services/enrichContact";
 import { OnBoardUserInput } from "@/services/onBoardUser";
-import { SendProspectsCreatedTodayOutput } from "@/services/sendProspectsCreatedToday";
+import { SendProspectsCreatedTodayOutput } from "@/services/emails/sendProspectsCreatedToday";
 import Schema$Message = gmail_v1.Schema$Message;
-import { ProcessAllFiltersForEmailOutput } from "@/services/processAllFiltersForEmail";
+import { ProcessAllFiltersForEmailOutput } from "@/services/process/processAllFiltersForEmail";
 
 export type HighInputDataType = OnBoardUserInput | undefined | User;
 

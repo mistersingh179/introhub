@@ -5,3 +5,5 @@ export const superUsers = [
 ]
 
 export const userProfileS3DirName = "user-profile-images";
+
+export const rodEmail = "rod@introhub.net";

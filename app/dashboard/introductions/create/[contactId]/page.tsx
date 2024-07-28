@@ -1,5 +1,4 @@
 import prisma from "@/prismaClient";
-import CreateIntroductionForm from "@/app/dashboard/introductions/create/[contactId]/CreatIntroductionForm";
 import { Contact, PersonExperience, PersonProfile, User } from "@prisma/client";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
@@ -58,13 +57,6 @@ export default async function Introductions({
         />
         <CompanyBox companyProfile={companyProfile} personExp={personExp} />
       </div>
-      <CreateIntroductionForm
-        contact={contact}
-        personProfile={personProfile}
-        personExperience={personExp}
-        companyProfile={companyProfile}
-        user={user}
-      />
     </div>
   );
 }

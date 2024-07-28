@@ -3,7 +3,36 @@ import { Introduction } from "@prisma/client";
 import prisma from "@/prismaClient";
 
 /*
-Here is how it works:
+How it works in v2.0 Latest
+
+At db level default state value is "draft"
+
+We automatically generate an introduction in – generateAnIntroduction.ts
+  -> intro is created in "pending approval" state
+
+Then we immediately send an email asking permission – sendAskingPermissionToMakeIntroEmail.ts
+  -> upon sending email successfully we put intro in "permission email sent" state
+  -> upon failing to send email we put intro in "permission email send failure" state
+
+If email is opened – api/intros/[id]/opened/route.ts
+  -> we update intro to "permission email opened" state
+  -> this only happens if in "permission email sent" state and not from any other state.
+
+If intro is approved – api/intros/[id]/approve/route.ts
+  -> we update intro to "approved" state
+
+Then we immediately send an email introducing both parties – sendIntroducingBothEmail.ts
+  -> we update intro to "introducing email sent"
+
+If intro is rejected – api/intros/[id]/reject/route.ts
+  -> we update intro to "rejected" state
+
+
+
+*/
+
+/*
+Here is how it works v1.0 (Original):
 
 when requester clicks on "create intro" in the UI – createIntroductionAction.ts
   -> intro is update to "pending approval"
@@ -33,30 +62,27 @@ type Transitions = {
 };
 
 const transitions: Transitions = {
-  draft: [
-    IntroStates["pending approval"],
-    IntroStates.cancelled,
-    IntroStates.expired,
-  ],
+  draft: [IntroStates["pending approval"], IntroStates.cancelled],
   "pending approval": [
-    IntroStates.approved,
-    IntroStates["pending credits"],
-    IntroStates.rejected,
-    IntroStates.expired,
+    IntroStates["permission email sent"],
+    IntroStates["permission email send failure"],
     IntroStates.cancelled,
   ],
-  approved: [IntroStates["email sent"]],
-  "pending credits": [
+  "permission email sent": [
+    IntroStates["permission email opened"],
     IntroStates.approved,
     IntroStates.rejected,
-    IntroStates.cancelled,
-    IntroStates.expired,
   ],
-  "email sent": [IntroStates["email opened"]],
-  "email opened": [],
+  "permission email opened": [IntroStates.approved, IntroStates.rejected],
+  "permission email send failure": [IntroStates["permission email sent"]],
+  approved: [
+    IntroStates["introducing email sent"],
+    IntroStates["introducing email send failure"],
+  ],
   rejected: [],
   cancelled: [],
-  expired: [],
+  "introducing email sent": [],
+  "introducing email send failure": [IntroStates["introducing email sent"]],
 };
 
 type CanStateChange = (
