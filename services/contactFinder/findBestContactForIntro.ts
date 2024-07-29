@@ -5,7 +5,7 @@ import fetchContactFromUserFilters from "@/services/contactFinder/fetchContactFr
 import fetchNextAvailableContact from "@/services/contactFinder/fetchNextAvailableContact";
 
 const findBestContactForIntro = async (user: User): Promise<Contact | null> => {
-  console.log("in findBestProspectForIntro with: ", user);
+  console.log("in findBestProspectForIntro for user: ", user.email);
 
   const fetchContactFunctions = [
     fetchWantedContact,
@@ -16,7 +16,7 @@ const findBestContactForIntro = async (user: User): Promise<Contact | null> => {
   for (const fetchContact of fetchContactFunctions) {
     const contact = await fetchContact(user);
     if (contact) {
-      console.log("found best prospect: ", user, contact);
+      console.log("found best prospect for: ", user.email, contact);
       return contact;
     }
   }

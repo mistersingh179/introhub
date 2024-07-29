@@ -7,7 +7,7 @@ const generateAnIntroduction = async (
   requester: User,
   prospect: Contact,
 ): Promise<Introduction> => {
-  console.log("going to generate an intro for: ", requester, prospect);
+  console.log("going to generate an intro for: ", requester.email, prospect.email);
   const intro = await prisma.introduction.create({
     data: {
       contactId: prospect.id,

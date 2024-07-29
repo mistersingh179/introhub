@@ -3,10 +3,11 @@ import prisma from "@/prismaClient";
 import getContactIdsTouchedByUser from "@/services/contactFinder/getContactIdsTouchedByUser";
 import getContactIdsTouchedRecently from "@/services/contactFinder/getContactIdsTouchedRecently";
 import getFacilitatorIdsWhoAlreadyMadeIntros from "@/services/contactFinder/getFacilitatorIdsWhoAlreadyMadeIntros";
+import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
 
 const fetchWantedContact = async (user: User): Promise<Contact | null> => {
-  const now = new Date();
-
+  const contactIdsOfOthersUsersKnownToThisUser =
+    await getContactIdsOfOthersUsersKnownToThisUser(user);
   const contactIdsTouchedByUser = await getContactIdsTouchedByUser(user);
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
@@ -20,14 +21,18 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
         },
       },
       id: {
-        notIn: [...contactIdsTouchedRecently, ...contactIdsTouchedByUser],
+        notIn: [
+          ...contactIdsTouchedRecently,
+          ...contactIdsTouchedByUser,
+          ...contactIdsOfOthersUsersKnownToThisUser,
+        ],
       },
       userId: {
         notIn: facilitatorIdsUsedRecently,
       },
     },
   });
-  console.log("got wantedContact for user: ", user, wantedContact);
+  console.log("got wantedContact for user: ", user.email, wantedContact);
   return wantedContact;
 };
 

@@ -10,7 +10,7 @@ const processUserForAutoProspecting = async (
   const prospect = await findBestContactForIntro(user);
   if (prospect) {
     const intro = await generateAnIntroduction(user, prospect);
-    console.log("auto generated intro request: ", user, prospect, intro);
+    console.log("auto generated intro request: ", user.email, prospect.email, intro.id);
     return intro;
   } else {
     console.log("unable to find best contact for auto intro: ", user, prospect);
