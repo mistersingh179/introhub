@@ -9,7 +9,7 @@ const getContactIdsTouchedByUser = async (user: User): Promise<string[]> => {
     },
   });
   const contactIds = introsRequestedByUser.map((i) => i.contactId);
-  console.log("getContactIdsTouchedByUser: ", user, contactIds);
+  console.log("getContactIdsTouchedByUser: ", user.email, contactIds);
   return contactIds;
 };
 
