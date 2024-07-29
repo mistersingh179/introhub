@@ -7,10 +7,13 @@ import getFiltersFromSearchParams from "@/services/getFiltersFromSearchParams";
 import getProspectsBasedOnFilters, {
   PaginatedValues,
 } from "@/services/getProspectsBasedOnFilters";
+import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
 
 const fetchContactFromUserFilters = async (
   user: User,
 ): Promise<Contact | null> => {
+  const contactIdsOfOthersUsersKnownToThisUser =
+    await getContactIdsOfOthersUsersKnownToThisUser(user);
   const contactIdsTouchedByUser = await getContactIdsTouchedByUser(user);
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
@@ -43,7 +46,11 @@ const fetchContactFromUserFilters = async (
       where: {
         id: {
           in: contactIdsFromUserFilter,
-          notIn: [...contactIdsTouchedRecently, ...contactIdsTouchedByUser],
+          notIn: [
+            ...contactIdsTouchedRecently,
+            ...contactIdsTouchedByUser,
+            ...contactIdsOfOthersUsersKnownToThisUser,
+          ],
         },
         userId: {
           notIn: facilitatorIdsUsedRecently,
@@ -52,7 +59,7 @@ const fetchContactFromUserFilters = async (
     });
 
     if (contactFromFilter) {
-      console.log("got contactFromFilter: ", contactFromFilter);
+      console.log("got contactFromFilter: ", contactFromFilter.email);
       return contactFromFilter;
     }
   }
