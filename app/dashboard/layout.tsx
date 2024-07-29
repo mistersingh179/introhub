@@ -11,6 +11,7 @@ import ClarityMetrics from "@/app/utils/ClarityMetrics";
 import ShowChildren from "@/components/ShowChildren";
 import checkUserPermissions from "@/services/checkUserPermissions";
 import MissingPermissionsDialog from "@/app/dashboard/MissingPermissionsDialog";
+import AutoProspectingDialog from "@/app/dashboard/AutoProspectingDialog";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -52,6 +53,8 @@ export default async function DashboardLayout({
         <ShowChildren showIt={!!user}>
           <ClarityMetrics user={user!} />
         </ShowChildren>
+
+        <AutoProspectingDialog agreedToAutoProspecting={user!.agreedToAutoProspecting} />
 
         <ShowChildren showIt={!weHavePermissions}>
           <MissingPermissionsDialog />
