@@ -69,6 +69,7 @@ model User {
   credits                  Int             @default(0)
   profileImageName         String?
   wantsToMeet              WantedContact[]
+  agreedToAutoProspecting  Boolean         @default(true)
 
   @@index([email])
 }
