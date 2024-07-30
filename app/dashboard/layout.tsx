@@ -54,7 +54,9 @@ export default async function DashboardLayout({
           <ClarityMetrics user={user!} />
         </ShowChildren>
 
-        <AutoProspectingDialog agreedToAutoProspecting={user!.agreedToAutoProspecting} />
+        <AutoProspectingDialog
+          agreedToAutoProspecting={user!.agreedToAutoProspecting}
+        />
 
         <ShowChildren showIt={!weHavePermissions}>
           <MissingPermissionsDialog />
