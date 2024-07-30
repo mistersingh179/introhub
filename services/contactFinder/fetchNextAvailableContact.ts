@@ -8,7 +8,7 @@ import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/
 const fetchNextAvailableContact = async (
   user: User,
 ): Promise<Contact | null> => {
-  console.log("in fetchNextAvailableContact with: ", user);
+  console.log("in fetchNextAvailableContact with: ", user.email);
 
   const contactIdsOfOthersUsersKnownToThisUser =
     await getContactIdsOfOthersUsersKnownToThisUser(user);
@@ -29,11 +29,14 @@ const fetchNextAvailableContact = async (
       userId: {
         notIn: [...facilitatorIdsUsedRecently, user.id],
       },
+      user: {
+        agreedToAutoProspecting: true
+      }
     },
   });
   console.log(
     "got nextAvailableContact for user: ",
-    user,
+    user.email,
     nextAvailableContact,
   );
 
