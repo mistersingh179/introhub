@@ -55,6 +55,9 @@ const fetchContactFromUserFilters = async (
         userId: {
           notIn: facilitatorIdsUsedRecently,
         },
+        user: {
+          agreedToAutoProspecting: true
+        }
       },
     });
 

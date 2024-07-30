@@ -21,7 +21,7 @@ const findBestContactForIntro = async (user: User): Promise<Contact | null> => {
     }
   }
 
-  console.log("unable to find any prospect for user: ", user);
+  console.log("unable to find any prospect for user: ", user.email);
   return null;
 };
 export default findBestContactForIntro;
