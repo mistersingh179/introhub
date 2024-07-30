@@ -30,6 +30,9 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
       userId: {
         notIn: facilitatorIdsUsedRecently,
       },
+      user: {
+        agreedToAutoProspecting: true
+      }
     },
   });
   console.log("got wantedContact for user: ", user.email, wantedContact);
