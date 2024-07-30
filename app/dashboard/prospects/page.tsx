@@ -309,6 +309,9 @@ export default async function Prospects({
             </div>
             <CollapsibleContent>
               <>
+                <ShowChildren showIt={savedFilters.length > 0}>
+                  <FiltersList savedFilters={savedFilters} />
+                </ShowChildren>
                 <FiltersForm
                   cities={cities}
                   states={states}
@@ -318,9 +321,6 @@ export default async function Prospects({
                   userEmails={userEmails}
                 />
                 <SaveFiltersDialog />
-                <ShowChildren showIt={savedFilters.length > 0}>
-                  <FiltersList savedFilters={savedFilters} />
-                </ShowChildren>
               </>
             </CollapsibleContent>
           </Collapsible>
