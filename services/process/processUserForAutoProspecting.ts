@@ -10,10 +10,26 @@ const processUserForAutoProspecting = async (
   const prospect = await findBestContactForIntro(user);
   if (prospect) {
     const intro = await generateAnIntroduction(user, prospect);
-    console.log("auto generated intro request: ", user.email, prospect.email, intro.id);
+    console.log("auto generated intro: ", user.email, prospect.email, intro.id);
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        unableToAutoProspect: false,
+      },
+    });
     return intro;
   } else {
     console.log("unable to find best contact for auto intro: ", user, prospect);
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        unableToAutoProspect: true,
+      },
+    });
     return null;
   }
 };
@@ -23,9 +39,9 @@ export default processUserForAutoProspecting;
 if (require.main === module) {
   (async () => {
     const user = await prisma.user.findFirstOrThrow({
-      where:{
-        email: 'sandeep@introhub.net'
-      }
+      where: {
+        email: "sandeep@introhub.net",
+      },
     });
     const ans = await processUserForAutoProspecting(user);
     console.log("ans: ", ans);

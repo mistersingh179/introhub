@@ -94,6 +94,31 @@ export default async function Home() {
         </Alert>
       )}
 
+      {user.unableToAutoProspect && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-8 w-8" />
+          <AlertTitle className={"ml-8"}>Unable to Auto Prospect</AlertTitle>
+          <AlertDescription className={"ml-8"}>
+            Please consider widening your ICP by starring more prospects and/or
+            creating more prospect filters.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {!user.unableToAutoProspect && (
+        <Alert variant="default">
+          <Check className="h-8 w-8" />
+          <AlertTitle className={"ml-8"}>
+            Auto Prospecting is working for you !
+          </AlertTitle>
+          <AlertDescription className={"ml-8"}>
+            We are able to automatically prospect for you based on your ICP as
+            inferred from the prospects you have starred and filters you have
+            created.
+          </AlertDescription>
+        </Alert>
+      )}
+
       <div className={"flex flex-col gap-2 md:flex-row items-center"}>
         <div className={"min-w-36 flex flex-row gap-4 items-center"}>
           Google Scope : <RefreshScopesForm />{" "}
@@ -105,9 +130,7 @@ export default async function Home() {
             ))}
           </ul>
         </ShowChildren>
-        <ShowChildren showIt={scopes.length == 0}>
-          None
-        </ShowChildren>
+        <ShowChildren showIt={scopes.length == 0}>None</ShowChildren>
       </div>
       <div className={"flex flex-col gap-2 md:flex-row"}>
         <div className={"min-w-36"}>User Id :</div>
