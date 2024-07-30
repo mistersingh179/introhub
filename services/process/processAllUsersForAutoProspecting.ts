@@ -2,7 +2,11 @@ import prisma from "@/prismaClient";
 import HighQueue from "@/bull/queues/highQueue";
 
 const processAllUsersForAutoProspecting = async () => {
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    where: {
+      agreedToAutoProspecting: true
+    }
+  });
   for (const user of users) {
     const jobObj = await HighQueue.add("processUserForAutoProspecting", user);
     const { name, id } = jobObj;
