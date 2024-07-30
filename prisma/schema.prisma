@@ -70,6 +70,7 @@ model User {
   profileImageName         String?
   wantsToMeet              WantedContact[]
   agreedToAutoProspecting  Boolean         @default(true)
+  unableToAutoProspect     Boolean         @default(false)
 
   @@index([email])
 }
