@@ -111,7 +111,7 @@ const getProspectsBasedOnFilters = async (
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} 
             ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} 
             ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
-        and C."userId" != ${user.id}
+        and C."userId" != ${user.id} and U."agreedToAutoProspecting" = true
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
@@ -132,8 +132,11 @@ const getProspectsBasedOnFilters = async (
                left join public."Category" CAT on CPC."categoryId" = CAT.id
                left join public."Introduction" I
                          on I."contactId" = C.id and I."requesterId" = ${user.id}
-      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
-        and C."userId" != ${user.id}
+      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql}
+            ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql}
+            ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql}
+            ${sizeToSql} ${introsMustBeNullRequirement}
+        and C."userId" != ${user.id} and U."agreedToAutoProspecting" = true
   `;
   const countSqlResult = await prisma.$queryRaw<{ count: number }[]>(countSql);
   const filteredRecordsCount = Number(countSqlResult[0].count);
