@@ -16,6 +16,7 @@ import getProfiles from "@/services/getProfiles";
 import { CompanyBox } from "@/app/dashboard/introductions/list/IntroTable";
 import * as React from "react";
 import ShowChildren from "@/components/ShowChildren";
+import { Badge } from "@/components/ui/badge";
 
 const Super = async () => {
   const allUsers = await prisma.user.findMany({
@@ -63,6 +64,13 @@ const Super = async () => {
                   <div className={"flex flex-col gap-4"}>
                     <div>{user.email}</div>
                     <div>{user.id}</div>
+                    <ShowChildren showIt={user.unableToAutoProspect}>
+                      <div>
+                        <Badge variant="destructive">
+                          Unable to Auto Prospect
+                        </Badge>
+                      </div>
+                    </ShowChildren>
                   </div>
                 </TableCell>
                 <TableCell>
