@@ -8,6 +8,7 @@ import getProspectsBasedOnFilters, {
   PaginatedValues,
 } from "@/services/getProspectsBasedOnFilters";
 import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
+import getFacilitatorIdsWhoAreMissingSendScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingSendScope";
 
 const fetchContactFromUserFilters = async (
   user: User,
@@ -18,6 +19,8 @@ const fetchContactFromUserFilters = async (
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
+  const facilitatorIdsWhoAreMissingSendScope =
+    await getFacilitatorIdsWhoAreMissingSendScope();
 
   const filters = await prisma.filters.findMany({
     where: {
@@ -53,11 +56,14 @@ const fetchContactFromUserFilters = async (
           ],
         },
         userId: {
-          notIn: facilitatorIdsUsedRecently,
+          notIn: [
+            ...facilitatorIdsUsedRecently,
+            ...facilitatorIdsWhoAreMissingSendScope,
+          ],
         },
         user: {
-          agreedToAutoProspecting: true
-        }
+          agreedToAutoProspecting: true,
+        },
       },
     });
 
