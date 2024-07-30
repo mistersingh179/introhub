@@ -15,26 +15,13 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-  const intros = await prisma.introduction.groupBy({
-    by: ['facilitatorId'],
+  const ans = await prisma.user.findMany({
     where: {
-      createdAt: {
-        gte: subDays(new Date(), 200)
-      }
-    },
-    _count: {
-      facilitatorId: true,
-    },
-    having: {
-      facilitatorId: {
-        _count: {
-          gte: 2
-        }
-      },
+      agreedToAutoProspecting: true
     }
-  })
+  });
 
-  console.log(intros);
+  console.log(ans);
 })();
 
 export {};
