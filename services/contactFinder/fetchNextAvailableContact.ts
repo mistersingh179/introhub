@@ -4,6 +4,7 @@ import getContactIdsTouchedByUser from "@/services/contactFinder/getContactIdsTo
 import getContactIdsTouchedRecently from "@/services/contactFinder/getContactIdsTouchedRecently";
 import getFacilitatorIdsWhoAlreadyMadeIntros from "@/services/contactFinder/getFacilitatorIdsWhoAlreadyMadeIntros";
 import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
+import getFacilitatorIdsWhoAreMissingSendScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingSendScope";
 
 const fetchNextAvailableContact = async (
   user: User,
@@ -16,6 +17,8 @@ const fetchNextAvailableContact = async (
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
+  const facilitatorIdsWhoAreMissingSendScope =
+    await getFacilitatorIdsWhoAreMissingSendScope();
 
   const nextAvailableContact = await prisma.contact.findFirst({
     where: {
@@ -27,11 +30,15 @@ const fetchNextAvailableContact = async (
         ],
       },
       userId: {
-        notIn: [...facilitatorIdsUsedRecently, user.id],
+        notIn: [
+          ...facilitatorIdsUsedRecently,
+          user.id,
+          ...facilitatorIdsWhoAreMissingSendScope,
+        ],
       },
       user: {
-        agreedToAutoProspecting: true
-      }
+        agreedToAutoProspecting: true,
+      },
     },
   });
   console.log(

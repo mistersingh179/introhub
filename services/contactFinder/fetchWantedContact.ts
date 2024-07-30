@@ -4,6 +4,7 @@ import getContactIdsTouchedByUser from "@/services/contactFinder/getContactIdsTo
 import getContactIdsTouchedRecently from "@/services/contactFinder/getContactIdsTouchedRecently";
 import getFacilitatorIdsWhoAlreadyMadeIntros from "@/services/contactFinder/getFacilitatorIdsWhoAlreadyMadeIntros";
 import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
+import getFacilitatorIdsWhoAreMissingSendScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingSendScope";
 
 const fetchWantedContact = async (user: User): Promise<Contact | null> => {
   const contactIdsOfOthersUsersKnownToThisUser =
@@ -12,6 +13,8 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
+  const facilitatorIdsWhoAreMissingSendScope =
+    await getFacilitatorIdsWhoAreMissingSendScope();
 
   const wantedContact = await prisma.contact.findFirst({
     where: {
@@ -28,11 +31,14 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
         ],
       },
       userId: {
-        notIn: facilitatorIdsUsedRecently,
+        notIn: [
+          ...facilitatorIdsUsedRecently,
+          ...facilitatorIdsWhoAreMissingSendScope,
+        ],
       },
       user: {
-        agreedToAutoProspecting: true
-      }
+        agreedToAutoProspecting: true,
+      },
     },
   });
   console.log("got wantedContact for user: ", user.email, wantedContact);
