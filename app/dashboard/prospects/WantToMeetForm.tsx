@@ -36,7 +36,7 @@ const WantToMeetForm = (props: WantToMeetFormProps) => {
               <SubmitButton size={"icon"} label={<Star />} />
             </TooltipTrigger>
             <TooltipContent className={"w-64"}>
-              Star the Prospect, if you want us to prioritize a intro to them.
+              Star a Prospect to further define your ICP and prioritize an intro to them.
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
