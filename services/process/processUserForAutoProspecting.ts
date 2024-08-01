@@ -3,10 +3,19 @@ import prisma from "@/prismaClient";
 import { Contact, Introduction, User } from "@prisma/client";
 import findBestContactForIntro from "@/services/contactFinder/findBestContactForIntro";
 import generateAnIntroduction from "@/services/generateAnIntroduction";
+import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
+import getProfiles from "@/services/getProfiles";
+import isUserMissingPersonalInfo from "@/services/isUserMissingPersonalInfo";
 
 const processUserForAutoProspecting = async (
   user: User,
 ): Promise<Introduction | null> => {
+  const userMissingPersonalInfo = await isUserMissingPersonalInfo(user);
+  if (userMissingPersonalInfo) {
+    console.log("wont process user as missing personal info", user);
+    return null;
+  }
+
   const prospect = await findBestContactForIntro(user);
   if (prospect) {
     const intro = await generateAnIntroduction(user, prospect);
@@ -40,7 +49,7 @@ if (require.main === module) {
   (async () => {
     const user = await prisma.user.findFirstOrThrow({
       where: {
-        email: "sandeep@introhub.net",
+        email: "ashnoorarneja@gmail.com",
       },
     });
     const ans = await processUserForAutoProspecting(user);
