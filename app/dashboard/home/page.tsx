@@ -119,6 +119,16 @@ export default async function Home() {
         </Alert>
       )}
 
+      {user.missingPersonalInfo && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-8 w-8" />
+          <AlertTitle className={"ml-8"}>Missing Profile</AlertTitle>
+          <AlertDescription className={"ml-8"}>
+            Please check your profile. We are missing critical data.
+          </AlertDescription>
+        </Alert>
+      )}
+
       <div className={"flex flex-col gap-2 md:flex-row items-center"}>
         <div className={"min-w-36 flex flex-row gap-4 items-center"}>
           Google Scope : <RefreshScopesForm />{" "}
