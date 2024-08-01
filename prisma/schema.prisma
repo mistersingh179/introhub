@@ -71,6 +71,7 @@ model User {
   wantsToMeet              WantedContact[]
   agreedToAutoProspecting  Boolean         @default(true)
   unableToAutoProspect     Boolean         @default(false)
+  missingPersonalInfo      Boolean         @default(false)
 
   @@index([email])
 }
