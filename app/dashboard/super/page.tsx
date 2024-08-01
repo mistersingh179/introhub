@@ -71,6 +71,13 @@ const Super = async () => {
                         </Badge>
                       </div>
                     </ShowChildren>
+                    <ShowChildren showIt={user.missingPersonalInfo}>
+                      <div>
+                        <Badge variant="destructive">
+                          Missing Personal Info
+                        </Badge>
+                      </div>
+                    </ShowChildren>
                   </div>
                 </TableCell>
                 <TableCell>
