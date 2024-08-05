@@ -25,8 +25,6 @@ import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import { User } from "@prisma/client";
-import NegativeBalanceAlert from "@/components/NegativeBalanceAlert";
-import ShowChildren from "@/components/ShowChildren";
 import WantToMeetForm from "@/app/dashboard/prospects/WantToMeetForm";
 import { ContactWithUserAndIsWanted } from "@/app/dashboard/prospects/page";
 import WantToNotMeetForm from "@/app/dashboard/prospects/WantToNotMeetForm";
@@ -50,9 +48,6 @@ const ProspectsTable = async ({
   });
   return (
     <>
-      <ShowChildren showIt={user.credits < 0}>
-        <NegativeBalanceAlert />
-      </ShowChildren>
       <Table>
         <TableCaption>Prospects</TableCaption>
         <TableHeader>
