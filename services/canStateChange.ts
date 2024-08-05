@@ -79,7 +79,9 @@ const transitions: Transitions = {
     IntroStates["introducing email sent"],
     IntroStates["introducing email send failure"],
   ],
-  rejected: [],
+  rejected: [
+    IntroStates.approved
+  ],
   cancelled: [],
   "introducing email sent": [],
   "introducing email send failure": [IntroStates["introducing email sent"]],
