@@ -13,7 +13,11 @@ import { z, ZodError } from "zod";
   const schema = z.object({
     name: z.string(),
     age: z.coerce.number(),
-    dailyEmail: z.string().transform((s) => s.toLowerCase() === "true"),
+    dailyEmail: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((s) => (s ? s.toLowerCase() === "true" : false)),
     address: z.string().optional(),
   });
 
