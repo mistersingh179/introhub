@@ -24,6 +24,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { UserPlus } from "lucide-react";
 import getProfiles from "@/services/getProfiles";
+import {Switch} from "@/components/ui/switch";
+import {Label} from "@/components/ui/label";
+import ContactAvailableForm from "@/app/dashboard/my-contacts/ContactAvailableForm";
+import {Badge} from "@/components/ui/badge";
 
 export default async function MyContacts({
   searchParams,
@@ -83,7 +87,7 @@ export default async function MyContacts({
         <TableHeader>
           <TableRow>
             <TableHead className={'w-2/3'}>Contact</TableHead>
-            <TableHead className={'w-1/3'}>Stats</TableHead>
+            <TableHead className={'w-1/3'}>Available</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -141,11 +145,7 @@ const ContactRow = (props: ContactProps) => {
           </div>
         </TableCell>
         <TableCell className={"p-2"}>
-          <div className={"flex flex-col whitespace-nowrap"}>
-            <div>Sent: {contact.sentCount}</div>
-            <div>Received: {contact.receivedCount}</div>
-            <div>Ratio: {contact.sentReceivedRatio / 100}</div>
-          </div>
+          <ContactAvailableForm contact={contact} />
         </TableCell>
       </TableRow>
     </>
