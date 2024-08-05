@@ -39,6 +39,7 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
       user: {
         agreedToAutoProspecting: true,
       },
+      available: true,
     },
   });
   console.log("got wantedContact for user: ", user.email, wantedContact);
