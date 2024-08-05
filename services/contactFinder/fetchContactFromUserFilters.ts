@@ -64,6 +64,7 @@ const fetchContactFromUserFilters = async (
         user: {
           agreedToAutoProspecting: true,
         },
+        available: true,
       },
     });
 

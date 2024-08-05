@@ -33,7 +33,14 @@ const ContactAvailableForm = (props: ContactAvailableFormProps) => {
           defaultChecked={contact.available}
           value={"true"}
           onCheckedChange={(newValue) => {
-            formRef.current?.requestSubmit();
+            const form = formRef.current;
+            if (form) {
+              if (typeof form.requestSubmit === "function") {
+                form.requestSubmit();
+              } else {
+                form.submit();
+              }
+            }
           }}
         />
         <Input type={"hidden"} name={"contactId"} value={contact.id} />
