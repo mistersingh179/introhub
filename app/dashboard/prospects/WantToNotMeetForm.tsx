@@ -35,6 +35,7 @@ const WantToNotMeetForm = (props: WantToNotMeetFormProps) => {
           <Tooltip>
             <TooltipTrigger>
               <SubmitButton
+                variant={"outline"}
                 size={"icon"}
                 label={<Star color={"rgb(147 51 234)"} />}
               />

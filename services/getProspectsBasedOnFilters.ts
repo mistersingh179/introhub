@@ -101,7 +101,8 @@ const getProspectsBasedOnFilters = async (
       select distinct on (C.email) C.*
       from "Contact" C
                inner join public."User" U on U.id = C."userId"
-               inner join public."PersonProfile" PP on C.email = PP.email and PP."linkedInUrl" is not null
+               inner join public."PersonProfile" PP
+                          on C.email = PP.email and PP."linkedInUrl" is not null and PP."fullName" is not null
                inner join public."PersonExperience" PE on PP.id = PE."personProfileId"
                inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
@@ -125,7 +126,8 @@ const getProspectsBasedOnFilters = async (
       select count(distinct C.email)
       from "Contact" C
                inner join public."User" U on U.id = C."userId"
-               inner join public."PersonProfile" PP on C.email = PP.email and PP."linkedInUrl" is not null
+               inner join public."PersonProfile" PP
+                          on C.email = PP.email and PP."linkedInUrl" is not null and PP."fullName" is not null
                inner join public."PersonExperience" PE on PP.id = PE."personProfileId"
                inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
