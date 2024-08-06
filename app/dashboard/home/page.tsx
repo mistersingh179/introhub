@@ -7,7 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 // @ts-ignore
 import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
 import * as React from "react";
-import Link from "next/link";
+import OnBoardingCard from "@/app/dashboard/home/OnBoardingCard";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -53,40 +53,7 @@ export default async function Home() {
         {/*<RefreshStatsForm />*/}
       </div>
 
-      <div>
-        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight my-2">
-          On-boarding Check list
-        </h4>
-        <ul className={"list-disc ml-4"}>
-          <li>
-            <div className={"flex flex-row gap-2"}>
-              <div className={"line-through"}>
-                Log in with Google and provide Send & Metadata Permission
-              </div>
-              <div>✅</div>
-            </div>
-          </li>
-          <li>
-            Go to{" "}
-            <Link href={"/dashboard/prospects"} className={"underline"}>
-              {" "}
-              {"Prospect's"}
-            </Link>{" "}
-            page and create a few filters which represent your ICP
-          </li>
-          <li>
-            {" "}
-            On the{" "}
-            <Link href={"/dashboard/prospects"} className={"underline"}>
-              {" "}
-              {"Prospect's"}
-            </Link>{" "}
-            page star at least a few prospects whom you want to meet and
-            represent your ICP
-          </li>
-          <li>Sit back & relax while we auto prospect for you.</li>
-        </ul>
-      </div>
+      <OnBoardingCard />
 
       {foundSendScope && (
         <Alert variant="default">
@@ -143,21 +110,6 @@ export default async function Home() {
           </AlertDescription>
         </Alert>
       )}
-
-      {/*<TestSheet />*/}
-
-      {/*<div className={"flex flex-row gap-4 items-center"}>*/}
-      {/*  <div className={"min-w-36"}>Access Token :</div>*/}
-      {/*  <div className={'break-all'}>{user.accounts[0].access_token}</div>*/}
-      {/*</div>*/}
-
-      {/*<pre*/}
-      {/*  className={*/}
-      {/*    "bg-yellow-50 text-black dark:bg-yellow-950 dark:text-white my-4 break-all whitespace-pre-wrap"*/}
-      {/*  }*/}
-      {/*>*/}
-      {/*  {JSON.stringify(user.accounts[0].scope, null, 2)}*/}
-      {/*</pre>*/}
     </div>
   );
 }
