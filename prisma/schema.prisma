@@ -139,6 +139,7 @@ model Contact {
   sentReceivedRatio Int
   wantedBy          WantedContact[]
   available         Boolean         @default(true)
+  lastReceivedAt    DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
