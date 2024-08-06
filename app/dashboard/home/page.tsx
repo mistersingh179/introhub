@@ -7,10 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 // @ts-ignore
 import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
 import * as React from "react";
-import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
-import OnBoardUserForm from "@/app/dashboard/home/OnBoardUserForm";
-import ProspectsCountForm from "@/app/dashboard/home/ProspectsCountForm";
-import ShowChildren from "@/components/ShowChildren";
+import Link from "next/link";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -27,17 +24,6 @@ export default async function Home() {
   const sendScope = `https://www.googleapis.com/auth/gmail.send`;
   const foundSendScope = !!scopes.find((val) => val === sendScope);
   // const contactStats = await getContactStats();
-
-  const emailsCount = await prisma.message.count({
-    where: {
-      userId: user.id,
-    },
-  });
-  const contactsCount = await prisma.contact.count({
-    where: {
-      userId: user.id,
-    },
-  });
 
   // const jobTitlesWithCount = await prisma.personExperience.groupBy({
   //   by: "jobTitle",
@@ -67,11 +53,40 @@ export default async function Home() {
         {/*<RefreshStatsForm />*/}
       </div>
 
-      <iframe
-        src="https://drive.google.com/file/d/1NeWsPDQktcs23Qttcen46N1rumXKwKc9/preview"
-        allow="autoplay"
-        className="rounded-xl mx-auto w-full aspect-video"
-      ></iframe>
+      <div>
+        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight my-2">
+          On-boarding Check list
+        </h4>
+        <ul className={"list-disc ml-4"}>
+          <li>
+            <div className={"flex flex-row gap-2"}>
+              <div className={"line-through"}>
+                Log in with Google and provide Send & Metadata Permission
+              </div>
+              <div>✅</div>
+            </div>
+          </li>
+          <li>
+            Go to{" "}
+            <Link href={"/dashboard/prospects"} className={"underline"}>
+              {" "}
+              {"Prospect's"}
+            </Link>{" "}
+            page and create a few filters which represent your ICP
+          </li>
+          <li>
+            {" "}
+            On the{" "}
+            <Link href={"/dashboard/prospects"} className={"underline"}>
+              {" "}
+              {"Prospect's"}
+            </Link>{" "}
+            page star at least a few prospects whom you want to meet and
+            represent your ICP
+          </li>
+          <li>Sit back & relax while we auto prospect for you.</li>
+        </ul>
+      </div>
 
       {foundSendScope && (
         <Alert variant="default">
@@ -128,47 +143,6 @@ export default async function Home() {
           </AlertDescription>
         </Alert>
       )}
-
-      <div className={"flex flex-col gap-2 md:flex-row items-center"}>
-        <div className={"min-w-36 flex flex-row gap-4 items-center"}>
-          Google Scope : <RefreshScopesForm />{" "}
-        </div>
-        <ShowChildren showIt={scopes.length > 0}>
-          <ul className={"list-disc ml-4"}>
-            {scopes.map((x) => (
-              <li key={x}>{x}</li>
-            ))}
-          </ul>
-        </ShowChildren>
-        <ShowChildren showIt={scopes.length == 0}>None</ShowChildren>
-      </div>
-      <div className={"flex flex-col gap-2 md:flex-row"}>
-        <div className={"min-w-36"}>User Id :</div>
-        <div>{user.id}</div>
-      </div>
-      <div className={"flex flex-col gap-2 md:flex-row"}>
-        <div className={"min-w-36"}>Credits:</div>
-        <div>{user.credits}</div>
-      </div>
-      <div className={"flex flex-col gap-2 md:flex-row"}>
-        <div className={"min-w-36"}>Name / Email :</div>
-        <div>
-          {user.name} / {user.email}
-        </div>
-      </div>
-      <div className={"flex flex-col gap-2 md:flex-row"}>
-        <div className={"min-w-36"}>Count:</div>
-        <ul className={"list-disc space-y-2 ml-4"}>
-          <li>Contacts: {contactsCount}</li>
-          <li>Emails: {emailsCount}</li>
-          <li>
-            <OnBoardUserForm />
-          </li>
-          <li>
-            <ProspectsCountForm />
-          </li>
-        </ul>
-      </div>
 
       {/*<TestSheet />*/}
 

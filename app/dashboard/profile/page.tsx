@@ -5,14 +5,18 @@ import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import getProfiles from "@/services/getProfiles";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
-import Link from "next/link";
 import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
+import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
+import ShowChildren from "@/components/ShowChildren";
 
 export default async function Profile() {
   const session = (await auth()) as Session;
   const user = await prisma.user.findFirstOrThrow({
     where: {
       email: session.user?.email ?? "",
+    },
+    include: {
+      accounts: true,
     },
   });
 
@@ -21,22 +25,72 @@ export default async function Profile() {
     await getEmailAndCompanyUrlProfiles([email]);
   const profiles = getProfiles(email, emailToProfile, companyUrlToProfile);
 
+  const emailsCount = await prisma.message.count({
+    where: {
+      userId: user.id,
+    },
+  });
+  const contactsCount = await prisma.contact.count({
+    where: {
+      userId: user.id,
+    },
+  });
+
+  const googleAccount = user.accounts?.find((a) => a.provider === "google");
+  const scopes = googleAccount?.scope?.split(" ") ?? [];
+  const sendScope = `https://www.googleapis.com/auth/gmail.send`;
+  const foundSendScope = !!scopes.find((val) => val === sendScope);
+
   return (
     <>
       <div className={"flex flex-row justify-start items-center gap-4"}>
         <h1 className={"text-2xl my-4"}>Profile</h1>
       </div>
       <div className={"flex flex-col gap-4"}>
-        <ProfileImageForm user={user}/>
-        <div>Name: {user.name} </div>
-        <div>Job Title: {profiles.personExp.jobTitle} </div>
-        <div className={'flex flex-row gap-4 items-center'}>
-          <div>Personal LinkedIn Url:</div>
-          <LinkWithExternalIcon href={profiles.personProfile.linkedInUrl!}/>
+        <ProfileImageForm user={user} />
+        <div className={"flex flex-row"}>
+          <div className={"min-w-48"}>Name :</div> <div>{user.name}</div>
         </div>
-        <div className={'flex flex-row gap-4 items-center'}>
-          <div>Company LinkedIn Url:</div>
-          <LinkWithExternalIcon href={profiles.companyProfile.linkedInUrl}/>
+        <div className={"flex flex-row"}>
+          <div className={"min-w-48"}>Job Title :</div>
+          <div>{profiles.personExp.jobTitle}</div>
+        </div>
+        <div className={"flex flex-row items-center"}>
+          <div className={"min-w-48 "}>Personal LinkedIn Url :</div>
+          <div>
+            <LinkWithExternalIcon href={profiles.personProfile.linkedInUrl!} />
+          </div>
+        </div>
+        <div className={"flex flex-row items-center"}>
+          <div className={"min-w-48"}>Company LinkedIn Url :</div>
+          <LinkWithExternalIcon href={profiles.companyProfile.linkedInUrl} />
+        </div>
+        <div className={"flex flex-row items-center"}>
+          <div className={"min-w-48"}>Contacts :</div>
+          <div>{contactsCount}</div>
+        </div>
+        <div className={"flex flex-row items-center"}>
+          <div className={"min-w-48 "}>Emails :</div>
+          <div>{emailsCount}</div>
+        </div>
+        <div className={"flex flex-row items-center"}>
+          <div className={"min-w-48"}>User Id :</div>
+          <div>{user.id}</div>
+        </div>
+        <div className={"flex flex-row items-center"}>
+          <div className={"min-w-48 flex flex-row items-center"}>
+            Google Scope : <RefreshScopesForm />{" "}
+          </div>
+          <div>
+            <ShowChildren showIt={scopes.length > 0}>
+              <ul className={"list-disc ml-4"}>
+                {scopes.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            </ShowChildren>
+            <ShowChildren showIt={scopes.length == 0}>None</ShowChildren>
+          </div>
         </div>
       </div>
     </>
