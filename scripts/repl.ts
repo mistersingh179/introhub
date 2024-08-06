@@ -34,16 +34,24 @@ prisma.$on("query", (e) => {
     },
   });
   console.log("user: ", user.accounts.length);
-  const result = await sendEmail({
-    from: "me",
-    account: user.accounts[0],
-    subject: "testing labels1",
-    body: "hello world",
-    cc: "",
-    to: "sandeep@introhub.net",
-  });
 
-  console.log(result);
+  let ans:any = await prisma.wantedContact.count({
+    where: {
+      userId: user.id
+    }
+  });
+  console.log('ans: ', ans);
+
+  ans = await prisma.wantedContact.findMany({
+    where: {
+      userId: user.id
+    },
+    include: {
+      contact: true
+    }
+  })
+  console.log('ans: ', ans);
+
 
   // const gmail = await getGmailObject(user.accounts[0]);
   //
