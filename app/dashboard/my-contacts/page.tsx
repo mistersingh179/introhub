@@ -87,7 +87,7 @@ export default async function MyContacts({
         <TableHeader>
           <TableRow>
             <TableHead className={'w-2/3'}>Contact</TableHead>
-            <TableHead className={'w-1/3'}>Available</TableHead>
+            <TableHead className={'w-1/3'}>Make Available</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
