@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import AddCreditsDialog from "@/app/dashboard/super/AddCreditsDialog";
 import ImpersonateForm from "@/app/dashboard/super/ImpersonateForm";
 import FacilitatorBox from "@/components/FacilitatorBox";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
@@ -104,7 +103,6 @@ const Super = async () => {
                 <TableCell>
                   <div className={"flex flex-col gap-4"}>
                     <ImpersonateForm userId={user.id} />
-                    <AddCreditsDialog userId={user.id} />
                   </div>
                 </TableCell>
               </TableRow>
