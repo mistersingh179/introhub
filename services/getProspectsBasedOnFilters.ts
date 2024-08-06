@@ -111,8 +111,10 @@ const getProspectsBasedOnFilters = async (
                          on I."contactId" = C.id and I."requesterId" = ${user.id}
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
         and C."userId" != ${user.id}
-        and U."agreedToAutoProspecting" = true
         and C."available" = true
+        and C."lastReceivedAt"
+          >= now() - INTERVAL '1 year'
+        and U."agreedToAutoProspecting" = true
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
@@ -136,8 +138,10 @@ const getProspectsBasedOnFilters = async (
                          on I."contactId" = C.id and I."requesterId" = ${user.id}
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
         and C."userId" != ${user.id}
-        and U."agreedToAutoProspecting" = true
         and C."available" = true
+        and C."lastReceivedAt"
+          >= now() - INTERVAL '1 year'
+        and U."agreedToAutoProspecting" = true
   `;
   const countSqlResult = await prisma.$queryRaw<{ count: number }[]>(countSql);
   const filteredRecordsCount = Number(countSqlResult[0].count);
