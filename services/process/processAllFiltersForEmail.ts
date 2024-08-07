@@ -6,7 +6,7 @@ import getProspectsBasedOnFilters, {
 } from "@/services/getProspectsBasedOnFilters";
 import prepareProspectsData from "@/services/prepareProspectsData";
 import { getNewProspectsHtml } from "@/email-templates/NewProspects";
-import sendEmail, {systemEmail} from "@/services/emails/sendEmail";
+import sendEmail, { systemEmail } from "@/services/emails/sendEmail";
 import { gmail_v1 } from "googleapis";
 
 export type ProcessAllFiltersForEmailOutput = gmail_v1.Schema$Message[];
@@ -71,7 +71,9 @@ const processAllFiltersForEmail =
         cc: "",
         subject: `Filter ${filtersObj.name} has ${count} new prospect${count == 1 ? "" : "s"}`,
       });
-      emailResponses.push(response);
+      if (response) {
+        emailResponses.push(response);
+      }
     }
     return emailResponses;
   };
