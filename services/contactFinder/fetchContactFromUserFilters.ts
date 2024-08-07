@@ -65,6 +65,7 @@ const fetchContactFromUserFilters = async (
           agreedToAutoProspecting: true,
         },
         available: true,
+        emailCheckPassed: true
       },
     });
 

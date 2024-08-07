@@ -140,6 +140,7 @@ model Contact {
   wantedBy          WantedContact[]
   available         Boolean         @default(true)
   lastReceivedAt    DateTime?
+  emailCheckPassed  Boolean         @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
