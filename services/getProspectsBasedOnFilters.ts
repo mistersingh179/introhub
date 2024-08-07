@@ -112,6 +112,7 @@ const getProspectsBasedOnFilters = async (
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
         and C."userId" != ${user.id}
         and C."available" = true
+        and C."emailCheckPassed" = true
         and C."lastReceivedAt"
           >= now() - INTERVAL '1 year'
         and U."agreedToAutoProspecting" = true
@@ -139,6 +140,7 @@ const getProspectsBasedOnFilters = async (
       where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
         and C."userId" != ${user.id}
         and C."available" = true
+        and C."emailCheckPassed" = true
         and C."lastReceivedAt"
           >= now() - INTERVAL '1 year'
         and U."agreedToAutoProspecting" = true

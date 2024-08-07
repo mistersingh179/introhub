@@ -1,11 +1,9 @@
-import processRateLimitedRequest from "@/services/processRateLimitedRequest";
 import prisma from "@/prismaClient";
-import { Contact, Introduction, User } from "@prisma/client";
+import { Introduction, User } from "@prisma/client";
 import findBestContactForIntro from "@/services/contactFinder/findBestContactForIntro";
 import generateAnIntroduction from "@/services/generateAnIntroduction";
-import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
-import getProfiles from "@/services/getProfiles";
 import isUserMissingPersonalInfo from "@/services/isUserMissingPersonalInfo";
+import isProspectEmailVerified from "@/services/isProspectEmailVerified";
 
 const processUserForAutoProspecting = async (
   user: User,
@@ -17,19 +15,7 @@ const processUserForAutoProspecting = async (
   }
 
   const prospect = await findBestContactForIntro(user);
-  if (prospect) {
-    const intro = await generateAnIntroduction(user, prospect);
-    console.log("auto generated intro: ", user.email, prospect.email, intro.id);
-    await prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        unableToAutoProspect: false,
-      },
-    });
-    return intro;
-  } else {
+  if (!prospect) {
     console.log("unable to find best contact for auto intro: ", user, prospect);
     await prisma.user.update({
       where: {
@@ -41,6 +27,25 @@ const processUserForAutoProspecting = async (
     });
     return null;
   }
+
+  const emailVerified = await isProspectEmailVerified(prospect);
+  if (!emailVerified) {
+    throw new Error("prospect email could not be verified " + prospect.email);
+  }
+
+  const intro = await generateAnIntroduction(user, prospect);
+  console.log("auto generated intro: ", user.email, prospect.email, intro.id);
+
+  await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      unableToAutoProspect: false,
+    },
+  });
+
+  return intro;
 };
 
 export default processUserForAutoProspecting;
