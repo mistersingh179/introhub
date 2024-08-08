@@ -52,8 +52,8 @@ const ProspectsTable = async ({
         <TableCaption>Prospects</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className={"w-1/2"}>Prospect</TableHead>
-            <TableHead className={"w-1/2"}>Introducer</TableHead>
+            <TableHead className={"w-2/3"}>Prospect</TableHead>
+            <TableHead className={"w-1/3"}></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -105,7 +105,6 @@ export const ProspectRow = (props: ProspectRowProps) => {
       <TableRow key={prospect.email}>
         <TableCell className={""}>
           <div className={"flex flex-col gap-4 overflow-hidden"}>
-            {prospect.id}
             <ProspectBox
               contact={prospect}
               personProfile={contactProfiles.personProfile}
@@ -119,10 +118,6 @@ export const ProspectRow = (props: ProspectRowProps) => {
         </TableCell>
         <TableCell className={""}>
           <div className={"flex flex-col gap-4"}>
-            <FacilitatorBox
-              user={prospect.user}
-              personExp={facilitatorProfiles.personExp}
-            />
             {prospect.isWanted ? (
               <WantToNotMeetForm contactId={prospect.id} />
             ) : (

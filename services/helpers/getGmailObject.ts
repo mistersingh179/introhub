@@ -21,10 +21,10 @@ const getGmailObject: GetGmailObject = async (account: Account) => {
     console.error("token expired", formatDistanceToNow(expiresAt), " ago");
     account = await refreshAccessToken(account);
   } else {
-    console.log(
-      "token is good. will expire in",
-      formatDistanceToNow(fromUnixTime(account.expires_at!)),
-    );
+    // console.log(
+    //   "token is good. will expire in",
+    //   formatDistanceToNow(fromUnixTime(account.expires_at!)),
+    // );
   }
 
   const gmail = google.gmail({

@@ -23,7 +23,7 @@ const OnBoardingCard = async () => {
       accounts: true,
     },
   });
-  const weHavePermissions = await checkUserPermissions(user!);
+  const weHavePermissions = await checkUserPermissions(user!.id);
 
   const filtersCount = await prisma.filters.count({
     where: {
