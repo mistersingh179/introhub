@@ -10,7 +10,7 @@ const checkPermissionsAction = async (formData: FormData) => {
       email: session.user?.email ?? "",
     },
   });
-  const ans = await checkUserPermissions(user);
+  const ans = await checkUserPermissions(user.id);
   return ans;
 };
 
