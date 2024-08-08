@@ -102,7 +102,6 @@ export const {
       return !!params.auth?.user;
     },
     async jwt(params) {
-      console.log("*** in jwt callback: ", params);
       const { token, trigger, user } = params;
       if (trigger === "signUp") {
         console.log("user has just signed up: ", user);

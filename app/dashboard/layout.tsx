@@ -28,7 +28,8 @@ export default async function DashboardLayout({
       accounts: true,
     },
   });
-  const weHavePermissions = await checkUserPermissions(user!);
+  const weHavePermissions = await checkUserPermissions(user!.id);
+
   return (
     <div className={""}>
       <div className={"container mx-auto min-h-dvh p-4 flex flex-col"}>
