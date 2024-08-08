@@ -115,7 +115,7 @@ const getProspectsBasedOnFilters = async (
         and C."emailCheckPassed" = true
         and C."lastReceivedAt"
           >= now() - INTERVAL '1 year'
-        and U."agreedToAutoProspecting" = true
+--         and U."agreedToAutoProspecting" = true
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
@@ -143,7 +143,7 @@ const getProspectsBasedOnFilters = async (
         and C."emailCheckPassed" = true
         and C."lastReceivedAt"
           >= now() - INTERVAL '1 year'
-        and U."agreedToAutoProspecting" = true
+--         and U."agreedToAutoProspecting" = true
   `;
   const countSqlResult = await prisma.$queryRaw<{ count: number }[]>(countSql);
   const filteredRecordsCount = Number(countSqlResult[0].count);

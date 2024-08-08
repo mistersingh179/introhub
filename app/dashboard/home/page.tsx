@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
 import * as React from "react";
 import OnBoardingCard from "@/app/dashboard/home/OnBoardingCard";
+import foo from "@/services/foo";
 
 export default async function Home() {
   const session = (await auth()) as Session;

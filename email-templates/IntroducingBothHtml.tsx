@@ -1,20 +1,9 @@
 import * as React from "react";
 import { render } from "@react-email/render";
 import { Profiles } from "@/app/dashboard/introductions/list/IntroTable";
-import { buildS3ImageUrl, getS3Url } from "@/lib/url";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import getFirstName from "@/services/getFirstName";
-import { userProfileS3DirName } from "@/app/utils/constants";
-import {
-  Html,
-  Body,
-  Container,
-  Text,
-  Link,
-  Section,
-} from "@react-email/components";
-
-const { BASE_API_URL } = process.env;
+import { Body, Container, Html, Text } from "@react-email/components";
 
 type IntroducingBothHtmlProps = {
   intro: IntroWithContactFacilitatorAndRequester;
@@ -42,7 +31,7 @@ const IntroducingBothHtml = (props: IntroducingBothHtmlProps) => {
               margin: "0px",
             }}
           >
-            <Text style={{margin: '0px'}}>
+            <Text style={{ margin: "0px" }}>
               Hi {contactName}, {"I'm"} introducing you to {requesterName}, now{" "}
               {"cc'd"}.
               <br />

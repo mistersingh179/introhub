@@ -53,7 +53,6 @@ export default async function NavigationItems({
       <div className={"grow"}></div>
       <ModeToggle />
       <UserProfileImageNav />
-      <CreditsBadge credits={user.credits} />
       <LogoutButton />
     </>
   );
