@@ -59,9 +59,7 @@ const AskPermissionToMakeIntroHtml = (
               >
                 {requesterName}
               </Link>{" "}
-              reached out to me asking for an introduction to you. Before I make
-              the intro I wanted to check-in with you and confirm that you are
-              okay with me introducing you.
+              asked me for an introduction to you. Is that OK with you? Here's the context:
             </Text>
             <Text
               style={{
@@ -80,22 +78,21 @@ const AskPermissionToMakeIntroHtml = (
               their thoughts.
             </Text>
             <Text>
-              Please click below to let me know if you are okay with me
-              introducing you and I will act accordingly.
+              Please click below if you agree to this introduction, and I will arrange it. 
             </Text>
             <Section>
               <Link
                 href={`${BASE_API_URL}/api/intros/${intro.id}/approve?approvalKey=${intro.approvalKey}`}
                 style={{ color: "blue", textDecoration: "underline" }}
               >
-                Sure, make the intro
+                Yes, make the intro.
               </Link>
               <br />
               <Link
                 href={`${BASE_API_URL}/api/intros/${intro.id}/reject?approvalKey=${intro.approvalKey}`}
                 style={{ color: "blue", textDecoration: "underline" }}
               >
-                No, don{"'"}t make the intro
+                No, don{"'"}t make the intro.
               </Link>
             </Section>
             <br />- {facilitatorName}
@@ -106,9 +103,9 @@ const AskPermissionToMakeIntroHtml = (
               href={`https://introhub.net`}
               style={{ color: "blue", textDecoration: "underline" }}
             >
-              introhub
+              IntroHub
             </Link>{" "}
-            to help manage introductions i make.
+            to manage this introduction.
             <br />
             <br />
             <img
