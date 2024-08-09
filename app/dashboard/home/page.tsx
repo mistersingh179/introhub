@@ -56,12 +56,31 @@ export default async function Home() {
 
       <OnBoardingCard />
 
+      {!user.unableToAutoProspect && (
+        <Alert variant="default">
+          <Check className="h-8 w-8" />
+          <AlertTitle className={"ml-8"}>
+            Sit Back, Relax, and Await Introductions
+          </AlertTitle>
+          <AlertDescription className={"ml-8"}>
+            We are automatically prospecting for you based on your ICP. 
+            Keep an eye out for intro emails, where you will be cc'd when 
+            a target prospect consents to an introduction. 
+            In the meantime, visit the{" "}
+                <Link href={"/dashboard/prospects"} className={"underline"}>
+                  {"Prospects"}
+                </Link>{" "}
+            page to add filters and star more profiles.
+          </AlertDescription>
+        </Alert>
+      )}
+      
       {foundSendScope && (
         <Alert variant="default">
           <Check className="h-8 w-8" />
-          <AlertTitle className={"ml-8"}>Permissions Success</AlertTitle>
+          <AlertTitle className={"ml-8"}>Your Account is Ready</AlertTitle>
           <AlertDescription className={"ml-8"}>
-            Google Send Permission was found. Good to go!
+            Google permissions were found. You're ready to get and make intros.
           </AlertDescription>
         </Alert>
       )}
@@ -69,10 +88,10 @@ export default async function Home() {
       {!foundSendScope && (
         <Alert variant="destructive">
           <AlertCircle className="h-8 w-8" />
-          <AlertTitle className={"ml-8"}>Error</AlertTitle>
+          <AlertTitle className={"ml-8"}>Account Creation Error</AlertTitle>
           <AlertDescription className={"ml-8"}>
-            Unable to find Google Send Permission. You need to Log-out, and log
-            back in while granting permissions.
+            You didn't grant us permission to send emails on your behalf. 
+            Please log out, log in, and grant the requested permissions.
           </AlertDescription>
         </Alert>
       )}
@@ -80,24 +99,10 @@ export default async function Home() {
       {user.unableToAutoProspect && (
         <Alert variant="destructive">
           <AlertCircle className="h-8 w-8" />
-          <AlertTitle className={"ml-8"}>Unable to Auto Prospect</AlertTitle>
+          <AlertTitle className={"ml-8"}>Auto Prospecting is Disabled</AlertTitle>
           <AlertDescription className={"ml-8"}>
-            Please consider widening your ICP by starring more prospects and/or
-            creating more prospect filters.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {!user.unableToAutoProspect && (
-        <Alert variant="default">
-          <Check className="h-8 w-8" />
-          <AlertTitle className={"ml-8"}>
-            Auto Prospecting is working for you !
-          </AlertTitle>
-          <AlertDescription className={"ml-8"}>
-            We are able to automatically prospect for you based on your ICP as
-            inferred from the prospects you have starred and filters you have
-            created.
+            Please consider widening your ICP by starring more prospects and / or
+            creating more Prospect filters.
           </AlertDescription>
         </Alert>
       )}
@@ -105,9 +110,13 @@ export default async function Home() {
       {user.missingPersonalInfo && (
         <Alert variant="destructive">
           <AlertCircle className="h-8 w-8" />
-          <AlertTitle className={"ml-8"}>Missing Profile</AlertTitle>
+          <AlertTitle className={"ml-8"}>Missing Profile Information</AlertTitle>
           <AlertDescription className={"ml-8"}>
-            Please check your profile. We are missing critical data.
+            Please check your{" "}
+                <Link href={"/dashboard/profile"} className={"underline"}>
+                  {"Profile"}
+                </Link>
+            . We are missing important information.           
           </AlertDescription>
         </Alert>
       )}
