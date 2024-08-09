@@ -32,58 +32,62 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
         <AlertDialogContent className={"w-full max-w-4xl"}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              🚀 🎉 🙌 IntroHub 2.0 is here 🚀 🎉 🙌{" "}
+              Welcome to IntroHub 2.0 🎉 {" "}
             </AlertDialogTitle>
             <AlertDialogDescription>
               <div>
-                Introhub 2.0 now{" "}
-                <span className={"font-semibold"}>auto prospects</span> and only
-                makes <span className={"font-semibold"}>double opt-in</span>{" "}
-                introductions.
+                We aim to get you more meetings per month with target prospects. 
+                To accomplish this goal, we automated intro requests and 
+                approvals. Here's what you need to know.
               </div>
-              <div className={"mt-4"}>
-                As a <span className={"font-semibold"}>requester</span> of
-                introductions, based on your ICP determined by your saved
-                filters and starred prospects, we automatically prospect for you
-                and request 1 introduction every day for you. This means that an
-                email is sent from the user who knows your prospect, asking
-                them, the prospect, if they would like to be introduced to you.
-                If they say yes, then an email is sent from the facilitator
-                introducing you to the prospect. You will be {"cc'd"} on this
-                email and are expected to then take the conversation from there,
-                building your relationship, closing the deal & bringing it home
-                💪.
+              <h2>Introduction Requests</h2>
+              <div class="mt-4">
+                <ul>
+                  <li style="list-style: inside; margin-bottom: 1em;">
+                    We automatically handle prospecting for you based on your Ideal Customer Profile (ICP). Set your ICP by saving filters and starring profiles on the Prospects page.
+                  </li>
+                  <li style="list-style: inside; margin-bottom: 1em;">
+                    Each day, we'll request an intro to prospects that match your ICP.
+                  </li>
+                  <li style="list-style: inside; margin-bottom: 1em;">
+                    If a prospect consents, then you'll be CC'd on an intro email so you can forge a relationship.
+                  </li>
+                </ul>
               </div>
-              <div className={"mt-4"}>
-                As a <span className={"font-semibold"}>facilitator</span> of
-                introductions, if and when your contacts match a requesters ICP,
-                we automatically send an email on your behalf to your contact
-                asking them if it is cool for them to be introduced to the
-                requester. If they{" "}
-                <span className={"font-semibold"}>explicitly say yes</span> I
-                would like to be introduced,{" "}
-                <span className={"font-semibold"}>then and only then</span> do
-                we introduce them to the requester.
+              <h2>Facilitating Introductions</h2>
+              <div class="mt-4">
+                <ul>
+                  <li style="list-style: inside; margin-bottom: 1em;">
+                    When one of your contacts matches a requester’s ICP, we’ll send an email on your behalf to ask if they're open to an introduction.
+                  </li>
+                  <li style="list-style: inside; margin-bottom: 1em;">
+                    Only with their explicit approval will we facilitate the connection to ensure respect and privacy.
+                  </li>
+                  <li style="list-style: inside; margin-bottom: 1em;">
+                    You're in control. Make any contact 'Unavailable' for intros in the Contacts page.
+                  </li>
+                </ul>
               </div>
-              <div className={"mt-4"}>
-                We have rules in place so that a contact is emailed to take an
-                intro{" "}
-                <span className={"font-semibold"}>
-                  no more than once every 7 days
-                </span>
-                . And we will ask{" "}
-                <span className={"font-semibold"}>
-                  no more than 2 contacts per day
-                </span>{" "}
-                to take an intro. This ensures that none of your contact are
-                burdened with too many intro requests.
-              </div>
+              <h2>Safeguarding Your Reputation</h2>
+              <div class="mt-4">
+                <ul>
+                  <li style="list-style: inside; margin-bottom: 1em;">
+                    To prevent contact fatigue, we limit emails to one per person every 7 days.
+                  </li>
+                  <li style="list-style: inside; margin-bottom: 1em;">
+                    Your account will never send more than two intro requests per day.
+                  </li>
+                </ul>
+              </div>      
+              <div class="mt-4">
+                Ready to get started? Opt in now and begin connecting with prospects!
+              </div>              
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <form action={acceptAutoProspectingAction}>
               <Button type={"submit"} className={"w-full"} autoFocus={true}>
-                I understand & want to use Introhub 2.0
+                Start Using IntroHub 2.0
               </Button>
             </form>
           </AlertDialogFooter>
