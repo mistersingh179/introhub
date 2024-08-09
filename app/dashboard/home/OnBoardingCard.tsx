@@ -49,10 +49,10 @@ const OnBoardingCard = async () => {
   return (
     <Card className={`${hideMe ? "hidden" : ""}`}>
       <CardHeader>
-        <CardTitle>On-boarding Checklist</CardTitle>
+        <CardTitle>Onboarding Checklist</CardTitle>
         <CardDescription>
-          IntroHub will auto-prospect and request introductions for you. For
-          IntroHub to work complete the following tasks.
+          IntroHub will handle prospecting and manage introductions on your behalf. 
+          Complete the tasks below to start building valuable connections effortlessly.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -60,8 +60,7 @@ const OnBoardingCard = async () => {
           <li>
             <div className={"flex flex-row gap-2"}>
               <div className={`${weHavePermissions ? "line-through" : ""}`}>
-                <LogoutLink label={"Log-in"} /> with Google and provide Send &
-                Metadata Permission
+                <LogoutLink label={"Log-in"} /> with Google and provide necessary permissions.
               </div>
               {weHavePermissions && <div> ✅ </div>}
               {!weHavePermissions && <div> ⚠️ ️</div>}
@@ -70,11 +69,11 @@ const OnBoardingCard = async () => {
           <li>
             <div className={"flex flex-row gap-2"}>
               <div className={`${filtersCount > 0 ? "line-through" : ""}`}>
-                Go to{" "}
+                Go to the{" "}
                 <Link href={"/dashboard/prospects"} className={"underline"}>
-                  {"Prospect's"}
+                  {"Prospects"}
                 </Link>{" "}
-                page and create a few filters which represent your ICP
+                page and create a few filters that represent your ICP
               </div>
               {filtersCount > 0 && <div> ✅ </div>}
               {filtersCount === 0 && <div> ⚠️ </div>}
@@ -85,11 +84,11 @@ const OnBoardingCard = async () => {
               <div
                 className={`${wantedProspectsCount > 0 ? "line-through" : ""}`}
               >
-                Go to{" "}
+                Go to the{" "}
                 <Link href={"/dashboard/prospects"} className={"underline"}>
-                  {"Prospect's"}
+                  {"Prospects"}
                 </Link>{" "}
-                page and star at least a few prospects which represent your ICP
+                page and star a few prospects that most accurately reflect your ICP
               </div>
               {wantedProspectsCount > 0 && <div> ✅ </div>}
               {wantedProspectsCount === 0 && <div> ⚠️ </div>}
