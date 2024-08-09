@@ -8,6 +8,7 @@ import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfi
 import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
 import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
 import ShowChildren from "@/components/ShowChildren";
+import { Badge } from "@/components/ui/badge";
 
 export default async function Profile() {
   const session = (await auth()) as Session;
@@ -53,17 +54,32 @@ export default async function Profile() {
         </div>
         <div className={"flex flex-row"}>
           <div className={"min-w-48"}>Job Title :</div>
-          <div>{profiles.personExp.jobTitle}</div>
+          {profiles.personExp.jobTitle && (
+            <div>{profiles.personExp.jobTitle}</div>
+          )}
+          {!profiles.personExp.jobTitle && (
+            <Badge variant={"destructive"}>Missing</Badge>
+          )}
         </div>
         <div className={"flex flex-row items-center"}>
           <div className={"min-w-48 "}>Personal LinkedIn Url :</div>
           <div>
-            <LinkWithExternalIcon href={profiles.personProfile.linkedInUrl!} />
+            {profiles.personProfile.linkedInUrl && (
+              <LinkWithExternalIcon href={profiles.personProfile.linkedInUrl} />
+            )}
+            {!profiles.personProfile.linkedInUrl && (
+              <Badge variant={"destructive"}>Missing</Badge>
+            )}
           </div>
         </div>
         <div className={"flex flex-row items-center"}>
           <div className={"min-w-48"}>Company LinkedIn Url :</div>
-          <LinkWithExternalIcon href={profiles.companyProfile.linkedInUrl} />
+          {profiles.companyProfile.linkedInUrl && (
+            <LinkWithExternalIcon href={profiles.companyProfile.linkedInUrl} />
+          )}
+          {!profiles.companyProfile.linkedInUrl && (
+            <Badge variant={"destructive"}>Missing</Badge>
+          )}
         </div>
         <div className={"flex flex-row items-center"}>
           <div className={"min-w-48"}>Contacts :</div>
