@@ -13,7 +13,8 @@ export async function GET(request: Request) {
   const intro: IntroWithContactFacilitatorAndRequester =
     await prisma.introduction.findFirstOrThrow({
       where: {
-        // facilitator: user,
+        id: 'clzlgc91i0001ss9skoxm8wlx',
+        requester: user,
         // status: IntroStates["approved"],
       },
       include: {
@@ -22,7 +23,10 @@ export async function GET(request: Request) {
         requester: true,
       },
     });
-  const html = await sendAskingPermissionToMakeIntroEmail(intro, false);
+
+  console.log("*** intro: ", intro);
+
+  const html = await sendAskingPermissionToMakeIntroEmail(intro, true);
   const htmlBody = html.replaceAll("\r\n", "<br>");
   console.log("htmlBody: ", htmlBody);
 

@@ -1,9 +1,12 @@
 export const superUsers = [
-  'sandeep@introhub.net',
-  'rod@introhub.net',
-  'mistersingh179@gmail.com'
-]
+  "sandeep@introhub.net",
+  "rod@introhub.net",
+  "mistersingh179@gmail.com",
+];
 
 export const userProfileS3DirName = "user-profile-images";
 
 export const rodEmail = "rod@introhub.net";
+
+export const defaultForwardableBlurb =
+  "Hi {facilitator-name}, I noticed you're connected to {prospect-name}. I'm really impressed by their work at {prospect-company-name}.\r\n\r\nCan you introduce us? I'm looking for a 15-minute chat to hear their thoughts.";

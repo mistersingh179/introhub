@@ -1,17 +1,16 @@
 import * as React from "react";
 import { render } from "@react-email/render";
 import { Profiles } from "@/app/dashboard/introductions/list/IntroTable";
-import { buildS3ImageUrl, getS3Url } from "@/lib/url";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import getFirstName from "@/services/getFirstName";
-import { userProfileS3DirName } from "@/app/utils/constants";
+import { defaultForwardableBlurb } from "@/app/utils/constants";
 import {
-  Html,
   Body,
   Container,
-  Text,
+  Html,
   Link,
   Section,
+  Text,
 } from "@react-email/components";
 
 const { BASE_API_URL, ZROK_BASE_API_URL } = process.env;
@@ -31,9 +30,24 @@ const AskPermissionToMakeIntroHtml = (
     "An IntroHub User",
   );
   const requesterLinkedInUrl = requestProfiles.personProfile.linkedInUrl;
-  const contactName = getFirstName(contactProfiles.personProfile.fullName);
-  const contactCompanyName = contactProfiles.personExp.companyName;
+  const prospectName = getFirstName(contactProfiles.personProfile.fullName);
+  const prospectCompanyName = contactProfiles.personExp.companyName ?? "";
   const facilitatorName = getFirstName(intro.facilitator.name);
+
+  let forwardableBlurb =
+    intro.requester.forwardableBlurb || defaultForwardableBlurb;
+  forwardableBlurb = forwardableBlurb.replaceAll(
+    "{facilitator-name}",
+    facilitatorName,
+  );
+  forwardableBlurb = forwardableBlurb.replaceAll(
+    "{prospect-name}",
+    prospectName,
+  );
+  forwardableBlurb = forwardableBlurb.replaceAll(
+    "{prospect-company-name}",
+    prospectCompanyName,
+  );
 
   return (
     <>
@@ -50,7 +64,7 @@ const AskPermissionToMakeIntroHtml = (
             }}
           >
             <Text>
-              Hi {contactName},
+              Hi {prospectName},
               <br />
               <br />
               <Link
@@ -69,13 +83,14 @@ const AskPermissionToMakeIntroHtml = (
                 color: "#555",
               }}
             >
-              Hi {facilitatorName}, I noticed {"you're"} connected to{" "}
-              {contactName}. {"I'm"} really impressed by their work at{" "}
-              {contactCompanyName}.
-              <br />
-              <br />
-              Can you introduce us? {"I'm"} looking for a 15-minute chat to hear{" "}
-              their thoughts.
+              {forwardableBlurb}
+              {/*Hi {facilitatorName}, I noticed {"you're"} connected to{" "}*/}
+              {/*{contactName}. {"I'm"} really impressed by their work at{" "}*/}
+              {/*{contactCompanyName}.*/}
+              {/*<br />*/}
+              {/*<br />*/}
+              {/*Can you introduce us? {"I'm"} looking for a 15-minute chat to hear{" "}*/}
+              {/*their thoughts.*/}
             </Text>
             <Text>
               Please click below if you agree to this introduction, and I will arrange it. 
