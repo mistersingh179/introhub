@@ -38,7 +38,7 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
                 To accomplish this goal, we automated intro requests and
                 approvals. {"Here's"} what you need to know.
               </div>
-              <h2>Introduction Requests</h2>
+              <h2 style={{ margin: '1em 0', fontWeight: 'bold', fontSize: 'medium' }}>Introduction Requests</h2>
               <div className="mt-4">
                 <ul>
                   <li
@@ -74,7 +74,7 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
                   </li>
                 </ul>
               </div>
-              <h2>Facilitating Introductions</h2>
+              <h2 style={{ margin: '1em 0', fontWeight: 'bold', fontSize: 'medium' }}>Facilitating Introductions</h2>
               <div className="mt-4">
                 <ul>
                   <li
@@ -110,7 +110,7 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
                   </li>
                 </ul>
               </div>
-              <h2>Safeguarding Your Reputation</h2>
+              <h2 style={{ margin: '1em 0', fontWeight: 'bold', fontSize: 'medium' }}>Safeguarding Your Reputation</h2>
               <div className="mt-4">
                 <ul>
                   <li
