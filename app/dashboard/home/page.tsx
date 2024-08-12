@@ -9,6 +9,7 @@ import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
 import * as React from "react";
 import OnBoardingCard from "@/app/dashboard/home/OnBoardingCard";
 import foo from "@/services/foo";
+import Link from "next/link";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -64,7 +65,7 @@ export default async function Home() {
           </AlertTitle>
           <AlertDescription className={"ml-8"}>
             We are automatically prospecting for you based on your ICP. 
-            Keep an eye out for intro emails, where you will be cc'd when 
+            Keep an eye out for intro emails, where you will be {"cc'd"} when
             a target prospect consents to an introduction. 
             In the meantime, visit the{" "}
                 <Link href={"/dashboard/prospects"} className={"underline"}>
@@ -80,7 +81,7 @@ export default async function Home() {
           <Check className="h-8 w-8" />
           <AlertTitle className={"ml-8"}>Your Account is Ready</AlertTitle>
           <AlertDescription className={"ml-8"}>
-            Google permissions were found. You're ready to get and make intros.
+            Google permissions were found. {"You're"} ready to get and make intros.
           </AlertDescription>
         </Alert>
       )}
@@ -90,7 +91,7 @@ export default async function Home() {
           <AlertCircle className="h-8 w-8" />
           <AlertTitle className={"ml-8"}>Account Creation Error</AlertTitle>
           <AlertDescription className={"ml-8"}>
-            You didn't grant us permission to send emails on your behalf. 
+            You {"didn't"} grant us permission to send emails on your behalf.
             Please log out, log in, and grant the requested permissions.
           </AlertDescription>
         </Alert>
