@@ -1,7 +1,7 @@
 import prisma from "@/prismaClient";
-import { IntroStates, IntroStatesKey } from "@/lib/introStates";
+import { IntroStates } from "@/lib/introStates";
 import fs from "fs";
-import canStateChange, {goingToChangeIntroStatus} from "@/services/canStateChange";
+import { goingToChangeIntroStatus } from "@/services/canStateChange";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 
@@ -22,20 +22,24 @@ type OptionsType = {
 
 export async function GET(request: Request, { params }: OptionsType) {
   try {
-    console.log("track open here");
+    console.log("track open here: ", [...request.headers]);
 
     const { id } = params;
     await goingToChangeIntroStatus(id, IntroStates["permission email opened"]);
     await prisma.introduction.update({
       where: {
-        id
+        id,
       },
       data: {
         status: IntroStates["permission email opened"],
       },
     });
   } catch (err) {
-    console.log("error happened while marking intro as ", IntroStates["permission email opened"]);
+    console.log(
+      "error happened while marking intro as ",
+      IntroStates["permission email opened"],
+      err,
+    );
   }
 
   const responseImage =
