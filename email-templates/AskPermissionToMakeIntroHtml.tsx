@@ -122,12 +122,12 @@ const AskPermissionToMakeIntroHtml = (
               IntroHub
             </Link>{" "}
             to manage this introduction.
-            <br />
-            <br />
-            <img
-              src={`${process.env.NODE_ENV === "development" ? ZROK_BASE_API_URL : BASE_API_URL}/api/intros/${intro.id}/opened`}
-              alt=""
-            ></img>
+            {/*<br />*/}
+            {/*<br />*/}
+            {/*<img*/}
+            {/*  src={`${process.env.NODE_ENV === "development" ? ZROK_BASE_API_URL : BASE_API_URL}/api/intros/${intro.id}/opened`}*/}
+            {/*  alt=""*/}
+            {/*></img>*/}
           </Container>
         </Body>
       </Html>

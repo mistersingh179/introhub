@@ -36,10 +36,7 @@ const sendEmail: SendEmail = async (input) => {
     process.env.NODE_ENV === "production" ? to : "mistersingh179@gmail.com";
   const ccFixed =
     process.env.NODE_ENV === "production" ? cc : "mistersingh179@gmail.com";
-  const bccFixed =
-    process.env.NODE_ENV === "production"
-      ? "sandeep@introhub.net,rod@introhub.net"
-      : "";
+  const bccFixed = process.env.NODE_ENV === "production" ? "" : "";
 
   const messageParts = [
     `From: ${from}`,
@@ -79,11 +76,14 @@ const sendEmail: SendEmail = async (input) => {
     await takePostEmailAction(!!res.data.id, postEmailActionData);
     return res.data;
   } catch (err) {
-    await takePostEmailAction(false, postEmailActionData)
+    await takePostEmailAction(false, postEmailActionData);
   }
 };
 
-const takePostEmailAction = async (success: boolean, postEmailActionData?: PostEmailActionData) => {
+const takePostEmailAction = async (
+  success: boolean,
+  postEmailActionData?: PostEmailActionData,
+) => {
   if (postEmailActionData) {
     const { intro, successState, failureState } = postEmailActionData;
     const newState = success ? successState : failureState;
