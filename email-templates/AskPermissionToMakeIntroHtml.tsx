@@ -73,7 +73,8 @@ const AskPermissionToMakeIntroHtml = (
               >
                 {requesterName}
               </Link>{" "}
-              asked me for an introduction to you. Is that OK with you? Here's the context:
+              asked me for an introduction to you. Is that OK with you?{" "}
+              {"Here's"} the context:
             </Text>
             <Text
               style={{
@@ -93,7 +94,7 @@ const AskPermissionToMakeIntroHtml = (
               {/*their thoughts.*/}
             </Text>
             <Text>
-              Please click below if you agree to this introduction, and I will arrange it. 
+              Please click below if you agree to this introduction, and I will arrange it.
             </Text>
             <Section>
               <Link
