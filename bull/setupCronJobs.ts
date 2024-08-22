@@ -33,19 +33,19 @@ const addEnrichAllContacts = async () => {
   console.log("schedule job: ", name, id, opts);
 };
 
-const addEnrichAllRemainingContactsUsingApollo = async () => {
-  const jobObj = await apolloQueue.add(
-    "enrichAllRemainingContactsUsingApollo",
-    null,
-    {
-      repeat: {
-        pattern: "0 10 * * *",
-      },
-    },
-  );
-  const { name, id, opts } = jobObj;
-  console.log("schedule job: ", name, id, opts);
-};
+// const addEnrichAllRemainingContactsUsingApollo = async () => {
+//   const jobObj = await apolloQueue.add(
+//     "enrichAllRemainingContactsUsingApollo",
+//     null,
+//     {
+//       repeat: {
+//         pattern: "0 10 * * *",
+//       },
+//     },
+//   );
+//   const { name, id, opts } = jobObj;
+//   console.log("schedule job: ", name, id, opts);
+// };
 
 const addEnrichAllRemainingUsersUsingApollo = async () => {
   const jobObj = await apolloQueue.add(
@@ -113,7 +113,7 @@ const setupCronJobs = async () => {
   await addDownloadMessagesForAllAccounts();
   await addBuildContactsForAllUsers();
   await addEnrichAllContacts();
-  await addEnrichAllRemainingContactsUsingApollo();
+  // await addEnrichAllRemainingContactsUsingApollo();
   await addEnrichAllRemainingUsersUsingApollo();
   await addSendProspectsCreateToday();
   await addProcessAllFiltersForEmail();

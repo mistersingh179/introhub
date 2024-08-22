@@ -17,6 +17,7 @@ import {
 import { randomInt } from "node:crypto";
 import enrichAllRemainingContactsUsingApollo from "@/services/enrichAllRemainingContactsUsingApollo";
 import enrichAllRemainingUsersUsingApollo from "@/services/enrichAllRemainingUsersUsingApollo";
+import peopleEnrichmentApiResponse from "@/services/peopleEnrichmentApiResponse";
 
 const queueName = "apollo";
 
@@ -38,6 +39,35 @@ function calculateTimeToNextWindow(
   }
 }
 
+const handleRateLimiting = async (
+  apolloWorker: Worker<
+    ApolloInputDataType,
+    ApolloOutputDataType,
+    ApolloJobNames
+  >,
+  rateLimitInfo: ApolloRateLimitInfo,
+) => {
+  const randomStop = randomInt(1, 10);
+  console.log("rateLimitInfo: ", rateLimitInfo, randomStop);
+
+  if (rateLimitInfo["x-minute-requests-left"] <= randomStop) {
+    const waitTime = calculateTimeToNextWindow("minute");
+    console.log("manually rate limiting for minute: ", waitTime);
+    await apolloWorker.rateLimit(waitTime);
+    throw Worker.RateLimitError();
+  } else if (rateLimitInfo["x-hourly-requests-left"] <= randomStop) {
+    const waitTime = calculateTimeToNextWindow("hour");
+    console.log("manually rate limiting for hour: ", waitTime);
+    await apolloWorker.rateLimit(waitTime);
+    throw Worker.RateLimitError();
+  } else if (rateLimitInfo["x-24-hour-requests-left"] <= randomStop) {
+    const waitTime = calculateTimeToNextWindow("day");
+    console.log("manually rate limiting for 24 hour: ", waitTime);
+    await apolloWorker.rateLimit(waitTime);
+    throw Worker.RateLimitError();
+  }
+};
+
 const apolloWorker: Worker<
   ApolloInputDataType,
   ApolloOutputDataType,
@@ -48,30 +78,22 @@ const apolloWorker: Worker<
     const { name, data, opts } = job;
     console.log("in processing function", name);
     switch (job.name) {
+      case "peopleEnrichmentApiResponse": {
+        const contactEmail = data as string;
+        const result = await peopleEnrichmentApiResponse(contactEmail);
+        const { response, rateLimitInfo } = result;
+        if (rateLimitInfo) {
+          await handleRateLimiting(apolloWorker, rateLimitInfo);
+        }
+        return response;
+      }
       case "enrichContactUsingApollo": {
         const input = data as string;
         const result = await enrichContactUsingApollo(input);
         if (result) {
           const { response, rateLimitInfo } = result;
           if (rateLimitInfo) {
-            const randomStop = randomInt(1, 10);
-            console.log("rateLimitInfo: ", rateLimitInfo, randomStop);
-            if (rateLimitInfo["x-minute-requests-left"] <= randomStop) {
-              const waitTime = calculateTimeToNextWindow("minute");
-              console.log("manually rate limiting for minute: ", waitTime);
-              await apolloWorker.rateLimit(waitTime);
-              throw Worker.RateLimitError();
-            } else if (rateLimitInfo["x-hourly-requests-left"] <= randomStop) {
-              const waitTime = calculateTimeToNextWindow("hour");
-              console.log("manually rate limiting for hour: ", waitTime);
-              await apolloWorker.rateLimit(waitTime);
-              throw Worker.RateLimitError();
-            } else if (rateLimitInfo["x-24-hour-requests-left"] <= randomStop) {
-              const waitTime = calculateTimeToNextWindow("day");
-              console.log("manually rate limiting for 24 hour: ", waitTime);
-              await apolloWorker.rateLimit(waitTime);
-              throw Worker.RateLimitError();
-            }
+            await handleRateLimiting(apolloWorker, rateLimitInfo);
           }
           return response;
         }
@@ -121,7 +143,13 @@ apolloWorker.on("drained", () => {
 });
 
 apolloWorker.on("failed", (job) => {
-  console.log("apolloWorker failed: ", job?.name, job?.id, job?.data, job?.stacktrace);
+  console.log(
+    "apolloWorker failed: ",
+    job?.name,
+    job?.id,
+    job?.data,
+    job?.stacktrace,
+  );
 });
 
 apolloWorker.on("ready", () => {

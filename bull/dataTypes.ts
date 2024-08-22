@@ -55,6 +55,7 @@ export type HighJobNames =
 export type ProxyCurlJobNames = "enrichContact" | "enrichAllContacts";
 
 export type ApolloJobNames =
+  | "peopleEnrichmentApiResponse"
   | "enrichContactUsingApollo"
   | "enrichAllRemainingContactsUsingApollo"
   | "enrichAllRemainingUsersUsingApollo";

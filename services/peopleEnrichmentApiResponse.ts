@@ -20,9 +20,10 @@ const peopleEnrichmentApiResponse = async (
         response: record.response as unknown as PeopleEnrichmentResponse,
         rateLimitInfo: undefined,
       };
+    }else{
+      console.log("cache did not help for: ", email);
     }
   }
-  console.log("cache did not help for: ", email);
 
   const data = await peopleEnrichmentApiCall(email);
   const { response, rateLimitInfo } = data;

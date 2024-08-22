@@ -1,10 +1,6 @@
-import ProxyCurlQueue, {
-  proxyCurlQueueEvents,
-} from "@/bull/queues/proxyCurlQueue";
 import MediumQueue, { mediumQueueEvents } from "@/bull/queues/mediumQueue";
 import prisma from "@/prismaClient";
-import proxyCurlQueue from "@/bull/queues/proxyCurlQueue";
-import getContactStats from "@/services/getContactStats";
+import ApolloQueue from "@/bull/queues/apolloQueue";
 
 export type OnBoardUserInput = {
   userId: string;
@@ -26,9 +22,7 @@ const onBoardUser: OnBoardUser = async (input) => {
   const email = user.email!;
   const account = user.accounts[0];
 
-  await ProxyCurlQueue.add("enrichContact", {
-    email,
-  });
+  await ApolloQueue.add("enrichContactUsingApollo", email);
 
   const downloadMessagesJob = await MediumQueue.add("downloadMessages", {
     account: account,
@@ -52,7 +46,7 @@ const onBoardUser: OnBoardUser = async (input) => {
     },
   });
   for (const contact of contacts) {
-    await proxyCurlQueue.add("enrichContact", { email: contact.email });
+    await ApolloQueue.add("enrichContactUsingApollo", email);
   }
 };
 

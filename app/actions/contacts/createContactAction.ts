@@ -7,7 +7,8 @@ import { z, ZodError } from "zod";
 import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import enrichContact from "@/services/enrichContact";
+import enrichContactUsingApollo from "@/services/enrichContactUsingApollo";
+import ApolloQueue from "@/bull/queues/apolloQueue";
 
 const createContactActionSchema = z.object({
   email: z.string().max(100).min(5),
@@ -50,8 +51,7 @@ export default async function createContactAction(
     });
     console.log("contact created: ", contact);
 
-    await enrichContact({email});
-
+    await ApolloQueue.add("enrichContactUsingApollo", email);
   } catch (e) {
     if (e instanceof ZodError) {
       return e.flatten();

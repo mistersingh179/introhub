@@ -1,10 +1,6 @@
 import prisma from "../prismaClient";
-
-import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
-import { IntroStates } from "@/lib/introStates";
-import getGmailObject from "@/services/helpers/getGmailObject";
-import { startOfToday, subDays } from "date-fns";
-import sendEmail from "@/services/emails/sendEmail";
+import refreshAccessToken from "@/services/helpers/refreshAccessToken";
+import sleep from "@/lib/sleep";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -20,9 +16,20 @@ prisma.$on("query", (e) => {
     where: {
       agreedToAutoProspecting: true,
     },
+    include: {
+      accounts: true,
+    },
   });
-  console.log("users: ", users);
-
+  // console.log("users: ", users);
+  for (const user of users) {
+    try {
+      await refreshAccessToken(user.accounts[0]!);
+      console.log("good with: ", user.email);
+    } catch (err) {
+      console.log("*** error with: ", user.email);
+    }
+    await sleep(250);
+  }
 })();
 
 export {};
