@@ -81,6 +81,7 @@ export const {
           access_type: "offline",
         },
       },
+      allowDangerousEmailAccountLinking: true,
     }),
     Credentials({
       credentials: {
@@ -96,7 +97,7 @@ export const {
         return user;
       },
     }),
-  ],
+],
   callbacks: {
     authorized: (params) => {
       return !!params.auth?.user;
