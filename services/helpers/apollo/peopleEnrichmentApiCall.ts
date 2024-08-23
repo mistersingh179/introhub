@@ -1,5 +1,5 @@
-import emailLookupByProxyUrl from "@/services/helpers/proxycurl/emailLookupApiCall";
 import loadEnvVariables from "@/lib/loadEnvVariables";
+import { ApolloTooManyRequestsError } from "@/services/helpers/apollo/ApolloTooManyRequestsError";
 
 export type ApolloEnrichResponseWithLimitInfo = {
   response: PeopleEnrichmentResponse;
@@ -44,10 +44,14 @@ const peopleEnrichmentApiCall: PeopleEnrichmentApiCall = async (email) => {
   };
 
   console.log("peopleEnrichmentCall: ", email, res.status, rateLimitInfo);
-
-  const data = (await res.json()) as PeopleEnrichmentResponse;
-  console.log("peopleEnrichmentCall: ", email, data);
-  return { response: data, rateLimitInfo: rateLimitInfo };
+  if (res.status == 429) {
+    console.log("peopleEnrichmentCall got rate limited!");
+    throw new ApolloTooManyRequestsError("got 429 from apollo", rateLimitInfo);
+  } else {
+    const data = (await res.json()) as PeopleEnrichmentResponse;
+    console.log("peopleEnrichmentCall: ", email, data);
+    return { response: data, rateLimitInfo: rateLimitInfo };
+  }
 };
 
 export default peopleEnrichmentApiCall;

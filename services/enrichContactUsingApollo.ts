@@ -9,7 +9,6 @@ import { ApolloEnrichResponseWithLimitInfo } from "@/services/helpers/apollo/peo
 const enrichContactUsingApollo = async (
   email: string,
 ): Promise<ApolloEnrichResponseWithLimitInfo | null> => {
-
   console.log("In enrichContactUsingApollo with: ", email);
   const personProfile = await prisma.personProfile.findFirst({
     where: {
