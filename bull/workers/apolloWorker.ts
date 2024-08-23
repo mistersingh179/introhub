@@ -55,17 +55,20 @@ const handleRateLimiting = async (
   console.log("rateLimitInfo: ", rateLimitInfo, randomStop);
 
   if (rateLimitInfo["x-minute-requests-left"] <= randomStop) {
-    const waitTime = calculateTimeToNextWindow("minute");
+    const additionalDelay = randomInt(5, 15) * 1_000; // 5 to 15 seconds
+    const waitTime = calculateTimeToNextWindow("minute") + additionalDelay;
     console.log("manually rate limiting for minute: ", waitTime);
     await apolloWorker.rateLimit(waitTime);
     throw Worker.RateLimitError();
   } else if (rateLimitInfo["x-hourly-requests-left"] <= randomStop) {
-    const waitTime = calculateTimeToNextWindow("hour");
+    const additionalDelay = randomInt(2, 5) * 60 * 1_000; // 5 to 5 minutes
+    const waitTime = calculateTimeToNextWindow("hour") + additionalDelay;
     console.log("manually rate limiting for hour: ", waitTime);
     await apolloWorker.rateLimit(waitTime);
     throw Worker.RateLimitError();
   } else if (rateLimitInfo["x-24-hour-requests-left"] <= randomStop) {
-    const waitTime = calculateTimeToNextWindow("day");
+    const additionalDelay = randomInt(20, 40) * 60 * 1_000; // 20 to 40 minutes
+    const waitTime = calculateTimeToNextWindow("day") + additionalDelay;
     console.log("manually rate limiting for 24 hour: ", waitTime);
     await apolloWorker.rateLimit(waitTime);
     throw Worker.RateLimitError();
