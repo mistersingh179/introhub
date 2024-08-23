@@ -55,6 +55,6 @@ export default emailLookupByProxyUrl;
 
 if (require.main === module) {
   (async () => {
-    await emailLookupByProxyUrl("sandeep@brandweaver.ai");
+    await emailLookupByProxyUrl("adam@google.com");
   })();
 }

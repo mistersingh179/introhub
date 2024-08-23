@@ -1,9 +1,6 @@
 import prisma from "../prismaClient";
-import { subYears } from "date-fns";
-import sleep from "@/lib/sleep";
 import ApolloQueue from "@/bull/queues/apolloQueue";
-import ApolloWorker from "@/bull/workers/apolloWorker";
-import {Contact, Prisma} from "@prisma/client";
+import { Contact, Prisma } from "@prisma/client";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -17,9 +14,9 @@ prisma.$on("query", (e) => {
 (async () => {
   console.log("in manuallyBuildPeopleEnrichmentApiResponseForAll");
 
-  const maxPagesCount = 100;
-  const take = 2
-  const pages = Array.from({ length: 10 }, (elem, idx) => idx + 1);
+  const maxPagesCount = 200;
+  const take = 100;
+  const pages = Array.from({ length: maxPagesCount }, (elem, idx) => idx + 1);
 
   for (const pageNumber of pages) {
     const skip = (pageNumber - 1) * take;
@@ -42,7 +39,7 @@ prisma.$on("query", (e) => {
     }
 
     console.log(contacts.length);
-    if(contacts.length === 0){
+    if (contacts.length === 0) {
       console.log("breaking as no more contacts left to enrich");
       break;
     }

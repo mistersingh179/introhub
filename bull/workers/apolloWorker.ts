@@ -18,13 +18,15 @@ import { randomInt } from "node:crypto";
 import enrichAllRemainingContactsUsingApollo from "@/services/enrichAllRemainingContactsUsingApollo";
 import enrichAllRemainingUsersUsingApollo from "@/services/enrichAllRemainingUsersUsingApollo";
 import peopleEnrichmentApiResponse from "@/services/peopleEnrichmentApiResponse";
+import { UTCDate } from "@date-fns/utc";
+import { ApolloTooManyRequestsError } from "@/services/helpers/apollo/ApolloTooManyRequestsError";
 
 const queueName = "apollo";
 
 function calculateTimeToNextWindow(
   windowType: "minute" | "hour" | "day",
 ): number {
-  const now = new Date();
+  const now = new UTCDate();
 
   switch (windowType) {
     case "minute":
@@ -45,8 +47,10 @@ const handleRateLimiting = async (
     ApolloOutputDataType,
     ApolloJobNames
   >,
-  rateLimitInfo: ApolloRateLimitInfo,
+  rateLimitInfo?: ApolloRateLimitInfo,
 ) => {
+  if (!rateLimitInfo) return;
+
   const randomStop = randomInt(1, 10);
   console.log("rateLimitInfo: ", rateLimitInfo, randomStop);
 
@@ -80,22 +84,33 @@ const apolloWorker: Worker<
     switch (job.name) {
       case "peopleEnrichmentApiResponse": {
         const contactEmail = data as string;
-        const result = await peopleEnrichmentApiResponse(contactEmail);
-        const { response, rateLimitInfo } = result;
-        if (rateLimitInfo) {
+        try {
+          const result = await peopleEnrichmentApiResponse(contactEmail);
+          const { response, rateLimitInfo } = result;
           await handleRateLimiting(apolloWorker, rateLimitInfo);
+          return response;
+        } catch (err) {
+          if (err instanceof ApolloTooManyRequestsError) {
+            console.log("caught apollo error: ", err.rateLimitInfo);
+            await handleRateLimiting(apolloWorker, err.rateLimitInfo);
+          }
         }
-        return response;
+        return undefined;
       }
       case "enrichContactUsingApollo": {
         const input = data as string;
-        const result = await enrichContactUsingApollo(input);
-        if (result) {
-          const { response, rateLimitInfo } = result;
-          if (rateLimitInfo) {
+        try {
+          const result = await enrichContactUsingApollo(input);
+          if (result) {
+            const { response, rateLimitInfo } = result;
             await handleRateLimiting(apolloWorker, rateLimitInfo);
+            return response;
           }
-          return response;
+        } catch (err) {
+          if (err instanceof ApolloTooManyRequestsError) {
+            console.log("caught apollo error: ", err.rateLimitInfo);
+            await handleRateLimiting(apolloWorker, err.rateLimitInfo);
+          }
         }
         return undefined;
       }
@@ -113,7 +128,7 @@ const apolloWorker: Worker<
     connection: redisClient,
     concurrency: Number(process.env.WORKER_CONCURRENCY_COUNT),
     limiter: {
-      max: 20, // Max 20 requests per minute
+      max: 195, // Max 195 requests per minute
       duration: 60 * 1000, // 60,000 ms (1 minute)
     },
     autorun: false,
