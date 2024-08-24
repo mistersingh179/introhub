@@ -68,7 +68,8 @@ const handleRateLimiting = async (
     throw Worker.RateLimitError();
   } else if (rateLimitInfo["x-24-hour-requests-left"] <= randomStop) {
     const additionalDelay = randomInt(20, 40) * 60 * 1_000; // 20 to 40 minutes
-    const waitTime = calculateTimeToNextWindow("day") + additionalDelay;
+    // const waitTime = calculateTimeToNextWindow("day") + additionalDelay;
+    const waitTime = 1 * 60 * 60 * 1_000 + additionalDelay; // 1 hour + additional
     console.log("manually rate limiting for 24 hour: ", waitTime);
     await apolloWorker.rateLimit(waitTime);
     throw Worker.RateLimitError();
