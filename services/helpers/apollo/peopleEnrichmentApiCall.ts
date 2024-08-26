@@ -16,7 +16,7 @@ const peopleEnrichmentApiCall: PeopleEnrichmentApiCall = async (email) => {
     email,
   };
 
-  console.log("peopleEnrichmentApiCall: ", process.env.APOLLO_API_KEY, body);
+  // console.log("peopleEnrichmentApiCall: ", process.env.APOLLO_API_KEY, body);
 
   const res = await fetch(url, {
     method: "POST",
@@ -43,7 +43,7 @@ const peopleEnrichmentApiCall: PeopleEnrichmentApiCall = async (email) => {
     "x-rate-limit-minute": Number(res.headers.get("x-rate-limit-minute")),
   };
 
-  console.log("peopleEnrichmentCall: ", email, res.status, rateLimitInfo);
+  console.log("peopleEnrichmentCall: ", new Date(), email, res.status, rateLimitInfo);
   if (res.status == 429) {
     console.log("peopleEnrichmentCall got rate limited!");
     throw new ApolloTooManyRequestsError("got 429 from apollo", rateLimitInfo);

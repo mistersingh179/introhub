@@ -73,6 +73,7 @@ model User {
   unableToAutoProspect     Boolean         @default(false)
   missingPersonalInfo      Boolean         @default(false)
   forwardableBlurb         String          @default("")
+  tokenIssue               Boolean         @default(false)
 
   @@index([email])
 }
