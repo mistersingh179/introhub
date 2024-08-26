@@ -114,6 +114,7 @@ export const ProspectRow = (props: ProspectRowProps) => {
               companyProfile={contactProfiles.companyProfile}
               personExp={contactProfiles.personExp}
             />
+            {process.env.NODE_ENV === "development" ? prospect.email : ""}
           </div>
         </TableCell>
         <TableCell className={""}>

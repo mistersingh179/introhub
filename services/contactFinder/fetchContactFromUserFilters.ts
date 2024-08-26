@@ -63,6 +63,7 @@ const fetchContactFromUserFilters = async (
         },
         user: {
           agreedToAutoProspecting: true,
+          tokenIssue: false,
         },
         available: true,
         emailCheckPassed: true

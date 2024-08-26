@@ -38,6 +38,7 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
       },
       user: {
         agreedToAutoProspecting: true,
+        tokenIssue: false,
       },
       available: true,
       emailCheckPassed: true,
