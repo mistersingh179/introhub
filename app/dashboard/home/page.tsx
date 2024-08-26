@@ -8,8 +8,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import roleBasedEmailAddressesListTemp from "role-based-email-addresses";
 import * as React from "react";
 import OnBoardingCard from "@/app/dashboard/home/OnBoardingCard";
-import foo from "@/services/foo";
 import Link from "next/link";
+import LogOutSimpleLink from "@/app/dashboard/home/LogOutSimpleLink";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -64,24 +64,24 @@ export default async function Home() {
             Sit Back, Relax, and Await Introductions
           </AlertTitle>
           <AlertDescription className={"ml-8"}>
-            We are automatically prospecting for you based on your ICP. 
-            Keep an eye out for intro emails, where you will be {"cc'd"} when
-            a target prospect consents to an introduction. 
-            In the meantime, visit the{" "}
-                <Link href={"/dashboard/prospects"} className={"underline"}>
-                  {"Prospects"}
-                </Link>{" "}
+            We are automatically prospecting for you based on your ICP. Keep an
+            eye out for intro emails, where you will be {"cc'd"} when a target
+            prospect consents to an introduction. In the meantime, visit the{" "}
+            <Link href={"/dashboard/prospects"} className={"underline"}>
+              {"Prospects"}
+            </Link>{" "}
             page to add filters and star more profiles.
           </AlertDescription>
         </Alert>
       )}
-      
+
       {foundSendScope && (
         <Alert variant="default">
           <Check className="h-8 w-8" />
           <AlertTitle className={"ml-8"}>Your Account is Ready</AlertTitle>
           <AlertDescription className={"ml-8"}>
-            Google permissions were found. {"You're"} ready to get and make intros.
+            Google permissions were found. {"You're"} ready to get and make
+            intros.
           </AlertDescription>
         </Alert>
       )}
@@ -92,7 +92,21 @@ export default async function Home() {
           <AlertTitle className={"ml-8"}>Account Creation Error</AlertTitle>
           <AlertDescription className={"ml-8"}>
             You {"didn't"} grant us permission to send emails on your behalf.
-            Please log out, log in, and grant the requested permissions.
+            Please <LogOutSimpleLink />, log in, and grant the requested
+            permissions.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {user.tokenIssue && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-8 w-8" />
+          <AlertTitle className={"ml-8"}>
+            Google OAuth Token Issue Detected
+          </AlertTitle>
+          <AlertDescription className={"ml-8"}>
+            We are unable to generate a Google Access Token for you. Please{" "}
+            <LogOutSimpleLink /> and log back in.
           </AlertDescription>
         </Alert>
       )}
@@ -100,10 +114,12 @@ export default async function Home() {
       {user.unableToAutoProspect && (
         <Alert variant="destructive">
           <AlertCircle className="h-8 w-8" />
-          <AlertTitle className={"ml-8"}>Auto Prospecting is Disabled</AlertTitle>
+          <AlertTitle className={"ml-8"}>
+            Auto Prospecting is Disabled
+          </AlertTitle>
           <AlertDescription className={"ml-8"}>
-            Please consider widening your ICP by starring more prospects and / or
-            creating more Prospect filters.
+            Please consider widening your ICP by starring more prospects and /
+            or creating more Prospect filters.
           </AlertDescription>
         </Alert>
       )}
@@ -111,13 +127,15 @@ export default async function Home() {
       {user.missingPersonalInfo && (
         <Alert variant="destructive">
           <AlertCircle className="h-8 w-8" />
-          <AlertTitle className={"ml-8"}>Missing Profile Information</AlertTitle>
+          <AlertTitle className={"ml-8"}>
+            Missing Profile Information
+          </AlertTitle>
           <AlertDescription className={"ml-8"}>
             Please check your{" "}
-                <Link href={"/dashboard/profile"} className={"underline"}>
-                  {"Profile"}
-                </Link>
-            . We are missing important information.           
+            <Link href={"/dashboard/profile"} className={"underline"}>
+              {"Profile"}
+            </Link>
+            . We are missing important information.
           </AlertDescription>
         </Alert>
       )}

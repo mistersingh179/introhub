@@ -77,6 +77,13 @@ const Super = async () => {
                         </Badge>
                       </div>
                     </ShowChildren>
+                    <ShowChildren showIt={user.tokenIssue}>
+                      <div>
+                        <Badge variant="destructive">
+                          Token Issue Encountered
+                        </Badge>
+                      </div>
+                    </ShowChildren>
                   </div>
                 </TableCell>
                 <TableCell>
