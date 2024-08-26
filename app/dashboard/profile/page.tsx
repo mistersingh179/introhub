@@ -64,10 +64,10 @@ export default async function Profile() {
         <div className={"flex flex-row items-center"}>
           <div className={"min-w-48 "}>Personal LinkedIn Url :</div>
           <div>
-            {profiles.personProfile.linkedInUrl && (
+            {profiles.personProfile?.linkedInUrl && (
               <LinkWithExternalIcon href={profiles.personProfile.linkedInUrl} />
             )}
-            {!profiles.personProfile.linkedInUrl && (
+            {!profiles.personProfile?.linkedInUrl && (
               <Badge variant={"destructive"}>Missing</Badge>
             )}
           </div>
