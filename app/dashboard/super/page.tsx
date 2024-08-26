@@ -16,6 +16,7 @@ import { CompanyBox } from "@/app/dashboard/introductions/list/IntroTable";
 import * as React from "react";
 import ShowChildren from "@/components/ShowChildren";
 import { Badge } from "@/components/ui/badge";
+import AddLinkedInUrlDialog from "@/app/dashboard/super/AddLinkedInUrlDialog";
 
 const Super = async () => {
   const allUsers = await prisma.user.findMany({
@@ -110,6 +111,9 @@ const Super = async () => {
                 <TableCell>
                   <div className={"flex flex-col gap-4"}>
                     <ImpersonateForm userId={user.id} />
+                    <ShowChildren showIt={user.missingPersonalInfo}>
+                      <AddLinkedInUrlDialog userEmail={user.email!} />
+                    </ShowChildren>
                   </div>
                 </TableCell>
               </TableRow>
