@@ -87,7 +87,7 @@ const addProcessAllUsersForAutoProspecting = async () => {
     undefined,
     {
       repeat: {
-        pattern: "0 9 * * *",
+        pattern: "0 15 * * *",
       },
     },
   );
