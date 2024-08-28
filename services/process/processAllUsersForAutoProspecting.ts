@@ -14,18 +14,6 @@ const processAllUsersForAutoProspecting = async () => {
     const { name, id } = jobObj;
     console.log("scheduled job for auto prospecting: ", name, id);
   }
-  const rodUser = await prisma.user.findFirst({
-    where: {
-      email: "rod@introhub.net",
-    },
-  });
-  if (rodUser) {
-    Array.from({ length: 3 }).map(async (x) => {
-      await HighQueue.add("processUserForAutoProspecting", rodUser, {
-        attempts: 3,
-      });
-    });
-  }
 };
 
 export default processAllUsersForAutoProspecting;

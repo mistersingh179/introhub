@@ -1,4 +1,5 @@
 import prisma from "../prismaClient";
+import sleep from "@/lib/sleep";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -11,9 +12,10 @@ prisma.$on("query", (e) => {
 
 (async () => {
 
-  Array.from({ length: 2 }).map(async (x) => {
+  for(const i of Array.from({ length: 2 })){
     console.log("In here");
-  });
+    await sleep(500);
+  };
 
 
 })();
