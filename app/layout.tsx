@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import type { Viewport } from "next";
 import Script from "next/script";
+import LinkedInAds from "@/app/utils/LinkedInAds";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,6 +36,9 @@ export default function RootLayout({
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "mt0cpz8e8x");`}
       </Script>
+
+      {process.env.NODE_ENV === "production" && <LinkedInAds />}
+
       <body className={`${inter.className}`}>
         <ThemeProvider
           attribute="class"
