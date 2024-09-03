@@ -177,6 +177,8 @@ model PersonProfile {
   @@index([city])
   @@index([state])
   @@index([email])
+  @@index([seniority])
+  @@index([isLikelyToEngage])
 }
 
 model PersonExperience {
@@ -193,6 +195,7 @@ model PersonExperience {
 
   @@index([personProfileId])
   @@index([jobTitle])
+  @@index([companyName])
 }
 
 model CompanyProfile {
@@ -212,8 +215,13 @@ model CompanyProfile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([size])
   @@index([website])
   @@index([industry])
+  @@index([foundedYear])
+  @@index([latestFundingRoundDate])
+  @@index([latestFundingStage])
+  @@index([publiclyTradedExchange])
   @@index([linkedInUrl])
 }
 
