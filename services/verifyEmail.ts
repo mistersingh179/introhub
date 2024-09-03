@@ -32,7 +32,7 @@ const verifyEmail = async (email: string): Promise<boolean> => {
       return ans.status === "valid";
     }
   } catch (err) {
-    console.log("got error when fetching zero bounce api: ", err);
+    console.log("got error when fetching zero bounce api: ", email, err);
     return true;
   }
 };

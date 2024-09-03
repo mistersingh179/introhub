@@ -3,14 +3,20 @@ import {
   CompanyProfile,
   CompanyProfileCategory,
   Contact,
+  Department,
   PersonExperience,
   PersonProfile,
+  PersonProfileDepartment,
+  PersonProfileWorkFunction,
+  WorkFunction,
 } from "@prisma/client";
 import getContactStats from "@/services/getContactStats";
 import prisma from "@/prismaClient";
 
 export type PersonProfileWithExp = PersonProfile & {
   personExperiences: PersonExperience[];
+  departments: (PersonProfileDepartment & { department: Department })[];
+  workFunctions: (PersonProfileWorkFunction & { workFunction: WorkFunction })[];
 };
 export type CompanyProfileWithCategories = CompanyProfile & {
   categories: (CompanyProfileCategory & { category: Category })[];
@@ -37,6 +43,16 @@ const getEmailAndCompanyUrlProfiles = async (
       },
       include: {
         personExperiences: true,
+        departments: {
+          include: {
+            department: true,
+          },
+        },
+        workFunctions: {
+          include: {
+            workFunction: true,
+          },
+        },
       },
     });
   const emailToProfile = personProfiles.reduce<EmailToProfile>((acc, pp) => {

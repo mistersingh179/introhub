@@ -155,8 +155,8 @@ model Contact {
 }
 
 model PersonProfile {
-  id                String             @id @default(cuid())
-  email             String             @unique
+  id                String                      @id @default(cuid())
+  email             String                      @unique
   personExperiences PersonExperience[]
   linkedInUrl       String?
   fullName          String?
@@ -164,6 +164,11 @@ model PersonProfile {
   country           String?
   state             String?
   lastUpdatedAt     DateTime?
+  seniority         String?
+  isLikelyToEngage  Boolean?
+  headline          String?
+  workFunctions     PersonProfileWorkFunction[]
+  departments       PersonProfileDepartment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -191,15 +196,18 @@ model PersonExperience {
 }
 
 model CompanyProfile {
-  id          String                   @id @default(cuid())
-  categories  CompanyProfileCategory[]
-  linkedInUrl String                   @unique
-  website     String?
-  sizeFrom    Int?
-  sizeTo      Int?
-  size        Int?
-  industry    String?
-  foundedYear Int?
+  id                     String                   @id @default(cuid())
+  categories             CompanyProfileCategory[]
+  linkedInUrl            String                   @unique
+  website                String?
+  sizeFrom               Int?
+  sizeTo                 Int?
+  size                   Int?
+  industry               String?
+  foundedYear            Int?
+  latestFundingStage     String?
+  latestFundingRoundDate DateTime?
+  publiclyTradedExchange String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -225,6 +233,54 @@ model Category {
   id              String                   @id @default(cuid())
   name            String                   @unique
   companyProfiles CompanyProfileCategory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+}
+
+model PersonProfileWorkFunction {
+  personProfileId String
+  personProfile   PersonProfile @relation(fields: [personProfileId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  workFunctionId  String
+  workFunction    WorkFunction  @relation(fields: [workFunctionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([personProfileId, workFunctionId])
+}
+
+model WorkFunction {
+  id   String @id @default(cuid())
+  name String @unique
+
+  personProfiles PersonProfileWorkFunction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+}
+
+model PersonProfileDepartment {
+  personProfileId String
+  personProfile   PersonProfile @relation(fields: [personProfileId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  departmentId    String
+  department      Department    @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([personProfileId, departmentId])
+}
+
+model Department {
+  id   String @id @default(cuid())
+  name String @unique
+
+  personProfiles PersonProfileDepartment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

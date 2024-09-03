@@ -42,15 +42,49 @@ const enrichContactUsingApollo = async (
     city: person.city,
     country: person.country,
     state: person.state,
+    seniority: person.seniority,
+    isLikelyToEngage: person.is_likely_to_engage,
+    headline: person.headline,
+
     personExperiences: {
       create: [
         {
           companyLinkedInUrl: organization.linkedin_url,
           companyName: organization.name,
           jobDescription: organization.short_description,
-          jobTitle: person.title,
+          jobTitle: person.title.replaceAll("|", ""),
         },
       ],
+    },
+
+    workFunctions: {
+      create: person["functions"].map((wf: string) => ({
+        workFunction: {
+          connectOrCreate: {
+            create: {
+              name: wf,
+            },
+            where: {
+              name: wf,
+            },
+          },
+        },
+      })),
+    },
+
+    departments: {
+      create: person.departments.map((d: string) => ({
+        department: {
+          connectOrCreate: {
+            create: {
+              name: d,
+            },
+            where: {
+              name: d,
+            },
+          },
+        },
+      })),
     },
   };
 
@@ -84,8 +118,13 @@ const enrichContactUsingApollo = async (
     data: {
       linkedInUrl: organization.linkedin_url,
       website: organization.website_url,
+      size: organization.estimated_num_employees,
       industry: organization.industry,
       foundedYear: organization.founded_year,
+      latestFundingStage: organization.latest_funding_stage,
+      latestFundingRoundDate: organization.latest_funding_round_date,
+      publiclyTradedExchange: organization.publicly_traded_exchange,
+
       categories: {
         create: organization.keywords.map((k: string) => ({
           category: {

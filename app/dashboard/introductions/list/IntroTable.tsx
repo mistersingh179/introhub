@@ -30,7 +30,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   CompanyProfileWithCategories,
   CompanyUrlToProfile,
-  EmailToProfile,
+  EmailToProfile, PersonProfileWithExp,
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { buildS3ImageUrl, getS3Url } from "@/lib/url";
@@ -276,7 +276,7 @@ export const CompanyBox = ({
 };
 
 export type Profiles = {
-  personProfile: PersonProfile;
+  personProfile: PersonProfileWithExp;
   personExp: PersonExperience;
   companyProfile: CompanyProfileWithCategories;
 };

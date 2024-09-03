@@ -46,6 +46,7 @@ interface PeopleEnrichmentResponse {
     subdepartments: string[];
     functions: string[];
     seniority: string;
+    is_likely_to_engage: boolean| null;
   };
 }
 
