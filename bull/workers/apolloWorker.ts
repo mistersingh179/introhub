@@ -132,7 +132,8 @@ const apolloWorker: Worker<
     connection: redisClient,
     concurrency: Number(process.env.WORKER_CONCURRENCY_COUNT),
     limiter: {
-      max: 195, // Max 195 requests per minute
+      // max: 195, // Max 195 requests per minute
+      max: 2000, // Max 195 requests per minute
       duration: 60 * 1000, // 60,000 ms (1 minute)
     },
     autorun: false,
