@@ -24,7 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import * as React from "react";
-import { lightFormat } from "date-fns";
+import { isDate, lightFormat } from "date-fns";
 
 export default async function ShowContact({
   params,
@@ -46,12 +46,24 @@ export default async function ShowContact({
   const email = contact.email;
   const { emailToProfile, companyUrlToProfile } =
     await getEmailAndCompanyUrlProfiles([email]);
-  const { personExp, companyProfile, personProfile } = getProfiles(
-    email,
-    emailToProfile,
-    companyUrlToProfile,
+  const {
+    personExp,
+    companyProfile,
+    personProfile
+  } =
+    getProfiles(
+      email,
+      emailToProfile,
+      companyUrlToProfile,
   );
   const categoryNames = getCategoryNames(companyProfile);
+  const departmentNames = personProfile.departments.map(
+    (d) => d.department.name,
+  );
+  const workFunctionNames = personProfile.workFunctions.map(
+    (wf) => wf.workFunction.name,
+  );
+
   const messages = await prisma.message.findMany({
     where: {
       user: user,
@@ -82,14 +94,6 @@ export default async function ShowContact({
       <div className={"flex flex-col gap-4 mt-6"}>
         <div className={"flex flex-row gap-8 items-center"}>
           <h1 className={"text-2xl my-2"}>Prospect Profile</h1>
-          <ShowChildren showIt={contact.userId !== user.id}>
-            <Button asChild className={"max-w-96"}>
-              <Link href={`/dashboard/introductions/create/${id}`}>
-                Create Intro
-                <SquarePen size={18} className={"ml-2"} />
-              </Link>
-            </Button>
-          </ShowChildren>
         </div>
         <ProspectBox
           contact={contact}
@@ -102,6 +106,21 @@ export default async function ShowContact({
           personExp={personExp}
           showLinkedInUrls={true}
         />
+
+        <div className={"flex flex-row gap-4"}>
+          <div>Seniority:</div>
+          <div>{personProfile.seniority}</div>
+        </div>
+
+        <div className={"flex flex-row gap-4"}>
+          <div>Headline:</div>
+          <div>{personProfile.headline}</div>
+        </div>
+
+        <div className={"flex flex-row gap-4"}>
+          <div>Is likely to engage:</div>
+          <div>{personProfile.isLikelyToEngage ? "yes" : "no"}</div>
+        </div>
 
         <div className={"flex flex-row gap-4"}>
           <div>Job Description:</div>
@@ -140,10 +159,37 @@ export default async function ShowContact({
           </div>
         </div>
 
+          <div className={"flex flex-row gap-4"}>
+            <div>Departments:</div>
+            <div className={"space-x-2"}>
+              {departmentNames.map((d) => (
+                <Badge key={"d"}>{d}</Badge>
+              ))}
+            </div>
+          </div>
+
+        <ShowChildren showIt={workFunctionNames.length > 0}>
+          <div className={"flex flex-row gap-4"}>
+            <div>Work Functions:</div>
+            <div className={"space-x-2"}>
+              {workFunctionNames.map((wf) => (
+                <Badge key={"wf"}>{wf}</Badge>
+              ))}
+            </div>
+          </div>
+        </ShowChildren>
+
         <ShowChildren showIt={!!companyProfile.industry}>
           <div className={"flex flex-row gap-4"}>
             <div>Industry:</div>
             <div>{companyProfile.industry}</div>
+          </div>
+        </ShowChildren>
+
+        <ShowChildren showIt={!!companyProfile.publiclyTradedExchange}>
+          <div className={"flex flex-row gap-4"}>
+            <div>Publicly Traded Exchange:</div>
+            <div>{companyProfile.publiclyTradedExchange}</div>
           </div>
         </ShowChildren>
 
@@ -153,6 +199,22 @@ export default async function ShowContact({
             <div>{companyProfile.foundedYear}</div>
           </div>
         </ShowChildren>
+
+        <ShowChildren showIt={!!companyProfile.latestFundingStage}>
+          <div className={"flex flex-row gap-4"}>
+            <div>Latest Funding Stage:</div>
+            <div>{companyProfile.latestFundingStage}</div>
+          </div>
+        </ShowChildren>
+
+        {isDate(companyProfile.latestFundingRoundDate) && (
+          <div className={"flex flex-row gap-4"}>
+            <div>Latest Funding Round Date:</div>
+            <div>
+              {lightFormat(companyProfile.latestFundingRoundDate, "MM-dd-yyyy")}
+            </div>
+          </div>
+        )}
 
         <ShowChildren showIt={categoryNames.length > 0}>
           <div className={"flex flex-row gap-4"}>
