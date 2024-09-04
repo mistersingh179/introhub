@@ -5,7 +5,6 @@ import { FancyOption } from "@/components/FancyOption";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
-import MyDropDown from "@/app/dashboard/home/MyDropDown";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, X } from "lucide-react";
@@ -18,6 +17,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import ShowChildren from "@/components/ShowChildren";
+import dynamic from "next/dynamic";
+
+const MyDropDown = dynamic(() => import("@/app/dashboard/home/MyDropDown"), {
+  ssr: false,
+});
 
 const buildOptions = (values: string[]): FancyOption[] => {
   return values.map((rec) => ({ label: rec, value: rec }));

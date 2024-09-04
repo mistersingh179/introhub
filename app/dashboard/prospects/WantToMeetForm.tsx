@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {usePathname, useSearchParams} from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 type WantToMeetFormProps = {
   contactId: string;
@@ -32,8 +32,8 @@ const WantToMeetForm = (props: WantToMeetFormProps) => {
         <ErrorMessage description={JSON.stringify(errorMessage, null, 2)} />
       </ShowChildren>
       <form action={dispatch}>
-        <input type={"hidden"} name={"desire"} value={"true"}/>
-        <input type={"hidden"} name={"contactId"} value={contactId}/>
+        <input type={"hidden"} name={"desire"} value={"true"} />
+        <input type={"hidden"} name={"contactId"} value={contactId} />
         <input
           type={"hidden"}
           name={"callbackUrl"}
@@ -41,11 +41,11 @@ const WantToMeetForm = (props: WantToMeetFormProps) => {
         />
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <SubmitButton
-                variant={'outline'}
+                variant={"outline"}
                 size={"icon"}
-                label={<Star/>}
+                label={<Star />}
               />
             </TooltipTrigger>
             <TooltipContent className={"w-64"}>
