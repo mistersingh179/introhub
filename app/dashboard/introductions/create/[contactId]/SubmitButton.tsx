@@ -19,18 +19,26 @@ type SubmitButtonProps = {
     | undefined;
   beDisabled?: boolean;
 }; /**/
-export default function SubmitButton(props: SubmitButtonProps) {
-  const { size, label, className, beDisabled, variant } = props;
-  const { pending } = useFormStatus();
-  return (
-    <Button
-      className={className}
-      type={"submit"}
-      variant={variant}
-      disabled={pending || beDisabled}
-      size={size}
-    >
-      {label ?? "Submit"}
-    </Button>
-  );
-}
+
+const SubmitButton = React.forwardRef<HTMLButtonElement, SubmitButtonProps>(
+  (props, ref) => {
+    const { size, label, className, beDisabled, variant } = props;
+    const { pending } = useFormStatus();
+    return (
+      <Button
+        ref={ref}
+        className={className}
+        type={"submit"}
+        variant={variant}
+        disabled={pending || beDisabled}
+        size={size}
+      >
+        {label ?? "Submit"}
+      </Button>
+    );
+  },
+);
+
+SubmitButton.displayName = "SubmitButton";
+
+export default SubmitButton;

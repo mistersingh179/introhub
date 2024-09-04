@@ -42,7 +42,7 @@ const WantToNotMeetForm = (props: WantToNotMeetFormProps) => {
         />
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <SubmitButton
                 variant={"outline"}
                 size={"icon"}
