@@ -14,6 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type WantToNotMeetFormProps = {
   contactId: string;
@@ -23,6 +24,9 @@ const WantToNotMeetForm = (props: WantToNotMeetFormProps) => {
   const { contactId } = props;
   const action = wantToMeetAction;
   const [errorMessage, dispatch] = useFormState(action, undefined);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   return (
     <>
       <ShowChildren showIt={!!errorMessage}>
@@ -31,6 +35,11 @@ const WantToNotMeetForm = (props: WantToNotMeetFormProps) => {
       <form action={dispatch}>
         <input type={"hidden"} name={"desire"} value={"false"} />
         <input type={"hidden"} name={"contactId"} value={contactId} />
+        <input
+          type={"hidden"}
+          name={"callbackUrl"}
+          value={`${pathname}?${searchParams}`}
+        />
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>

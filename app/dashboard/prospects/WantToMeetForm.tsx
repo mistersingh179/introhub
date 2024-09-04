@@ -13,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {usePathname, useSearchParams} from "next/navigation";
 
 type WantToMeetFormProps = {
   contactId: string;
@@ -22,21 +23,29 @@ const WantToMeetForm = (props: WantToMeetFormProps) => {
   const { contactId } = props;
   const action = wantToMeetAction;
   const [errorMessage, dispatch] = useFormState(action, undefined);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   return (
     <>
       <ShowChildren showIt={!!errorMessage}>
         <ErrorMessage description={JSON.stringify(errorMessage, null, 2)} />
       </ShowChildren>
       <form action={dispatch}>
-        <input type={"hidden"} name={"desire"} value={"true"} />
-        <input type={"hidden"} name={"contactId"} value={contactId} />
+        <input type={"hidden"} name={"desire"} value={"true"}/>
+        <input type={"hidden"} name={"contactId"} value={contactId}/>
+        <input
+          type={"hidden"}
+          name={"callbackUrl"}
+          value={`${pathname}?${searchParams}`}
+        />
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
               <SubmitButton
                 variant={'outline'}
                 size={"icon"}
-                label={<Star />}
+                label={<Star/>}
               />
             </TooltipTrigger>
             <TooltipContent className={"w-64"}>

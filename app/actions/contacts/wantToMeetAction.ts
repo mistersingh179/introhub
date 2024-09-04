@@ -10,6 +10,7 @@ import prisma from "@/prismaClient";
 const wantToMeetActionSchema = z.object({
   desire: z.string().transform((s) => s.toLowerCase() === "true"),
   contactId: z.string(),
+  callbackUrl: z.string(),
 });
 
 type WantToMeetActionFlattenErrorType = z.inferFlattenedErrors<
@@ -26,12 +27,16 @@ export default async function wantToMeetAction(
       email: session.user?.email ?? "",
     },
   });
-  console.log("wantToMeetAction", [...formData.entries()])
+  let redirectUrl = "/dashboard/prospects";
+
+  console.log("wantToMeetAction", [...formData.entries()]);
   try {
-    const { desire, contactId } = wantToMeetActionSchema.parse({
+    const { desire, contactId, callbackUrl } = wantToMeetActionSchema.parse({
       desire: formData.get("desire"),
       contactId: formData.get("contactId"),
+      callbackUrl: formData.get("callbackUrl"),
     });
+    redirectUrl = callbackUrl;
 
     console.log("wantToMeetAction: ", desire, contactId);
 
@@ -62,6 +67,6 @@ export default async function wantToMeetAction(
     }
   }
 
-  revalidatePath("/dashboard/prospects");
-  redirect("/dashboard/prospects");
+  revalidatePath(redirectUrl);
+  redirect(redirectUrl);
 }
