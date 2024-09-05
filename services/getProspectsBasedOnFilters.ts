@@ -85,11 +85,11 @@ const getProspectsBasedOnFilters = async (
     : Prisma.sql``;
 
   const sizeFromSql = sizeFrom
-    ? Prisma.sql`and CP."sizeFrom" >= ${Number(sizeFrom)}`
+    ? Prisma.sql`and CP."size" >= ${Number(sizeFrom)}`
     : Prisma.sql``;
 
   const sizeToSql = sizeTo
-    ? Prisma.sql`and CP."sizeTo" <= ${Number(sizeTo)}`
+    ? Prisma.sql`and CP."size" <= ${Number(sizeTo)}`
     : Prisma.sql``;
 
   const introsMustBeNullRequirement =
