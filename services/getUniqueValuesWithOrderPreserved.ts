@@ -9,7 +9,7 @@ const getUniqueValuesWithOrderPreserved = <Key extends string>(
   records: RecordWithCount<Key>[],
   key: Key
 ) => {
-  console.log("Hello world: ", records);
+  console.log("getUniqueValuesWithOrderPreserved: ", records);
   const uniqueJobTitles = new Map<string, null>();
   records.forEach(rec => {
     const trimmedValue = rec[key]?.trim();

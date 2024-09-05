@@ -180,7 +180,7 @@ const MyDropDown = (props: MyDropDownProps): React.ReactElement => {
       <AsyncSelect
         styles={customStyles}
         placeholder={placeholder}
-        // cacheOptions
+        cacheOptions
         defaultOptions
         isMulti
         hideSelectedOptions={true}
