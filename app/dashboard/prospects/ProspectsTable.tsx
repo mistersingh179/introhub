@@ -19,15 +19,13 @@ import {
   CompanyUrlToProfile,
   EmailToProfile,
 } from "@/services/getEmailAndCompanyUrlProfiles";
-import FacilitatorBox from "@/components/FacilitatorBox";
 import getProfiles from "@/services/getProfiles";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import { User } from "@prisma/client";
-import WantToMeetForm from "@/app/dashboard/prospects/WantToMeetForm";
 import { ContactWithUserAndIsWanted } from "@/app/dashboard/prospects/page";
-import WantToNotMeetForm from "@/app/dashboard/prospects/WantToNotMeetForm";
+import WantToMeetStar from "@/app/dashboard/prospects/WantToMeetStar";
 
 const ProspectsTable = async ({
   prospectsWithUser,
@@ -119,11 +117,12 @@ export const ProspectRow = (props: ProspectRowProps) => {
         </TableCell>
         <TableCell className={""}>
           <div className={"flex flex-col gap-4"}>
-            {prospect.isWanted ? (
-              <WantToNotMeetForm contactId={prospect.id} />
-            ) : (
-              <WantToMeetForm contactId={prospect.id} />
-            )}
+            <WantToMeetStar contact={prospect} />
+            {/*{prospect.isWanted ? (*/}
+            {/*  <WantToNotMeetForm contactId={prospect.id} />*/}
+            {/*) : (*/}
+            {/*  <WantToMeetForm contactId={prospect.id} />*/}
+            {/*)}*/}
           </div>
         </TableCell>
       </TableRow>

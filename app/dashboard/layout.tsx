@@ -1,5 +1,6 @@
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as SoonerToaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import NavigationItems from "@/app/dashboard/NavigationItems";
@@ -51,6 +52,7 @@ export default async function DashboardLayout({
         </nav>
         <main className={""}>{children}</main>
         <Toaster />
+        <SoonerToaster richColors />
         <ShowChildren showIt={!!user}>
           <ClarityMetrics user={user!} />
         </ShowChildren>
