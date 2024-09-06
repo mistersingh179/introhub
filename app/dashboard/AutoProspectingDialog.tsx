@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 
+import * as React from "react";
 import { useEffect, useState } from "react";
 import {
   AlertDialog,
@@ -12,6 +13,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import acceptAutoProspectingAction from "@/app/actions/user/acceptAutoProspectingAction";
+import { useFormState } from "react-dom";
+import ErrorMessage from "@/app/dashboard/introductions/create/[contactId]/ErrorMessage";
+import ShowChildren from "@/components/ShowChildren";
+import { Input } from "@/components/ui/input";
 
 type AutoProspectingDialogProps = {
   agreedToAutoProspecting: boolean;
@@ -26,6 +31,11 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
     setOpen(agreedToAutoProspecting === false);
   }, [agreedToAutoProspecting]);
 
+  const [errorMessage, dispatch] = useFormState(
+    acceptAutoProspectingAction,
+    undefined,
+  );
+
   return (
     <>
       <AlertDialog open={open} onOpenChange={setOpen}>
@@ -38,7 +48,15 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
                 To accomplish this goal, we automated intro requests and
                 approvals. {"Here's"} what you need to know.
               </div>
-              <h2 style={{ margin: '1em 0', fontWeight: 'bold', fontSize: 'medium' }}>Introduction Requests</h2>
+              <h2
+                style={{
+                  margin: "1em 0",
+                  fontWeight: "bold",
+                  fontSize: "medium",
+                }}
+              >
+                Introduction Requests
+              </h2>
               <div className="mt-4">
                 <ul>
                   <li
@@ -74,7 +92,15 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
                   </li>
                 </ul>
               </div>
-              <h2 style={{ margin: '1em 0', fontWeight: 'bold', fontSize: 'medium' }}>Facilitating Introductions</h2>
+              <h2
+                style={{
+                  margin: "1em 0",
+                  fontWeight: "bold",
+                  fontSize: "medium",
+                }}
+              >
+                Facilitating Introductions
+              </h2>
               <div className="mt-4">
                 <ul>
                   <li
@@ -85,8 +111,8 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
                     }}
                   >
                     When one of your contacts matches a requester’s ICP, we’ll
-                    send an email on your behalf to ask if {"they're"} open to an
-                    introduction.
+                    send an email on your behalf to ask if {"they're"} open to
+                    an introduction.
                   </li>
                   <li
                     style={{
@@ -105,12 +131,20 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
                       marginBottom: "1em",
                     }}
                   >
-                    {"You're"} in control. Make any contact {"'Unavailable'"} for intros
-                    in the Contacts page.
+                    {"You're"} in control. Make any contact {"'Unavailable'"}{" "}
+                    for intros in the Contacts page.
                   </li>
                 </ul>
               </div>
-              <h2 style={{ margin: '1em 0', fontWeight: 'bold', fontSize: 'medium' }}>Safeguarding Your Reputation</h2>
+              <h2
+                style={{
+                  margin: "1em 0",
+                  fontWeight: "bold",
+                  fontSize: "medium",
+                }}
+              >
+                Safeguarding Your Reputation
+              </h2>
               <div className="mt-4">
                 <ul>
                   <li
@@ -142,7 +176,13 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <form action={acceptAutoProspectingAction}>
+            <ShowChildren showIt={!!errorMessage}>
+              <ErrorMessage
+                description={JSON.stringify(errorMessage, null, 2)}
+              />
+            </ShowChildren>
+            <form action={dispatch}>
+              <Input type={"hidden"} name={"agreed"} value={"true"} />
               <Button type={"submit"} className={"w-full"} autoFocus={true}>
                 Start Using IntroHub 2.0
               </Button>

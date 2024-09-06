@@ -15,6 +15,8 @@ type SubmitButtonProps = {
     | "secondary"
     | "ghost"
     | "link"
+    | "primary"
+    | "success"
     | null
     | undefined;
   beDisabled?: boolean;
