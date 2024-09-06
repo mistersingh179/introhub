@@ -36,134 +36,76 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
     undefined,
   );
 
+  const listItemClasses = {
+    listStyle: "outside",
+    marginLeft: "1em",
+    marginBottom: "1em",
+  };
+
+  const headingClasses = {
+    margin: "1em 0",
+    fontWeight: "bold",
+    fontSize: "medium",
+  };
+
   return (
     <>
       <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogContent className={"w-full max-w-4xl"}>
+        <AlertDialogContent
+          className={"w-full max-w-4xl max-h-[95vh] overflow-y-auto"}
+        >
           <AlertDialogHeader>
             <AlertDialogTitle>Welcome to IntroHub 2.0 🎉 </AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className={"text-left"}>
               <div>
                 We aim to get you more meetings per month with target prospects.
                 To accomplish this goal, we automated intro requests and
                 approvals. {"Here's"} what you need to know.
               </div>
-              <h2
-                style={{
-                  margin: "1em 0",
-                  fontWeight: "bold",
-                  fontSize: "medium",
-                }}
-              >
-                Introduction Requests
-              </h2>
+              <h2 style={headingClasses}>Introduction Requests</h2>
               <div className="mt-4">
                 <ul>
-                  <li
-                    style={{
-                      listStyle: "outside",
-                      marginLeft: "1em",
-                      marginBottom: "1em",
-                    }}
-                  >
+                  <li style={listItemClasses}>
                     We automatically handle prospecting for you based on your
                     Ideal Customer Profile (ICP). Set your ICP by saving filters
                     and starring profiles on the Prospects page.
                   </li>
-                  <li
-                    style={{
-                      listStyle: "outside",
-                      marginLeft: "1em",
-                      marginBottom: "1em",
-                    }}
-                  >
+                  <li style={listItemClasses}>
                     Each day, {"we'll"} request an intro to prospects that match
                     your ICP.
                   </li>
-                  <li
-                    style={{
-                      listStyle: "outside",
-                      marginLeft: "1em",
-                      marginBottom: "1em",
-                    }}
-                  >
+                  <li style={listItemClasses}>
                     If a prospect consents, then {"you'll"} be {"CC'd"} on an
                     intro email so you can forge a relationship.
                   </li>
                 </ul>
               </div>
-              <h2
-                style={{
-                  margin: "1em 0",
-                  fontWeight: "bold",
-                  fontSize: "medium",
-                }}
-              >
-                Facilitating Introductions
-              </h2>
+              <h2 style={headingClasses}>Facilitating Introductions</h2>
               <div className="mt-4">
                 <ul>
-                  <li
-                    style={{
-                      listStyle: "outside",
-                      marginLeft: "1em",
-                      marginBottom: "1em",
-                    }}
-                  >
+                  <li style={listItemClasses}>
                     When one of your contacts matches a requester’s ICP, we’ll
                     send an email on your behalf to ask if {"they're"} open to
                     an introduction.
                   </li>
-                  <li
-                    style={{
-                      listStyle: "outside",
-                      marginLeft: "1em",
-                      marginBottom: "1em",
-                    }}
-                  >
+                  <li style={listItemClasses}>
                     Only with their explicit approval will we facilitate the
                     connection to ensure respect and privacy.
                   </li>
-                  <li
-                    style={{
-                      listStyle: "outside",
-                      marginLeft: "1em",
-                      marginBottom: "1em",
-                    }}
-                  >
+                  <li style={listItemClasses}>
                     {"You're"} in control. Make any contact {"'Unavailable'"}{" "}
                     for intros in the Contacts page.
                   </li>
                 </ul>
               </div>
-              <h2
-                style={{
-                  margin: "1em 0",
-                  fontWeight: "bold",
-                  fontSize: "medium",
-                }}
-              >
-                Safeguarding Your Reputation
-              </h2>
+              <h2 style={headingClasses}>Safeguarding Your Reputation</h2>
               <div className="mt-4">
                 <ul>
-                  <li
-                    style={{
-                      listStyle: "outside",
-                      marginLeft: "1em",
-                      marginBottom: "1em",
-                    }}
-                  >
+                  <li style={listItemClasses}>
                     To prevent contact fatigue, we limit emails to one per
                     person every 7 days.
                   </li>
-                  <li
-                    style={{
-                      listStyle: "outside",
-                      marginLeft: "1em",
-                      marginBottom: "1em",
-                    }}
-                  >
+                  <li style={listItemClasses}>
                     Your account will never send more than two intro requests
                     per day.
                   </li>
@@ -175,7 +117,7 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
+          <AlertDialogFooter className="sticky bottom-0">
             <ShowChildren showIt={!!errorMessage}>
               <ErrorMessage
                 description={JSON.stringify(errorMessage, null, 2)}
