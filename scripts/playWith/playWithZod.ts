@@ -18,6 +18,7 @@ import { z, ZodError } from "zod";
       .nullable()
       .optional()
       .transform((s) => (s ? s.toLowerCase() === "true" : false)),
+    agreed: z.coerce.boolean(),
     address: z.string().optional(),
   });
 
@@ -25,7 +26,8 @@ import { z, ZodError } from "zod";
   fd.set("name", "hi");
   fd.set("age", "5");
   fd.set("address", "hello st");
-  fd.set("dailyEmail", "true");
+  fd.set("dailyEmail", "false");
+  fd.set("agreed", "false");
 
   try {
     const ans = schema.parse({
@@ -33,6 +35,7 @@ import { z, ZodError } from "zod";
       age: fd.get("age"),
       address: fd.get("address"),
       dailyEmail: fd.get("dailyEmail"),
+      agreed: fd.get("agreed"),
     });
     console.table(ans);
   } catch (e) {

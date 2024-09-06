@@ -10,6 +10,7 @@ import * as React from "react";
 import OnBoardingCard from "@/app/dashboard/home/OnBoardingCard";
 import Link from "next/link";
 import LogOutSimpleLink from "@/app/dashboard/home/LogOutSimpleLink";
+import AutoProspectingDialog from "@/app/dashboard/AutoProspectingDialog";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -55,22 +56,62 @@ export default async function Home() {
         {/*<RefreshStatsForm />*/}
       </div>
 
+      <AutoProspectingDialog
+        agreedToAutoProspecting={user!.agreedToAutoProspecting}
+      />
+
       <OnBoardingCard />
 
-      {!user.unableToAutoProspect && (
+      {user.agreedToAutoProspecting && (
         <Alert variant="default">
           <Check className="h-8 w-8" />
           <AlertTitle className={"ml-8"}>
             Sit Back, Relax, and Await Introductions
           </AlertTitle>
           <AlertDescription className={"ml-8"}>
-            We are automatically prospecting for you based on your ICP. Keep an
-            eye out for intro emails, where you will be {"cc'd"} when a target
-            prospect consents to an introduction. In the meantime, visit the{" "}
+            Your IntroHub account is turned ON and we will prospect for you
+            based on your ICP. Keep an eye out for intro emails, where you will
+            be {"cc'd"} when a target prospect consents to an introduction. In
+            the meantime, visit the{" "}
             <Link href={"/dashboard/prospects"} className={"underline"}>
               {"Prospects"}
             </Link>{" "}
             page to add filters and star more profiles.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {!user.agreedToAutoProspecting && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-8 w-8" />
+          <AlertTitle className={"ml-8"}>Account is OFF</AlertTitle>
+          <AlertDescription className={"ml-8"}>
+            Your IntroHub account is currently turned OFF. We will NOT prospect
+            for you. We will NOT use your contacts to facilitate introduction
+            for others.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {!user.unableToAutoProspect && (
+        <Alert variant="default">
+          <Check className="h-8 w-8" />
+          <AlertTitle className={"ml-8"}>Your ICP is well defined</AlertTitle>
+          <AlertDescription className={"ml-8"}>
+            We are able to find prospects matching your ICP.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {user.unableToAutoProspect && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-8 w-8" />
+          <AlertTitle className={"ml-8"}>
+            Auto Prospecting is Disabled
+          </AlertTitle>
+          <AlertDescription className={"ml-8"}>
+            Please consider widening your ICP by starring more prospects and /
+            or creating more Prospect filters.
           </AlertDescription>
         </Alert>
       )}
@@ -107,19 +148,6 @@ export default async function Home() {
           <AlertDescription className={"ml-8"}>
             We are unable to generate a Google Access Token for you. Please{" "}
             <LogOutSimpleLink /> and log back in.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {user.unableToAutoProspect && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-8 w-8" />
-          <AlertTitle className={"ml-8"}>
-            Auto Prospecting is Disabled
-          </AlertTitle>
-          <AlertDescription className={"ml-8"}>
-            Please consider widening your ICP by starring more prospects and /
-            or creating more Prospect filters.
           </AlertDescription>
         </Alert>
       )}

@@ -9,6 +9,7 @@ import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
 import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
 import ShowChildren from "@/components/ShowChildren";
 import { Badge } from "@/components/ui/badge";
+import ProfileStatusUpdateForm from "@/app/dashboard/profile/ProfileStatusUpdateForm";
 
 export default async function Profile() {
   const session = (await auth()) as Session;
@@ -50,7 +51,25 @@ export default async function Profile() {
       <div className={"flex flex-col gap-4"}>
         <ProfileImageForm user={user} />
         <div className={"flex flex-row"}>
-          <div className={"min-w-48"}>Name :</div> <div>{user.name}</div>
+          <div className={"min-w-48 self-center"}>Status :</div>
+          <div className={"flex flex-row gap-4 items-center"}>
+            {user.agreedToAutoProspecting && (
+              <>
+                <div>IntroHub is currently ON</div>
+                <ProfileStatusUpdateForm setAgreedTo={false} />
+              </>
+            )}
+            {!user.agreedToAutoProspecting && (
+              <>
+                <div>IntroHub is currently OFF</div>
+                <ProfileStatusUpdateForm setAgreedTo={true} />
+              </>
+            )}
+          </div>
+        </div>
+        <div className={"flex flex-row"}>
+          <div className={"min-w-48"}>Name :</div>
+          <div>{user.name}</div>
         </div>
         <div className={"flex flex-row"}>
           <div className={"min-w-48"}>Job Title :</div>

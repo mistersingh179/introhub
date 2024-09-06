@@ -69,7 +69,7 @@ model User {
   credits                  Int             @default(0)
   profileImageName         String?
   wantsToMeet              WantedContact[]
-  agreedToAutoProspecting  Boolean         @default(true)
+  agreedToAutoProspecting  Boolean         @default(false)
   unableToAutoProspect     Boolean         @default(false)
   missingPersonalInfo      Boolean         @default(false)
   forwardableBlurb         String          @default("")
