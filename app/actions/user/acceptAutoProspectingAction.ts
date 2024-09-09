@@ -13,7 +13,7 @@ const acceptAutoProspectingActionSchema = z.object({
     .nullable()
     .optional()
     .transform((s) => (s ? s.toLowerCase() === "true" : false)),
-  callbackUrl: z.string(),
+  callbackUrl: z.string().optional(),
 });
 
 export type AcceptAutoProspectingActionFlattenErrorType =
@@ -36,7 +36,9 @@ const acceptAutoProspectingAction = async (
       agreed: formData.get("agreed"),
       callbackUrl: formData.get("callbackUrl"),
     });
-    redirectUrl = callbackUrl;
+    if(callbackUrl){
+      redirectUrl = callbackUrl;
+    }
 
     await prisma.user.update({
       data: {
