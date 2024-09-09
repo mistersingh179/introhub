@@ -1,5 +1,10 @@
-const getFirstName = (fullName?: string|null, defaultName?: string): string => {
-  return fullName?.split(" ")?.[0] || defaultName || "Person";
+import capitalize from "capitalize";
+
+const getFirstName = (
+  fullName?: string | null,
+  defaultName?: string,
+): string => {
+  return capitalize(fullName?.split(" ")?.[0] || defaultName || "Person");
 };
 
 export default getFirstName;
@@ -13,5 +18,6 @@ if (require.main === module) {
     console.log("4", getFirstName(undefined, "User"));
     console.log("5", getFirstName(undefined, undefined));
     console.log("6", getFirstName(undefined));
+    console.log("7", getFirstName("shodan foo bar"));
   })();
 }

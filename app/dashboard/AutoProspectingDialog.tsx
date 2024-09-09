@@ -125,6 +125,7 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
             </ShowChildren>
             <form action={dispatch}>
               <Input type={"hidden"} name={"agreed"} value={"true"} />
+              <Input type={"hidden"} name={"callbackUrl"} value={"/dashboard/home"} />
               <Button type={"submit"} className={"w-full"} autoFocus={true}>
                 Start Using IntroHub 2.0
               </Button>
