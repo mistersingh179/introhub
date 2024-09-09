@@ -1,60 +1,50 @@
 import prisma from "../prismaClient";
-import sleep from "@/lib/sleep";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import { JWT } from "google-auth-library";
 import creds from "./introhub-276d729d73d8.json";
-import { startOfToday, subDays } from "date-fns";
 import getProspectsBasedOnFilters, {
   PaginatedValues,
   SelectedFilterValues,
-} from "@/services/getProspectsBasedOnFilters"; // path to your JSON key file
+} from "@/services/getProspectsBasedOnFilters";
 
 // @ts-ignore
 prisma.$on("query", (e) => {
   const { timestamp, query, params, duration, target } = e;
-  console.log("***");
   console.log(query, params);
-  console.log("***");
-  console.log({ timestamp, params, duration, target });
+  // console.log({ timestamp, params, duration, target });
 });
 
-(async () => {
-  // console.log("hi");
+const saveRecord = async (userEmail: string, contactEmail: string) => {
+  const user = await prisma.user.findFirstOrThrow({
+    where: {
+      email: userEmail,
+    },
+  });
+  const filters: SelectedFilterValues = {
+    selectedEmail: contactEmail,
+  };
+  const { prospects, filteredRecordsCount } = await getProspectsBasedOnFilters(
+    filters,
+    {
+      currentPage: 1,
+      itemsPerPage: 1,
+      recordsToSkip: 0,
+    },
+    user,
+  );
+  const prospect = prospects[0];
 
-  // console.log(creds);
-
-  const saveRecord = async (userEmail: string, contactEmail: string) => {
-    const user = await prisma.user.findFirstOrThrow({
-      where: {
-        email: userEmail,
+  if (user && prospect) {
+    await prisma.wantedContact.create({
+      data: {
+        userId: user.id,
+        contactId: prospect.id,
       },
     });
-    const filters: SelectedFilterValues = {
-      selectedEmail: contactEmail,
-    };
-    const { prospects, filteredRecordsCount } =
-      await getProspectsBasedOnFilters(
-        filters,
-        {
-          currentPage: 1,
-          itemsPerPage: 1,
-          recordsToSkip: 0,
-        },
-        user,
-      );
-    const prospect = prospects[0];
+  }
+};
 
-    if (user && prospect) {
-      await prisma.wantedContact.create({
-        data: {
-          userId: user.id,
-          contactId: prospect.id,
-        },
-      });
-    }
-    return;
-  };
-
+(async () => {
   const SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -84,9 +74,17 @@ prisma.$on("query", (e) => {
     const rows = await sheet.getRows();
     for (const row of rows) {
       console.log(row.rowNumber, row.get("Users_Email"), row.get("Email"));
-      await saveRecord(row.get("Users_Email"), row.get("Email"));
+      try {
+        await saveRecord(row.get("Users_Email"), row.get("Email"));
+      } catch (err) {
+        console.log(
+          "Error saving: ",
+          row.get("Users_Email"),
+          row.get("Email"),
+          (err as Error)?.message,
+        );
+      }
     }
-    return;
   }
 })();
 

@@ -66,6 +66,7 @@
     "email-addresses": "^5.0.0",
     "embla-carousel-react": "^8.0.0",
     "fastest-levenshtein": "^1.0.16",
+    "google-spreadsheet": "^4.1.4",
     "googleapis": "^133.0.0",
     "input-otp": "^1.2.2",
     "lodash": "^4.17.21",
