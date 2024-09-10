@@ -9,12 +9,16 @@ import getProspectsBasedOnFilters, {
 } from "@/services/getProspectsBasedOnFilters";
 import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
 import getFacilitatorIdsWhoAreMissingSendScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingSendScope";
+import getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts
+  from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts";
 
 const fetchContactFromUserFilters = async (
   user: User,
 ): Promise<Contact | null> => {
   const contactIdsOfOthersUsersKnownToThisUser =
     await getContactIdsOfOthersUsersKnownToThisUser(user);
+  const contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts =
+    await getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts(user);
   const contactIdsTouchedByUser = await getContactIdsTouchedByUser(user);
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
@@ -53,6 +57,7 @@ const fetchContactFromUserFilters = async (
             ...contactIdsTouchedRecently,
             ...contactIdsTouchedByUser,
             ...contactIdsOfOthersUsersKnownToThisUser,
+            ...contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts,
           ],
         },
         userId: {
