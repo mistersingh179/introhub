@@ -5,10 +5,13 @@ import getContactIdsTouchedRecently from "@/services/contactFinder/getContactIds
 import getFacilitatorIdsWhoAlreadyMadeIntros from "@/services/contactFinder/getFacilitatorIdsWhoAlreadyMadeIntros";
 import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
 import getFacilitatorIdsWhoAreMissingSendScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingSendScope";
+import getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts";
 
 const fetchWantedContact = async (user: User): Promise<Contact | null> => {
   const contactIdsOfOthersUsersKnownToThisUser =
     await getContactIdsOfOthersUsersKnownToThisUser(user);
+  const contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts =
+    await getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts(user);
   const contactIdsTouchedByUser = await getContactIdsTouchedByUser(user);
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
@@ -28,6 +31,7 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
           ...contactIdsTouchedRecently,
           ...contactIdsTouchedByUser,
           ...contactIdsOfOthersUsersKnownToThisUser,
+          ...contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts,
         ],
       },
       userId: {
