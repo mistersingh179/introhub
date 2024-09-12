@@ -73,15 +73,16 @@ const sendEmail: SendEmail = async (input) => {
       },
     });
     console.log("message sent: ", res.data);
-    await takePostEmailAction(!!res.data.id, postEmailActionData);
+    await takePostEmailAction(!!res.data.id, res.data?.threadId, postEmailActionData);
     return res.data;
   } catch (err) {
-    await takePostEmailAction(false, postEmailActionData);
+    await takePostEmailAction(false, null, postEmailActionData);
   }
 };
 
 const takePostEmailAction = async (
   success: boolean,
+  threadId: string | null | undefined,
   postEmailActionData?: PostEmailActionData,
 ) => {
   if (postEmailActionData) {
@@ -93,6 +94,7 @@ const takePostEmailAction = async (
       },
       data: {
         status: newState,
+        threadId: threadId ?? "",
       },
     });
   }
