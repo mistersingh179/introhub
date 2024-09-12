@@ -2,7 +2,6 @@ import prisma from "../prismaClient";
 import sleep from "@/lib/sleep";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import { JWT } from "google-auth-library";
-import creds from "./introhub-276d729d73d8.json";
 import { startOfToday, subDays } from "date-fns";
 import getProspectsBasedOnFilters, {
   PaginatedValues,
@@ -19,75 +18,7 @@ prisma.$on("query", (e) => {
 });
 
 (async () => {
-  // console.log("hi");
-
-  // console.log(creds);
-
-  const saveRecord = async (userEmail: string, contactEmail: string) => {
-    const user = await prisma.user.findFirstOrThrow({
-      where: {
-        email: userEmail,
-      },
-    });
-    const filters: SelectedFilterValues = {
-      selectedEmail: contactEmail,
-    };
-    const { prospects, filteredRecordsCount } =
-      await getProspectsBasedOnFilters(
-        filters,
-        {
-          currentPage: 1,
-          itemsPerPage: 1,
-          recordsToSkip: 0,
-        },
-        user,
-      );
-    const prospect = prospects[0];
-
-    if (user && prospect) {
-      await prisma.wantedContact.create({
-        data: {
-          userId: user.id,
-          contactId: prospect.id,
-        },
-      });
-    }
-    return;
-  };
-
-  const SCOPES = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive.file",
-  ];
-
-  const jwt = new JWT({
-    email: creds.client_email,
-    key: creds.private_key,
-    scopes: SCOPES,
-  });
-
-  const doc = new GoogleSpreadsheet(
-    "1AfB8HJ498AOMD-n2g6AaNniJZZXQjsh1zj3NKjWoTuQ",
-    jwt,
-  );
-  await doc.loadInfo(); // loads document properties and worksheets
-  console.log(doc.title);
-  const sheets = doc.sheetsByIndex;
-  for (const sheet of sheets) {
-    if (!sheet.title.startsWith("stars for")) {
-      console.log("skipping sheet: ", sheet.title);
-      continue;
-    }
-    console.log("processing sheet: ", sheet.title);
-    await sheet.loadHeaderRow();
-    console.log(sheet.headerValues);
-    const rows = await sheet.getRows();
-    for (const row of rows) {
-      console.log(row.rowNumber, row.get("Users_Email"), row.get("Email"));
-      await saveRecord(row.get("Users_Email"), row.get("Email"));
-    }
-    return;
-  }
+  console.log("hello world fro repl!")
 })();
 
 export {};
