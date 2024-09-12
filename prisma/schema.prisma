@@ -336,6 +336,8 @@ model Message {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([subject])
+  @@index([threadId])
   @@index([userId])
   @@index([receivedAt])
   @@index([fromAddress])
