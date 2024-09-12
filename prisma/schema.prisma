@@ -98,10 +98,12 @@ model Introduction {
   status                String  @default("draft")
   rejectionReason       String?
   approvalKey           String  @default(dbgenerated("gen_random_uuid()"))
+  threadId              String  @default("")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index(threadId)
   @@index(requesterId)
   @@index(facilitatorId)
   @@index(contactId)
