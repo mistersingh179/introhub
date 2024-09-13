@@ -6,7 +6,8 @@ import { startOfToday, subDays } from "date-fns";
 import getProspectsBasedOnFilters, {
   PaginatedValues,
   SelectedFilterValues,
-} from "@/services/getProspectsBasedOnFilters"; // path to your JSON key file
+} from "@/services/getProspectsBasedOnFilters";
+import {IntroStates} from "@/lib/introStates"; // path to your JSON key file
 
 // @ts-ignore
 prisma.$on("query", (e) => {
@@ -19,6 +20,22 @@ prisma.$on("query", (e) => {
 
 (async () => {
   console.log("hello world fro repl!")
+  const intros = await prisma.introduction.findMany({
+    where:{
+      messageForContact: "",
+      // status: IntroStates["introducing email sent"]
+    },
+    include: {
+      requester: true,
+      facilitator: true,
+      contact: true,
+    },
+    take: 1
+  })
+  for(const intro of intros){
+    console.log("intro: ", intro);
+    break;
+  }
 })();
 
 export {};
