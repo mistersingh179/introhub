@@ -94,7 +94,7 @@ const takePostEmailAction = async (
       },
       data: {
         status: newState,
-        threadId: threadId ?? "",
+        // threadId: threadId ?? "",
       },
     });
   }

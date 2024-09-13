@@ -32,8 +32,8 @@ const getEmailAndCompanyUrlProfiles = async (
   companyUrlToProfile: CompanyUrlToProfile;
   emailToProfile: EmailToProfile;
 }> => {
-  console.log("In getContactsMetaData: ", emails.length);
-  console.log(emails);
+  // console.log("In getContactsMetaData: ", emails.length);
+  // console.log(emails);
   const personProfiles: PersonProfileWithExp[] =
     await prisma.personProfile.findMany({
       where: {
@@ -59,7 +59,7 @@ const getEmailAndCompanyUrlProfiles = async (
     acc[pp.email] = pp;
     return acc;
   }, {});
-  console.log(emailToProfile);
+  // console.log(emailToProfile);
 
   const companyLinkedInUrls = [
     ...new Set(
@@ -78,7 +78,7 @@ const getEmailAndCompanyUrlProfiles = async (
   //   .map((pp) => pp.personExperiences[0]?.companyLinkedInUrl)
   //   .filter((x) => x);
 
-  console.log("companyLinkedInUrls: ", companyLinkedInUrls);
+  // console.log("companyLinkedInUrls: ", companyLinkedInUrls);
   const companyProfiles: CompanyProfileWithCategories[] =
     await prisma.companyProfile.findMany({
       where: {
@@ -101,7 +101,7 @@ const getEmailAndCompanyUrlProfiles = async (
     },
     {},
   );
-  console.log("companyUrlToProfile: ", companyUrlToProfile);
+  // console.log("companyUrlToProfile: ", companyUrlToProfile);
   return { companyUrlToProfile, emailToProfile };
 };
 
