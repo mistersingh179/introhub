@@ -66,4 +66,5 @@ export type MediumJobNames =
   | "sendEmail"
   | "downloadMessagesForAllAccounts"
   | "buildContacts"
-  | "buildContactsForAllUsers";
+  | "buildContactsForAllUsers"
+  | "buildThreadIds";

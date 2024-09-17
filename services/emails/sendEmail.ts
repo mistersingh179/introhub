@@ -76,6 +76,7 @@ const sendEmail: SendEmail = async (input) => {
     await takePostEmailAction(!!res.data.id, res.data?.threadId, postEmailActionData);
     return res.data;
   } catch (err) {
+    console.log("in send email error: ", err);
     await takePostEmailAction(false, null, postEmailActionData);
   }
 };
