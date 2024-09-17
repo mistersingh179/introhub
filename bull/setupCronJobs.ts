@@ -33,6 +33,17 @@ const addEnrichAllContacts = async () => {
   console.log("schedule job: ", name, id, opts);
 };
 
+const addBuildThreadIds = async () => {
+  const jobObj = await mediumQueue.add("buildThreadIds", null, {
+    repeat: {
+      pattern: "0 7 * * *",
+    },
+  });
+  const { name, id, opts } = jobObj;
+  console.log("schedule job: ", name, id, opts);
+};
+
+
 // const addEnrichAllRemainingContactsUsingApollo = async () => {
 //   const jobObj = await apolloQueue.add(
 //     "enrichAllRemainingContactsUsingApollo",
@@ -119,6 +130,7 @@ const setupCronJobs = async () => {
   await addProcessAllFiltersForEmail();
   // await addSendEmailForAllApprovedIntros();
   await addProcessAllUsersForAutoProspecting();
+  await addBuildThreadIds();
 };
 
 export default setupCronJobs;

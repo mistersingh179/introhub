@@ -19,6 +19,7 @@ import buildContacts from "@/services/buildContacts";
 import buildContactsForAllUsers from "@/services/buildContactsForAllUsers";
 import sendEmail, { SendEmailInput } from "@/services/emails/sendEmail";
 import onBoardUser, { OnBoardUserInput } from "@/services/onBoardUser";
+import buildThreadIds from "@/services/buildThreadIds";
 
 const queueName = "medium";
 
@@ -71,6 +72,9 @@ const mediumWorker: Worker<
       }
       case "buildContactsForAllUsers": {
         return await buildContactsForAllUsers();
+      }
+      case "buildThreadIds": {
+        return await buildThreadIds();
       }
       default:
         console.error("got unknown job!");
