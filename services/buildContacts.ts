@@ -38,7 +38,7 @@ const buildContacts: BuildContacts = async (user) => {
       insert
       into "Contact" ("id", "userId", email, "sentCount", "receivedCount", "sentReceivedRatio", "createdAt",
                       "updatedAt", "lastReceivedAt")
-      select uuid_generate_v4(),
+      select gen_random_uuid(),
              ${user.id},
              my_contacts.email,
              my_contacts.sent_count,
