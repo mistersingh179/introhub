@@ -21,13 +21,31 @@ interface ComparisonResult {
 
 // This is where all word phrases are defined for easy editing
 // const wordsToCompare = ["hello", "hi", "namaste", "bye", "orange"];
+
+// const wordsToCompare = [
+//   {name: 'hello', value: 'hello'},
+//   {name: 'hi', value: 'hi'},
+//   {name: 'namaste', value: 'namaste'},
+//   {name: 'bye', value: 'bye'},
+//   {name: 'orange', value: 'orange'},
+// ];
+
 const wordsToCompare = [
-  {name: 'hello', value: JSON.stringify({ saying: "hello", emotion: "happy", speaker: 'me' })},
-  {name: 'hi', value: JSON.stringify({  emotion: "happy", speaker: 'me', saying: "hi"})},
-  {name: 'namaste', value: JSON.stringify({ saying: "namaste", emotion: "happy", speaker: 'me' })},
-  {name: 'bye', value: JSON.stringify({ saying: "bye", emotion: "happy", speaker: 'me' })},
-  {name: 'orange', value: JSON.stringify({ saying: "orange", emotion: "happy", speaker: 'me' })},
+  {name: 'hello', value: 'I said hello while my emotions were happy'},
+  {name: 'hi', value: 'I said hi while my emotions were happy'},
+  {name: 'namaste', value: 'I said namaste while my emotions were happy'},
+  {name: 'bye', value: 'I said bye while my emotions were happy'},
+  {name: 'orange', value: 'I said bye while my emotions were happy'},
 ];
+
+
+// const wordsToCompare = [
+//   {name: 'hello', value: JSON.stringify({ emotion: "happy", speaker: 'me', saying: "hello" })},
+//   {name: 'hi', value: JSON.stringify({  emotion: "happy", speaker: 'me', saying: "hi"})},
+//   {name: 'namaste', value: JSON.stringify({ emotion: "happy", speaker: 'me', saying: "namaste" })},
+//   {name: 'bye', value: JSON.stringify({ emotion: "happy", speaker: 'me', saying: "bye" })},
+//   {name: 'orange', value: JSON.stringify({ emotion: "happy", speaker: 'me', saying: "orange", })},
+// ];
 
 const collectResults = (
   algorithm: string,

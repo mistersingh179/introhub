@@ -16,19 +16,19 @@ prisma.$on("query", (e) => {
     apiKey: process.env.OPENAI_KEY,
   });
 
-  // const userText = "pasta";
+  // const userText = "Pasta";
   // const userText = "I want to eat indian food";
   // const userText = "I want to eat indian food which has rice in it";
-  const userText = "I want to eat food which does not have rice in it";
+  // const userText = "I want to eat food which does not have rice in it";
   // const userText = "I want to eat indian food which does not have rice in it";
   // const userText = "I want to eat food which has goat and rice in it";
-  // const userText = JSON.stringify({
-  //   country: "indian",
-  //   spicy: "yes",
-  //   gravy: "yes",
-  //   includes_rice: 'no',
-  //   has_dairy: 'no,'
-  // });
+  const userText = JSON.stringify({
+    country: "indian",
+    spicy: "yes",
+    gravy: "yes",
+    includes_rice: 'no',
+    has_dairy: 'no,'
+  });
 
   const userTextResult = await openai.embeddings.create({
     model: "text-embedding-3-small",
@@ -44,7 +44,7 @@ prisma.$on("query", (e) => {
              1 - (embedding <=> ${userTextVector}::vector) as cosine_similiarity
       FROM "Food"
       ORDER BY cosine_similiarity DESC
-      LIMIT 5;`
+      LIMIT 25;`
 
   console.log(nearestFoodSql.text, nearestFoodSql.values);
 
