@@ -21,7 +21,7 @@ const FoodTable = ({ foods }: { foods: FoodWithCosine[] }) => {
           <TableRow>
             <TableHead className={"p-2"}>Id</TableHead>
             <TableHead className={"p-2"}>Name</TableHead>
-            <TableHead className={"p-2"}>Embedding</TableHead>
+            <TableHead className={"p-2"}>Cosine Similarity</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
