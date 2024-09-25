@@ -129,7 +129,7 @@ const setupCronJobs = async () => {
   await addSendProspectsCreateToday();
   await addProcessAllFiltersForEmail();
   // await addSendEmailForAllApprovedIntros();
-  await addProcessAllUsersForAutoProspecting();
+  // await addProcessAllUsersForAutoProspecting();
   await addBuildThreadIds();
 };
 
