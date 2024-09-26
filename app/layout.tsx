@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import type { Viewport } from "next";
 import Script from "next/script";
 import LinkedInAds from "@/app/utils/LinkedInAds";
+import GoogleTagManager from "@/app/utils/GoogleTagManager";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,7 @@ export default function RootLayout({
         </Script>
 
         {process.env.NODE_ENV === "production" && <LinkedInAds />}
+        {process.env.NODE_ENV === "production" && <GoogleTagManager />}
 
       <body className={`${inter.className}`}>
         <ThemeProvider
