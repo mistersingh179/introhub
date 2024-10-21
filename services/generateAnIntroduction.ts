@@ -33,14 +33,18 @@ if (require.main === module) {
   (async () => {
     const user = await prisma.user.findFirstOrThrow({
       where: {
-        email: "sandeep@introhub.net",
+        email: "rod@introhub.net",
       },
     });
     const prospect = await prisma.contact.findFirstOrThrow({
       where: {
-        email: "mistersingh179@gmail.com",
+        id: '2d4c33ce-3348-4c82-8fb0-b1483c49c35e'
       },
+      include: {
+        user: true
+      }
     });
+    // console.log("prospect: ", prospect);
     await generateAnIntroduction(user, prospect);
   })();
 }
