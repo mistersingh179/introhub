@@ -234,6 +234,11 @@ export const ProspectBox = ({
   personExp: PersonExperience;
   showLinkedInUrls?: boolean;
 }) => {
+
+  if (!personProfile?.linkedInUrl || !personProfile?.fullName) {
+    return <></>;
+  }
+
   return (
     <div className={"flex flex-row gap-4 items-center"}>
       <ProspsectAvatar prospect={contact} personProfile={personProfile} />
@@ -245,7 +250,7 @@ export const ProspectBox = ({
         </div>
         <p className={"text-muted-foreground"}>{personExp.jobTitle} </p>
         <ShowChildren showIt={showLinkedInUrls}>
-          <LinkWithExternalIcon href={personProfile.linkedInUrl!} />
+          <LinkWithExternalIcon href={personProfile?.linkedInUrl! ?? "-"} />
         </ShowChildren>
       </div>
     </div>
