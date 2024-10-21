@@ -133,7 +133,7 @@ export const ProspsectAvatar = ({
   prospect: Contact;
   personProfile: PersonProfile;
 }) => {
-  if (!personProfile.fullName) {
+  if (!personProfile?.fullName) {
     return <></>;
   }
   return (
@@ -240,7 +240,7 @@ export const ProspectBox = ({
       <div className={"flex flex-col gap-2"}>
         <div>
           <Link href={`/dashboard/prospects/${contact.id}`}>
-            {personProfile.fullName ?? "-"}
+            {personProfile?.fullName ?? "-"}
           </Link>{" "}
         </div>
         <p className={"text-muted-foreground"}>{personExp.jobTitle} </p>
