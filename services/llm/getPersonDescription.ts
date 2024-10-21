@@ -47,23 +47,39 @@ const getPersonDescription = async (
           companyName: true,
           jobTitle: true,
           jobDescription: true,
-          companyProfile: {
+          companyLinkedInUrl: true,
+        },
+      },
+    },
+  });
+
+  if (personJsonObject.personExperiences.length === 0) {
+    console.log("bailing getPersonDescription as no personExperiences found");
+    return null;
+  }
+
+
+  const companies = await prisma.companyProfile.findMany({
+    where: {
+      linkedInUrl: {
+        in: personJsonObject.personExperiences.map(
+          (pe) => pe.companyLinkedInUrl,
+        ),
+      },
+    },
+    select: {
+      size: true,
+      industry: true,
+      foundedYear: true,
+      latestFundingRoundDate: true,
+      latestFundingStage: true,
+      publiclyTradedExchange: true,
+      linkedInUrl: true,
+      categories: {
+        select: {
+          category: {
             select: {
-              size: true,
-              industry: true,
-              foundedYear: true,
-              latestFundingRoundDate: true,
-              latestFundingStage: true,
-              publiclyTradedExchange: true,
-              categories: {
-                select: {
-                  category: {
-                    select: {
-                      name: true,
-                    },
-                  },
-                },
-              },
+              name: true,
             },
           },
         },
@@ -71,15 +87,24 @@ const getPersonDescription = async (
     },
   });
 
-  console.dir(personJsonObject, { depth: 6 });
-
-  if (personJsonObject.personExperiences.length === 0) {
-    console.log("bailing getPersonDescription as no personExperiences found");
-    return null;
-  } else if (!(personJsonObject.personExperiences ?? [])[0]?.companyProfile) {
-    console.log("bailing getPersonDescription as no companyProfile found");
+  if (companies.length === 0) {
+    console.log("bailing getPersonDescription as no companyJsonObject found");
     return null;
   }
+
+  let companiesHash: Record<string, any> = {};
+  companiesHash = [...companies].reduce((acc, cv, ci, arr) => {
+    const {linkedInUrl, ...rest} = cv;
+    acc[linkedInUrl] = rest
+    return acc;
+  }, companiesHash)
+
+  personJsonObject.personExperiences.map(pe => {
+    (pe as typeof pe & { company?: Record<string, any> }).company = companiesHash[pe.companyLinkedInUrl];
+    delete (pe as Partial<typeof pe>).companyLinkedInUrl;
+  })
+
+  console.dir(personJsonObject, { depth: 6 });
 
   const chatTemplate = ChatPromptTemplate.fromMessages([
     new SystemMessage(
@@ -114,7 +139,8 @@ if (require.main === module) {
   (async () => {
     const personProfile = await prisma.personProfile.findFirstOrThrow({
       where: {
-        email: "stanley.wu@hashkey.com",
+        // email: "stanley.wu@hashkey.com",
+        email: "sandeep@introhub.net",
       },
     });
 
