@@ -12,7 +12,7 @@ import Schema$Message = gmail_v1.Schema$Message;
 import permissionEmailReplyAnalysis, {
   permissionGrantedEnum,
 } from "@/services/llm/permissionEmailReplyAnalysis";
-import {allowedEmailsForTesting} from "@/app/utils/constants";
+import { allowedEmailsForTesting } from "@/app/utils/constants";
 
 const extractBody = (message: Schema$Message): string => {
   const body = message.payload?.body;
@@ -45,11 +45,11 @@ export const messageHandler = async (message: Message) => {
       historyId: number;
     };
 
-    console.log(emailAddress, historyId);
+    console.log("in message Handler with", emailAddress, historyId);
 
-    if(allowedEmailsForTesting.find(x => emailAddress.includes(x))){
+    if (allowedEmailsForTesting.find((x) => emailAddress.includes(x))) {
       console.log("email allowed: ", emailAddress);
-    }else{
+    } else {
       console.log("email not allowed: ", emailAddress);
       message.ack();
       return;
@@ -79,6 +79,8 @@ export const messageHandler = async (message: Message) => {
       user.introductionsFacilitated;
 
     const account = (user.accounts as Account[])[0];
+
+    console.log("facilitated intros which need to be checked: ", intros.length);
 
     for (const intro of intros) {
       console.log("we have intro: ", intro.id, intro.permissionEmailThreadId);
@@ -142,12 +144,6 @@ export const messageHandler = async (message: Message) => {
 };
 
 const startSubscriber = async () => {
-  const accounts = await prisma.account.findMany({
-    include: {
-      user: true,
-    },
-  });
-
   const pubSubClient = new PubSub();
   const subscriptionName = process.env.SUBSCRIPTION_NAME!;
   const subscription = pubSubClient.subscription(subscriptionName);
