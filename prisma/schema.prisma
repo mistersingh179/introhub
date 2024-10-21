@@ -205,19 +205,17 @@ model PersonProfile {
 }
 
 model PersonExperience {
-  id                 String         @id @default(cuid())
+  id                 String        @id @default(cuid())
   personProfileId    String
-  personProfile      PersonProfile  @relation(fields: [personProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  personProfile      PersonProfile @relation(fields: [personProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyName        String?
   companyLinkedInUrl String
-  companyProfile     CompanyProfile @relation(fields: [companyLinkedInUrl], references: [linkedInUrl], onDelete: Cascade, onUpdate: Cascade)
   jobTitle           String?
   jobDescription     String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([companyLinkedInUrl])
   @@index([personProfileId])
   @@index([jobTitle])
   @@index([companyName])
@@ -226,7 +224,6 @@ model PersonExperience {
 model CompanyProfile {
   id                     String                   @id @default(cuid())
   categories             CompanyProfileCategory[]
-  personExperiences      PersonExperience[]
   linkedInUrl            String                   @unique
   website                String?
   sizeFrom               Int?
