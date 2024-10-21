@@ -45,6 +45,22 @@ export const messageHandler = async (message: Message) => {
     };
 
     console.log(emailAddress, historyId);
+
+    const allowedEmails = [
+      "rod@intorhub.net",
+      "sandeep@introhub.net",
+      "rod@brandweaver.ai",
+      "sandeep@brandweaver.ai",
+      "mistersingh179@gmail.com"
+    ];
+    if(allowedEmails.find(x => emailAddress.includes(x))){
+      console.log("email allowed: ", emailAddress);
+    }else{
+      console.log("email now allowed: ", emailAddress);
+      message.ack();
+      return;
+    }
+
     const user = await prisma.user.findFirstOrThrow({
       where: {
         email: emailAddress,
