@@ -25,7 +25,7 @@ if (require.main === module) {
   (async () => {
     const pp = await prisma.personProfile.findFirstOrThrow({
       where: {
-        email: "mistersingh179@gmail.com",
+        email: "sandeep@introhub.net",
       },
     });
     await addLlmDescriptionOnPersonProfile(pp);

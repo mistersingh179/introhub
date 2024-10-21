@@ -12,6 +12,7 @@ import Schema$Message = gmail_v1.Schema$Message;
 import permissionEmailReplyAnalysis, {
   permissionGrantedEnum,
 } from "@/services/llm/permissionEmailReplyAnalysis";
+import {allowedEmailsForTesting} from "@/app/utils/constants";
 
 const extractBody = (message: Schema$Message): string => {
   const body = message.payload?.body;
@@ -46,17 +47,10 @@ export const messageHandler = async (message: Message) => {
 
     console.log(emailAddress, historyId);
 
-    const allowedEmails = [
-      "rod@intorhub.net",
-      "sandeep@introhub.net",
-      "rod@brandweaver.ai",
-      "sandeep@brandweaver.ai",
-      "mistersingh179@gmail.com"
-    ];
-    if(allowedEmails.find(x => emailAddress.includes(x))){
+    if(allowedEmailsForTesting.find(x => emailAddress.includes(x))){
       console.log("email allowed: ", emailAddress);
     }else{
-      console.log("email now allowed: ", emailAddress);
+      console.log("email not allowed: ", emailAddress);
       message.ack();
       return;
     }
