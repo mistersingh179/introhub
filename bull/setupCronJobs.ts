@@ -2,11 +2,22 @@ import mediumQueue from "@/bull/queues/mediumQueue";
 import proxyCurlQueue from "@/bull/queues/proxyCurlQueue";
 import apolloQueue from "@/bull/queues/apolloQueue";
 import highQueue from "@/bull/queues/highQueue";
+import openAiQueue from "@/bull/queues/openAiQueue";
 
 const addDownloadMessagesForAllAccounts = async () => {
   const jobObj = await mediumQueue.add("downloadMessagesForAllAccounts", null, {
     repeat: {
       pattern: "0 4 * * *",
+    },
+  });
+  const { name, id, opts } = jobObj;
+  console.log("schedule job: ", name, id, opts);
+};
+
+const addSetupMailboxWatchOnAllAccounts = async () => {
+  const jobObj = await mediumQueue.add("setupMailboxWatchOnAllAccounts", null, {
+    repeat: {
+      pattern: "30 4 * * *",
     },
   });
   const { name, id, opts } = jobObj;
@@ -27,6 +38,16 @@ const addEnrichAllContacts = async () => {
   const jobObj = await proxyCurlQueue.add("enrichAllContacts", null, {
     repeat: {
       pattern: "0 6 * * *",
+    },
+  });
+  const { name, id, opts } = jobObj;
+  console.log("schedule job: ", name, id, opts);
+};
+
+const addLlmDescriptionOnAll = async () => {
+  const jobObj = await openAiQueue.add("addLlmDescriptionOnAll", null, {
+    repeat: {
+      pattern: "0 9 * * *",
     },
   });
   const { name, id, opts } = jobObj;
@@ -122,8 +143,10 @@ const addProcessAllUsersForAutoProspecting = async () => {
 
 const setupCronJobs = async () => {
   await addDownloadMessagesForAllAccounts();
+  // await addSetupMailboxWatchOnAllAccounts();
   await addBuildContactsForAllUsers();
   await addEnrichAllContacts();
+  // await addLlmDescriptionOnAll();
   // await addEnrichAllRemainingContactsUsingApollo();
   await addEnrichAllRemainingUsersUsingApollo();
   await addSendProspectsCreateToday();

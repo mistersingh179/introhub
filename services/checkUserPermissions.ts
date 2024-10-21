@@ -5,7 +5,7 @@ import { cache } from "react";
 const checkUserPermissions = cache(async (userId: string) => {
   try {
     const userScopes = await refreshScopes(userId);
-    const requiredScopes = ["profile", "openid", "metadata", "email", "send"];
+    const requiredScopes = ["https://mail.google.com/"];
     return requiredScopes.every((requiredScope) =>
       userScopes.some((userScope) => userScope.includes(requiredScope)),
     );

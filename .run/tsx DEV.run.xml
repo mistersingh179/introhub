@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="tsx DEV" type="NodeJSConfigurationType" node-parameters="--import tsx --require dotenv/config" path-to-js-file="$FilePathRelativeToProjectRoot$" working-dir="$PROJECT_DIR$">
+  <configuration default="false" name="tsx DEV" type="NodeJSConfigurationType" singleton="true" node-parameters="--import tsx --require dotenv/config" path-to-js-file="$FilePathRelativeToProjectRoot$" working-dir="$PROJECT_DIR$">
     <envs>
       <env name="NODE_ENV" value="development" />
     </envs>

@@ -72,7 +72,7 @@ const downloadMetaData: DownloadMetaData = async (input) => {
 
 export default downloadMetaData;
 
-const getHeaderValue = (
+export const getHeaderValue = (
   headers: Schema$MessagePartHeader[],
   headerName: string,
 ) => {
@@ -80,7 +80,7 @@ const getHeaderValue = (
   return item?.value || "";
 };
 
-const parseEmail = (headerValue: string) => {
+export const parseEmail = (headerValue: string) => {
   const address = "";
   const name = "";
   if (headerValue) {

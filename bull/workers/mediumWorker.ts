@@ -1,4 +1,4 @@
-import { DelayedError, Job, MetricsTime, Worker } from "bullmq";
+import { DelayedError, MetricsTime, Worker } from "bullmq";
 import redisClient from "@/lib/redisClient";
 import {
   MediumInputDataType,
@@ -18,8 +18,8 @@ import { User } from "@prisma/client";
 import buildContacts from "@/services/buildContacts";
 import buildContactsForAllUsers from "@/services/buildContactsForAllUsers";
 import sendEmail, { SendEmailInput } from "@/services/emails/sendEmail";
-import onBoardUser, { OnBoardUserInput } from "@/services/onBoardUser";
 import buildThreadIds from "@/services/buildThreadIds";
+import setupMailboxWatchOnAllAccounts from "@/services/setupMailboxWatchOnAllAccounts";
 
 const queueName = "medium";
 
@@ -65,6 +65,9 @@ const mediumWorker: Worker<
       }
       case "downloadMessagesForAllAccounts": {
         return await downloadMessagesForAllAccounts();
+      }
+      case "setupMailboxWatchOnAllAccounts": {
+        return await setupMailboxWatchOnAllAccounts();
       }
       case "buildContacts": {
         const input = data as User;

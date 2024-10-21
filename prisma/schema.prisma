@@ -89,28 +89,45 @@ model Profile {
 }
 
 model Introduction {
-  id                    String  @id @default(cuid())
-  requesterId           String
-  requester             User    @relation("RequestedIntroductions", fields: [requesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  facilitatorId         String
-  facilitator           User    @relation("FacilitatedIntroductions", fields: [facilitatorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  contactId             String
-  contact               Contact @relation(fields: [contactId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  messageForFacilitator String
-  messageForContact     String
-  status                String  @default("draft")
-  rejectionReason       String?
-  approvalKey           String  @default(dbgenerated("gen_random_uuid()"))
-  threadId              String?
+  id                       String  @id @default(cuid())
+  requesterId              String
+  requester                User    @relation("RequestedIntroductions", fields: [requesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  facilitatorId            String
+  facilitator              User    @relation("FacilitatedIntroductions", fields: [facilitatorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  contactId                String
+  contact                  Contact @relation(fields: [contactId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  messageForFacilitator    String
+  messageForContact        String
+  status                   String  @default("draft")
+  rejectionReason          String?
+  approvalKey              String  @default(dbgenerated("gen_random_uuid()"))
+  threadId                 String?
+  permissionEmailThreadId  String?
+  introducingEmailThreadId String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  permissionResponeEmails PermissionResponseEmail[]
 
   @@index(threadId)
   @@index(requesterId)
   @@index(facilitatorId)
   @@index(contactId)
   @@index(createdAt)
+}
+
+model PermissionResponseEmail {
+  id             String       @id @default(cuid())
+  introductionId String
+  introduction   Introduction @relation(fields: [introductionId], references: [id], onDelete: Cascade)
+  fromEmail      String
+  subject        String
+  bodyText       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index(introductionId)
 }
 
 model VerificationToken {
@@ -174,6 +191,7 @@ model PersonProfile {
   headline          String?
   workFunctions     PersonProfileWorkFunction[]
   departments       PersonProfileDepartment[]
+  llmDescription    String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -187,17 +205,19 @@ model PersonProfile {
 }
 
 model PersonExperience {
-  id                 String        @id @default(cuid())
+  id                 String         @id @default(cuid())
   personProfileId    String
-  personProfile      PersonProfile @relation(fields: [personProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  personProfile      PersonProfile  @relation(fields: [personProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyName        String?
   companyLinkedInUrl String
+  companyProfile     CompanyProfile @relation(fields: [companyLinkedInUrl], references: [linkedInUrl], onDelete: Cascade, onUpdate: Cascade)
   jobTitle           String?
   jobDescription     String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([companyLinkedInUrl])
   @@index([personProfileId])
   @@index([jobTitle])
   @@index([companyName])
@@ -206,6 +226,7 @@ model PersonExperience {
 model CompanyProfile {
   id                     String                   @id @default(cuid())
   categories             CompanyProfileCategory[]
+  personExperiences      PersonExperience[]
   linkedInUrl            String                   @unique
   website                String?
   sizeFrom               Int?

@@ -67,14 +67,11 @@ const AskPermissionToMakeIntroHtml = (
               Hi {prospectName},
               <br />
               <br />
-              <Link
-                href={`${requesterLinkedInUrl}`}
-                style={{ color: "blue", textDecoration: "underline" }}
-              >
-                {requesterName}
-              </Link>{" "}
-              asked me for an introduction to you. Is that OK with you?{" "}
-              {"Here's"} the context:
+              {requesterName} asked me for an introduction to you. Is that OK{" "}
+              with you? <br />
+            </Text>
+            <Text>
+              {"Here's"} some context:
             </Text>
             <Text
               style={{
@@ -94,34 +91,21 @@ const AskPermissionToMakeIntroHtml = (
               {/*their thoughts.*/}
             </Text>
             <Text>
-              Please click below if you agree to this introduction, and I will arrange it.
+              {"Here's"} LinkedIn:{" "}
+              <Link
+                href={`${requesterLinkedInUrl}`}
+                style={{ color: "blue", textDecoration: "underline" }}
+              >
+                {requesterLinkedInUrl}
+              </Link>{" "}
             </Text>
-            <Section>
-              <Link
-                href={`${BASE_API_URL}/api/intros/${intro.id}/approve?approvalKey=${intro.approvalKey}`}
-                style={{ color: "blue", textDecoration: "underline" }}
-              >
-                Yes, make the intro.
-              </Link>
-              <br />
-              <Link
-                href={`${BASE_API_URL}/api/intros/${intro.id}/reject?approvalKey=${intro.approvalKey}`}
-                style={{ color: "blue", textDecoration: "underline" }}
-              >
-                No, don{"'"}t make the intro.
-              </Link>
-            </Section>
-            <br />- {facilitatorName}
+            <Text>
+              Let me know yes or no and {"I'll"} accordingly handle it.
+            </Text>
+            - {facilitatorName}
             <br />
             <br />
-            p.s. {"I'm"} using{" "}
-            <Link
-              href={`https://introhub.net`}
-              style={{ color: "blue", textDecoration: "underline" }}
-            >
-              IntroHub
-            </Link>{" "}
-            to manage this introduction.
+            p.s. {"I'm"} using an automated system to manage these emails.{" "}
             {/*<br />*/}
             {/*<br />*/}
             {/*<img*/}

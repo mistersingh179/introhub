@@ -1,6 +1,7 @@
 import prisma from "@/prismaClient";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import sendAskingPermissionToMakeIntroEmail from "@/services/emails/sendAskingPermissionToMakeIntroEmail";
+import sendIntroducingBothEmail from "@/services/emails/sendIntroducingBothEmail";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 
@@ -13,8 +14,8 @@ export async function GET(request: Request) {
   const intro: IntroWithContactFacilitatorAndRequester =
     await prisma.introduction.findFirstOrThrow({
       where: {
-        id: 'clzlgc91i0001ss9skoxm8wlx',
-        requester: user,
+        id: 'cm2c6v306000178vatg3qizbv',
+        // requester: user,
         // status: IntroStates["approved"],
       },
       include: {
@@ -26,7 +27,8 @@ export async function GET(request: Request) {
 
   console.log("*** intro: ", intro);
 
-  const html = await sendAskingPermissionToMakeIntroEmail(intro, true);
+  const html = await sendAskingPermissionToMakeIntroEmail(intro, false);
+  // const html = await sendIntroducingBothEmail(intro, false);
   const htmlBody = html.replaceAll("\r\n", "<br>");
   console.log("htmlBody: ", htmlBody);
 

@@ -74,11 +74,7 @@ export const {
       authorization: {
         params: {
           scope: `openid \
-          https://www.googleapis.com/auth/userinfo.profile \
-          https://www.googleapis.com/auth/userinfo.email \
-          https://www.googleapis.com/auth/gmail.send \
-          https://mail.google.com/ \
-          https://www.googleapis.com/auth/gmail.metadata`,
+          https://mail.google.com/`,
           access_type: "offline",
         },
       },

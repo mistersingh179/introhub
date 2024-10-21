@@ -2,12 +2,9 @@ import prisma from "@/prismaClient";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import getAllProfiles from "@/services/getAllProfiles";
-import sendEmail, { systemEmail } from "@/services/emails/sendEmail";
-import introOverviewHtml from "@/email-templates/IntroOverviewHtml";
+import sendEmail from "@/services/emails/sendEmail";
 import { IntroStates } from "@/lib/introStates";
-import { Profiles } from "@/app/dashboard/introductions/list/IntroTable";
 import getFirstName from "@/services/getFirstName";
-import askPermissionToMakeIntroHtml from "@/email-templates/AskPermissionToMakeIntroHtml";
 import introducingBothHtml from "@/email-templates/IntroducingBothHtml";
 
 const sendIntroducingBothEmail = async (
@@ -41,11 +38,7 @@ const sendIntroducingBothEmail = async (
 
   const contactName = getFirstName(contactProfiles.personProfile.fullName);
 
-  const html = introducingBothHtml(
-    intro,
-    contactProfiles,
-    requestProfiles,
-  );
+  const html = introducingBothHtml(intro, contactProfiles, requestProfiles);
 
   console.log("*** actuallySendEmail: ", actuallySendEmail);
 
@@ -56,11 +49,12 @@ const sendIntroducingBothEmail = async (
       from: intro.facilitator.email!,
       to: intro.contact.email!,
       cc: intro.requester.email!,
-      subject: `Introduction: ${contactName} & ${requesterName}`,
-      postEmailActionData:{
+      subject: `Introduction: ${contactName}, meet ${requesterName}!`,
+      postEmailActionData: {
         intro,
         successState: IntroStates["introducing email sent"],
-        failureState: IntroStates["introducing email send failure"]
+        failureState: IntroStates["introducing email send failure"],
+        storeThreadIdInColumn: "introducingEmailThreadId",
       },
     });
   }

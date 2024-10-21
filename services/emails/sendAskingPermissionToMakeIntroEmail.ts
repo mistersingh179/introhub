@@ -55,7 +55,8 @@ const sendAskingPermissionToMakeIntroEmail = async (
       postEmailActionData: {
         intro: intro,
         successState: IntroStates['permission email sent'],
-        failureState: IntroStates["permission email send failure"]
+        failureState: IntroStates["permission email send failure"],
+        storeThreadIdInColumn: "permissionEmailThreadId"
       }
     });
   }

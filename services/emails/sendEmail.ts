@@ -9,6 +9,7 @@ export type PostEmailActionData = {
   intro: Introduction;
   successState: IntroStates;
   failureState: IntroStates;
+  storeThreadIdInColumn: "permissionEmailThreadId" | "introducingEmailThreadId";
 };
 
 export type SendEmailInput = {
@@ -73,7 +74,11 @@ const sendEmail: SendEmail = async (input) => {
       },
     });
     console.log("message sent: ", res.data);
-    await takePostEmailAction(!!res.data.id, res.data?.threadId, postEmailActionData);
+    await takePostEmailAction(
+      !!res.data.id,
+      res.data?.threadId,
+      postEmailActionData,
+    );
     return res.data;
   } catch (err) {
     console.log("in send email error: ", err);
@@ -87,7 +92,8 @@ const takePostEmailAction = async (
   postEmailActionData?: PostEmailActionData,
 ) => {
   if (postEmailActionData) {
-    const { intro, successState, failureState } = postEmailActionData;
+    const { intro, successState, failureState, storeThreadIdInColumn } =
+      postEmailActionData;
     const newState = success ? successState : failureState;
     await prisma.introduction.update({
       where: {
@@ -95,7 +101,7 @@ const takePostEmailAction = async (
       },
       data: {
         status: newState,
-        // threadId: threadId ?? "",
+        [storeThreadIdInColumn]: threadId,
       },
     });
   }
@@ -113,15 +119,15 @@ if (require.main === module) {
     });
     const account = user.accounts[0];
     const intro = await prisma.introduction.findFirstOrThrow();
-    const body = intro.messageForContact;
+    const body = "hows it going?";
 
     await sendEmail({
       account,
       body,
       from: "Sandeep Arneja <sandeep@brandweaver.ai>",
       to: "Mister Singh <mistersingh179@gmail.com>",
-      cc: "Sandeep Arneja ONE <sandeep+1@brandweaver.ai>",
-      subject: "good morning 🥳. Please meet – Sandeep",
+      cc: "",
+      subject: "Hi there oct 10",
     });
   })();
 }

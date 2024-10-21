@@ -24,8 +24,8 @@ export default async function Home() {
   });
   const googleAccount = user.accounts?.find((a) => a.provider === "google");
   const scopes = googleAccount?.scope?.split(" ") ?? [];
-  const sendScope = `https://www.googleapis.com/auth/gmail.send`;
-  const foundSendScope = !!scopes.find((val) => val === sendScope);
+  const fullScope = `https://mail.google.com/`;
+  const foundFullScope = !!scopes.find((val) => val === fullScope);
   // const contactStats = await getContactStats();
 
   // const jobTitlesWithCount = await prisma.personExperience.groupBy({
@@ -116,7 +116,7 @@ export default async function Home() {
         </Alert>
       )}
 
-      {foundSendScope && (
+      {foundFullScope && (
         <Alert variant="default">
           <Check className="h-8 w-8" />
           <AlertTitle className={"ml-8"}>Your Account is Ready</AlertTitle>
@@ -127,12 +127,12 @@ export default async function Home() {
         </Alert>
       )}
 
-      {!foundSendScope && (
+      {!foundFullScope && (
         <Alert variant="destructive">
           <AlertCircle className="h-8 w-8" />
           <AlertTitle className={"ml-8"}>Account Creation Error</AlertTitle>
           <AlertDescription className={"ml-8"}>
-            You {"didn't"} grant us permission to send emails on your behalf.
+            You {"didn't"} grant us permission to access emails on your behalf.
             Please <LogOutSimpleLink />, log in, and grant the requested
             permissions.
           </AlertDescription>
