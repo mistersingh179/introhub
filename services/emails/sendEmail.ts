@@ -31,6 +31,26 @@ type SendEmail = (input: SendEmailInput) => Promise<Schema$Message | undefined>;
 const sendEmail: SendEmail = async (input) => {
   const { account, from, to, cc, subject, body, postEmailActionData } = input;
 
+  const allowedEmails = [
+    "rod@intorhub.net",
+    "sandeep@introhub.net",
+    "rod@brandweaver.ai",
+    "sandeep@brandweaver.ai",
+    "mistersingh179@gmail.com"
+  ];
+  if (allowedEmails.find((x) => from.includes(x))) {
+    console.log("from is allowed: ", from);
+  } else {
+    console.log("from is not allowed: ", from);
+    return;
+  }
+  if (allowedEmails.find((x) => to.includes(x))) {
+    console.log("to is allowed: ", to);
+  } else {
+    console.log("to is not allowed: ", to);
+    return;
+  }
+
   const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString("base64")}?=`;
   const htmlBody = body.replaceAll("\r\n", "<br>");
   const toFixed =
