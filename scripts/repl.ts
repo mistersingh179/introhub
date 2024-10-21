@@ -13,17 +13,12 @@ prisma.$on("query", (e) => {});
 (async () => {
   console.log("Starting repl!");
 
-  const user = await prisma.user.findFirst({
-    where: {
-      email: "sandeep@introhub.net",
-    },
-  });
+  const allowedEmails = ['rod@intorhub.net', 'sandeep@introhub.net', 'rod@brandweaver.ai', 'a'];
+  const from = 'a';
+  if(allowedEmails.find((x) => x === from)){
+    console.log("foudnit");
+  }
 
-  const model = new ChatOpenAI({ model: "gpt-4o", temperature: 0 });
-  const ans = await model.invoke("hi");
-  console.log(ans);
-
-  console.log(user);
 })();
 
 export {};
