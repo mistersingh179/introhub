@@ -18,6 +18,9 @@ const IntroducingBothHtml = (props: IntroducingBothHtmlProps) => {
   const contactName = getFirstName(contactProfiles.personProfile.fullName);
   const facilitatorName = getFirstName(intro.facilitator.name);
 
+  const contactLlmDescription = contactProfiles.personProfile.llmDescription;
+  const requesterLlmDescription = requestProfiles.personProfile.llmDescription;
+
   return (
     <>
       <Html>
@@ -32,17 +35,32 @@ const IntroducingBothHtml = (props: IntroducingBothHtmlProps) => {
             }}
           >
             <Text style={{ margin: "0px" }}>
-              Hi {contactName}, {"I'm"} introducing you to {requesterName}, now{" "}
-              {"cc'd"}.
+              Hi {contactName},<br />
               <br />
+              {"I'd"} like to introduce you to {requesterName}, who is now{" "}
+              {"cc'd"} on this email. <br />
               <br />
-              {"I'll"} let you two take it from here.
+              {"I'll"} leave it to the two of you to connect further. Wishing
+              you both a productive and valuable discussion! <br />
               <br />
+              Best regards,
               <br />
-              Wishing you both a productive discussion!
-              <br />
-              <br />-{facilitatorName}
+              {facilitatorName}
             </Text>
+            {contactLlmDescription && (
+              <Text>
+                ---------------------------- <br />
+                <br />A little about {contactName}:<br />
+                {contactLlmDescription}
+              </Text>
+            )}
+            {requesterLlmDescription && (
+              <Text>
+                ---------------------------- <br />
+                <br />A little about {requesterName}:<br />
+                {requesterLlmDescription}
+              </Text>
+            )}
           </Container>
         </Body>
       </Html>

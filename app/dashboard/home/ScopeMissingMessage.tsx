@@ -17,10 +17,10 @@ const ScopeMissingMessage = async () => {
     },
   });
   const scopes = user.accounts?.[0]?.scope?.split(" ") ?? [];
-  const sendScope = `https://www.googleapis.com/auth/gmail.send`;
-  const foundSendScope = !!scopes.find((val) => val === sendScope);
+  const fullScope = `https://mail.google.com/`;
+  const foundFullScope = !!scopes.find((val) => val === fullScope);
 
-  if (!foundSendScope) {
+  if (!foundFullScope) {
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-8 w-8" />
@@ -28,7 +28,7 @@ const ScopeMissingMessage = async () => {
             Error
         </AlertTitle>
         <AlertDescription className={"ml-8"}>
-          Unable to find Send Permission. You need to Log-out, and log back in
+          Unable to find Google Permissions. You need to Log-out, and log back in
           while granting permissions.
         </AlertDescription>
       </Alert>

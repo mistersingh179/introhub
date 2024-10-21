@@ -8,7 +8,7 @@ import getProspectsBasedOnFilters, {
   PaginatedValues,
 } from "@/services/getProspectsBasedOnFilters";
 import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
-import getFacilitatorIdsWhoAreMissingSendScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingSendScope";
+import getFacilitatorIdsWhoAreMissingFullScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingFullScope";
 import getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts
   from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts";
 
@@ -24,7 +24,7 @@ const fetchContactFromUserFilters = async (
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
   const facilitatorIdsWhoAreMissingSendScope =
-    await getFacilitatorIdsWhoAreMissingSendScope();
+    await getFacilitatorIdsWhoAreMissingFullScope();
 
   const filters = await prisma.filters.findMany({
     where: {

@@ -107,6 +107,12 @@ export default async function ShowContact({
           showLinkedInUrls={true}
         />
 
+        <div className={"flex flex-row gap-4 items-center"}>
+          <div>Description:</div>
+          <div>{personProfile.llmDescription}</div>
+        </div>
+
+
         <div className={"flex flex-row gap-4"}>
           <div>Seniority:</div>
           <div>{personProfile.seniority}</div>
@@ -131,7 +137,7 @@ export default async function ShowContact({
           <div className={"flex flex-row gap-4 items-center"}>
             <div>Website:</div>
             <div>
-              <LinkWithExternalIcon href={companyProfile.website!} />
+              <LinkWithExternalIcon href={companyProfile.website!}/>
             </div>
           </div>
         </ShowChildren>
@@ -159,14 +165,14 @@ export default async function ShowContact({
           </div>
         </div>
 
-          <div className={"flex flex-row gap-4"}>
-            <div>Departments:</div>
-            <div className={"space-x-2"}>
-              {departmentNames.map((d) => (
-                <Badge key={"d"}>{d}</Badge>
-              ))}
-            </div>
+        <div className={"flex flex-row gap-4"}>
+          <div>Departments:</div>
+          <div className={"space-x-2"}>
+            {departmentNames.map((d) => (
+              <Badge key={"d"}>{d}</Badge>
+            ))}
           </div>
+        </div>
 
         <ShowChildren showIt={workFunctionNames.length > 0}>
           <div className={"flex flex-row gap-4"}>

@@ -3,7 +3,7 @@ import {
   DownloadMessagesInput,
   DownloadMessagesOutput,
 } from "@/services/downloadMessages";
-import { Introduction, User } from "@prisma/client";
+import { Introduction, PersonProfile, User } from "@prisma/client";
 import { SendEmailInput } from "@/services/emails/sendEmail";
 import { gmail_v1 } from "googleapis";
 import { EnrichContactInput } from "@/services/enrichContact";
@@ -17,6 +17,8 @@ export type HighInputDataType = OnBoardUserInput | undefined | User;
 export type ProxyCurlInputDataType = EnrichContactInput | null;
 
 export type ApolloInputDataType = string | null;
+
+export type OpenAiInputDataType = PersonProfile | null;
 
 export type MediumInputDataType =
   | DownloadMessagesInput
@@ -36,6 +38,8 @@ export type HighOutputDataType =
 export type ProxyCurlOutputDataType = void;
 
 export type ApolloOutputDataType = void | PeopleEnrichmentResponse;
+
+export type OpenAiOutputDataType = void;
 
 export type MediumOutputDataType =
   | DownloadMessagesOutput
@@ -60,6 +64,10 @@ export type ApolloJobNames =
   | "enrichAllRemainingContactsUsingApollo"
   | "enrichAllRemainingUsersUsingApollo";
 
+export type OpenAiJobNames =
+  | "addLlmDescriptionOnPersonProfile"
+  | "addLlmDescriptionOnAll";
+
 export type MediumJobNames =
   | "downloadMessages"
   | "downloadMetaData"
@@ -67,4 +75,5 @@ export type MediumJobNames =
   | "downloadMessagesForAllAccounts"
   | "buildContacts"
   | "buildContactsForAllUsers"
-  | "buildThreadIds";
+  | "buildThreadIds"
+  | "setupMailboxWatchOnAllAccounts";

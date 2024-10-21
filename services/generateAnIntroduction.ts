@@ -7,7 +7,7 @@ const generateAnIntroduction = async (
   requester: User,
   prospect: Contact,
 ): Promise<Introduction> => {
-  console.log("going to generate an intro for: ", requester.email, prospect.email);
+  console.log("generating intro for: ", requester.email, prospect.email);
   const intro = await prisma.introduction.create({
     data: {
       contactId: prospect.id,
@@ -36,7 +36,11 @@ if (require.main === module) {
         email: "sandeep@introhub.net",
       },
     });
-    const prospect = await prisma.contact.findFirstOrThrow({});
+    const prospect = await prisma.contact.findFirstOrThrow({
+      where: {
+        email: "mistersingh179@gmail.com",
+      },
+    });
     await generateAnIntroduction(user, prospect);
   })();
 }

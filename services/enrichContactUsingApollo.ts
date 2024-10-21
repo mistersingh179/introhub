@@ -3,8 +3,9 @@ import peopleEnrichmentApiResponse from "@/services/peopleEnrichmentApiResponse"
 import copyImageUrlToS3 from "@/services/helpers/copyImageUrlToS3";
 import md5 from "md5";
 import { Prisma } from "@prisma/client";
-import PersonProfileCreateInput = Prisma.PersonProfileCreateInput;
 import { ApolloEnrichResponseWithLimitInfo } from "@/services/helpers/apollo/peopleEnrichmentApiCall";
+import OpenAiQueue from "@/bull/queues/openAiQueue";
+import PersonProfileCreateInput = Prisma.PersonProfileCreateInput;
 
 const enrichContactUsingApollo = async (
   email: string,
@@ -106,54 +107,58 @@ const enrichContactUsingApollo = async (
     },
   });
 
-  if (companyProfile) {
-    console.log(
-      "bailing here as companyProfile already exists:",
-      companyProfile,
-    );
-    return apolloEnrichResponseWithLimitInfo;
-  }
+  if (!companyProfile) {
+    await prisma.companyProfile.create({
+      data: {
+        linkedInUrl: organization.linkedin_url,
+        website: organization.website_url,
+        size: organization.estimated_num_employees,
+        industry: organization.industry,
+        foundedYear: organization.founded_year,
+        latestFundingStage: organization.latest_funding_stage,
+        latestFundingRoundDate: organization.latest_funding_round_date,
+        publiclyTradedExchange: organization.publicly_traded_exchange,
 
-  await prisma.companyProfile.create({
-    data: {
-      linkedInUrl: organization.linkedin_url,
-      website: organization.website_url,
-      size: organization.estimated_num_employees,
-      industry: organization.industry,
-      foundedYear: organization.founded_year,
-      latestFundingStage: organization.latest_funding_stage,
-      latestFundingRoundDate: organization.latest_funding_round_date,
-      publiclyTradedExchange: organization.publicly_traded_exchange,
-
-      categories: {
-        create: organization.keywords.map((k: string) => ({
-          category: {
-            connectOrCreate: {
-              create: {
-                name: k,
-              },
-              where: {
-                name: k,
+        categories: {
+          create: organization.keywords.map((k: string) => ({
+            category: {
+              connectOrCreate: {
+                create: {
+                  name: k,
+                },
+                where: {
+                  name: k,
+                },
               },
             },
-          },
-        })),
+          })),
+        },
       },
-    },
-  });
+    });
 
-  if (organization.logo_url && organization.website_url) {
-    await copyImageUrlToS3(
-      organization.logo_url,
-      "logo",
-      `${md5(organization.website_url)}`,
+    if (organization.logo_url && organization.website_url) {
+      await copyImageUrlToS3(
+        organization.logo_url,
+        "logo",
+        `${md5(organization.website_url)}`,
+      );
+    } else {
+      console.log(
+        "skipping copyImageUrlToS3 as missing data: ",
+        organization.logo_url,
+        organization.website_url,
+      );
+    }
+  }
+
+  const pp = await prisma.personProfile.findFirst({ where: { email } });
+  if (pp) {
+    const jobObj = await OpenAiQueue.add(
+      "addLlmDescriptionOnPersonProfile",
+      pp,
     );
-  } else {
-    console.log(
-      "skipping copyImageUrlToS3 as missing data: ",
-      organization.logo_url,
-      organization.website_url,
-    );
+    const { name, id } = jobObj;
+    console.log("scheduled addLlmDescriptionOnPersonProfile job: ", pp);
   }
 
   return apolloEnrichResponseWithLimitInfo;
@@ -163,7 +168,7 @@ export default enrichContactUsingApollo;
 
 if (require.main === module) {
   (async () => {
-    const ans = await enrichContactUsingApollo("colton@nubela.co");
+    const ans = await enrichContactUsingApollo("mistersingh179@gmail.com");
     console.log(ans);
   })();
 }

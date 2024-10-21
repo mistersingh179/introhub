@@ -1,0 +1,33 @@
+import { PersonProfile } from "@prisma/client";
+import getPersonDescription from "@/services/llm/getPersonDescription";
+import prisma from "@/prismaClient";
+
+const addLlmDescriptionOnPersonProfile = async (
+  personProfile: PersonProfile,
+) => {
+  if (personProfile.llmDescription) {
+    console.log("bailing as we already have llm description");
+    return;
+  }
+
+  const llmDescription = await getPersonDescription(personProfile);
+  if (llmDescription) {
+    await prisma.personProfile.update({
+      where: { email: personProfile.email },
+      data: { llmDescription },
+    });
+  }
+};
+
+export default addLlmDescriptionOnPersonProfile;
+
+if (require.main === module) {
+  (async () => {
+    const pp = await prisma.personProfile.findFirstOrThrow({
+      where: {
+        email: "mistersingh179@gmail.com",
+      },
+    });
+    await addLlmDescriptionOnPersonProfile(pp);
+  })();
+}

@@ -1,6 +1,7 @@
 import MediumQueue, { mediumQueueEvents } from "@/bull/queues/mediumQueue";
 import prisma from "@/prismaClient";
 import ApolloQueue from "@/bull/queues/apolloQueue";
+import {setupMailboxWatch} from "@/services/setupMailboxWatchOnAllAccounts";
 
 export type OnBoardUserInput = {
   userId: string;
@@ -48,6 +49,7 @@ const onBoardUser: OnBoardUser = async (input) => {
   for (const contact of contacts) {
     await ApolloQueue.add("enrichContactUsingApollo", email);
   }
+  await setupMailboxWatch({...account, user: user})
 };
 
 export default onBoardUser;
