@@ -1,14 +1,17 @@
 import refreshScopes from "@/services/refreshScopes";
 import prisma from "@/prismaClient";
 import { cache } from "react";
+import doWeHaveFullScope from "@/services/doWeHaveFullScope";
 
 const checkUserPermissions = cache(async (userId: string) => {
   try {
-    const userScopes = await refreshScopes(userId);
-    const requiredScopes = ["https://mail.google.com/"];
-    return requiredScopes.every((requiredScope) =>
-      userScopes.some((userScope) => userScope.includes(requiredScope)),
-    );
+    await refreshScopes(userId);
+    const accounts = await prisma.account.findMany({
+      where: {
+        userId,
+      },
+    });
+    return doWeHaveFullScope(accounts);
   } catch (err) {
     return false;
   }

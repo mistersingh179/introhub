@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/prismaClient";
 import Credentials from "@auth/core/providers/credentials";
 import LinkedIn, { LinkedInProfile } from "@auth/core/providers/linkedin";
+import {fullScope} from "@/app/utils/constants";
 
 const makeOnboardCall = async (userId: string) => {
   console.log("going to make fetch call to onboard user: ", userId);
@@ -73,8 +74,7 @@ export const {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: `openid \
-          https://mail.google.com/`,
+          scope: fullScope,
           access_type: "offline",
         },
       },

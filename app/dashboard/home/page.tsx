@@ -11,6 +11,7 @@ import OnBoardingCard from "@/app/dashboard/home/OnBoardingCard";
 import Link from "next/link";
 import LogOutSimpleLink from "@/app/dashboard/home/LogOutSimpleLink";
 import AutoProspectingDialog from "@/app/dashboard/AutoProspectingDialog";
+import doWeHaveFullScope from "@/services/doWeHaveFullScope";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -22,10 +23,7 @@ export default async function Home() {
       accounts: true,
     },
   });
-  const googleAccount = user.accounts?.find((a) => a.provider === "google");
-  const scopes = googleAccount?.scope?.split(" ") ?? [];
-  const fullScope = `https://mail.google.com/`;
-  const foundFullScope = !!scopes.find((val) => val === fullScope);
+  const foundFullScope = doWeHaveFullScope(user.accounts);
   // const contactStats = await getContactStats();
 
   // const jobTitlesWithCount = await prisma.personExperience.groupBy({
@@ -69,10 +67,9 @@ export default async function Home() {
             Sit Back, Relax, and Await Introductions
           </AlertTitle>
           <AlertDescription className={"ml-8"}>
-            Your IntroHub account is turned ON and we will prospect for you
-            based on your ICP. Keep an eye out for intro emails, where you will
-            be {"cc'd"} when a target prospect consents to an introduction. In
-            the meantime, visit the{" "}
+            We will auto prospect for you based on your ICP. Keep an eye out for
+            intro emails, where you will be {"cc'd"} when a target prospect
+            consents to an introduction. In the meantime, visit the{" "}
             <Link href={"/dashboard/prospects"} className={"underline"}>
               {"Prospects"}
             </Link>{" "}

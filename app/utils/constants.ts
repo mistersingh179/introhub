@@ -4,6 +4,8 @@ export const superUsers = [
   "mistersingh179@gmail.com",
 ];
 
+export const fullScope = `https://mail.google.com/ openid`;
+
 export const allowedEmailsForTesting = [
   "rod@introhub.net",
   "sandeep@introhub.net",

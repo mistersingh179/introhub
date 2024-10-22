@@ -16,7 +16,7 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
-  const facilitatorIdsWhoAreMissingSendScope =
+  const facilitatorIdsWhoAreMissingFullScope =
     await getFacilitatorIdsWhoAreMissingFullScope();
 
   const wantedContact = await prisma.contact.findFirst({
@@ -37,7 +37,7 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
       userId: {
         notIn: [
           ...facilitatorIdsUsedRecently,
-          ...facilitatorIdsWhoAreMissingSendScope,
+          ...facilitatorIdsWhoAreMissingFullScope,
         ],
       },
       user: {

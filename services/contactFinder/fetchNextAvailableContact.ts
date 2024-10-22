@@ -17,7 +17,7 @@ const fetchNextAvailableContact = async (
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
-  const facilitatorIdsWhoAreMissingSendScope =
+  const facilitatorIdsWhoAreMissingFullScope =
     await getFacilitatorIdsWhoAreMissingFullScope();
 
   const nextAvailableContact = await prisma.contact.findFirst({
@@ -33,7 +33,7 @@ const fetchNextAvailableContact = async (
         notIn: [
           ...facilitatorIdsUsedRecently,
           user.id,
-          ...facilitatorIdsWhoAreMissingSendScope,
+          ...facilitatorIdsWhoAreMissingFullScope,
         ],
       },
       user: {
