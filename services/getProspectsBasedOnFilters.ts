@@ -1,6 +1,7 @@
 import { Contact, Prisma, User } from "@prisma/client";
 import prisma from "@/prismaClient";
 import { IntroStates } from "@/lib/introStates";
+import {fullScope} from "@/app/utils/constants";
 
 export type PaginatedValues = {
   currentPage: number;
@@ -101,6 +102,7 @@ const getProspectsBasedOnFilters = async (
       select distinct on (C.email) C.*
       from "Contact" C
                inner join public."User" U on U.id = C."userId"
+               inner join public."Account" A on U.id = A."userId" and A.provider='google' and A.scope=${fullScope} -- drastically reduces prospects count
                inner join public."PersonProfile" PP
                           on C.email = PP.email and PP."linkedInUrl" is not null and PP."fullName" is not null
                inner join public."PersonExperience" PE on PP.id = PE."personProfileId"
@@ -115,7 +117,7 @@ const getProspectsBasedOnFilters = async (
         and C."emailCheckPassed" = true
         and C."lastReceivedAt"
           >= now() - INTERVAL '1 year'
---         and U."agreedToAutoProspecting" = true
+        and U."agreedToAutoProspecting" = true -- drastically reduces the prospects we see
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
@@ -129,6 +131,7 @@ const getProspectsBasedOnFilters = async (
       select count(distinct C.email)
       from "Contact" C
                inner join public."User" U on U.id = C."userId"
+               inner join public."Account" A on U.id = A."userId" and A.provider='google' and A.scope=${fullScope} -- drastically reduces prospects count
                inner join public."PersonProfile" PP
                           on C.email = PP.email and PP."linkedInUrl" is not null and PP."fullName" is not null
                inner join public."PersonExperience" PE on PP.id = PE."personProfileId"
@@ -143,7 +146,7 @@ const getProspectsBasedOnFilters = async (
         and C."emailCheckPassed" = true
         and C."lastReceivedAt"
           >= now() - INTERVAL '1 year'
---         and U."agreedToAutoProspecting" = true
+        and U."agreedToAutoProspecting" = true -- drastically reduces the prospects we see
   `;
   const countSqlResult = await prisma.$queryRaw<{ count: number }[]>(countSql);
   const filteredRecordsCount = Number(countSqlResult[0].count);

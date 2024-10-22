@@ -5,6 +5,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import * as React from "react";
 import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
+import doWeHaveFullScope from "@/services/doWeHaveFullScope";
 
 const ScopeMissingMessage = async () => {
   const session = (await auth()) as Session;
@@ -16,20 +17,16 @@ const ScopeMissingMessage = async () => {
       accounts: true,
     },
   });
-  const scopes = user.accounts?.[0]?.scope?.split(" ") ?? [];
-  const fullScope = `https://mail.google.com/`;
-  const foundFullScope = !!scopes.find((val) => val === fullScope);
+  const foundFullScope = doWeHaveFullScope(user.accounts);
 
   if (!foundFullScope) {
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-8 w-8" />
-        <AlertTitle className={"ml-8"}>
-            Error
-        </AlertTitle>
+        <AlertTitle className={"ml-8"}>Error</AlertTitle>
         <AlertDescription className={"ml-8"}>
-          Unable to find Google Permissions. You need to Log-out, and log back in
-          while granting permissions.
+          Unable to find Google Permissions. You need to Log-out, and log back
+          in while granting permissions.
         </AlertDescription>
       </Alert>
     );

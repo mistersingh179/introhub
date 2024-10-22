@@ -55,7 +55,7 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
           className={"w-full max-w-4xl max-h-[95vh] overflow-y-auto"}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle>Welcome to IntroHub 2.0 🎉 </AlertDialogTitle>
+            <AlertDialogTitle>Welcome to IntroHub 3.0 🎉 </AlertDialogTitle>
             <AlertDialogDescription className={"text-left"}>
               <div>
                 We aim to get you more meetings per month with target prospects.
@@ -127,7 +127,7 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
               <Input type={"hidden"} name={"agreed"} value={"true"} />
               <Input type={"hidden"} name={"callbackUrl"} value={"/dashboard/home"} />
               <Button type={"submit"} className={"w-full"} autoFocus={true}>
-                Start Using IntroHub 2.0
+                Start Using IntroHub 3.0
               </Button>
             </form>
           </AlertDialogFooter>

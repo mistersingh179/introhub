@@ -23,7 +23,7 @@ const fetchContactFromUserFilters = async (
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
-  const facilitatorIdsWhoAreMissingSendScope =
+  const facilitatorIdsWhoAreMissingFullScope =
     await getFacilitatorIdsWhoAreMissingFullScope();
 
   const filters = await prisma.filters.findMany({
@@ -63,7 +63,7 @@ const fetchContactFromUserFilters = async (
         userId: {
           notIn: [
             ...facilitatorIdsUsedRecently,
-            ...facilitatorIdsWhoAreMissingSendScope,
+            ...facilitatorIdsWhoAreMissingFullScope,
           ],
         },
         user: {

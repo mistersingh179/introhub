@@ -1,5 +1,6 @@
 import prisma from "@/prismaClient";
 import { startOfToday } from "date-fns";
+import {fullScope} from "@/app/utils/constants";
 
 const getFacilitatorIdsWhoAreMissingFullScope = async (): Promise<string[]> => {
   const facilitators = await prisma.user.findMany({
@@ -8,17 +9,14 @@ const getFacilitatorIdsWhoAreMissingFullScope = async (): Promise<string[]> => {
         some: {
           provider: "google",
           NOT: {
-            scope: {
-              contains: "https://mail.google.com/",
-              mode: 'insensitive'
-            },
+            scope: fullScope
           },
         },
       },
     },
   });
   const facilitatorIds = facilitators.map((i) => i.id);
-  console.log("getFacilitatorIdsWhoAreMissingSendScope: ", facilitatorIds);
+  console.log("getFacilitatorIdsWhoAreMissingFullScope: ", facilitatorIds);
   return facilitatorIds;
 };
 

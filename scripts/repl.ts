@@ -5,7 +5,7 @@ import { Contact, Food, Prisma } from "@prisma/client";
 import getGmailObject from "@/services/helpers/getGmailObject";
 import refreshAccessToken from "@/services/helpers/refreshAccessToken";
 import {ChatOpenAI} from "@langchain/openai";
-import {allowedEmailsForTesting} from "@/app/utils/constants";
+import {allowedEmailsForTesting, fullScope} from "@/app/utils/constants";
 const { PubSub } = require("@google-cloud/pubsub");
 
 // @ts-ignore
@@ -16,13 +16,16 @@ prisma.$on("query", (e) => {});
 
   const users = await prisma.user.findMany({
     where: {
-      email: {
-        in: allowedEmailsForTesting
+      agreedToAutoProspecting: true,
+      accounts: {
+        some: {
+          scope: fullScope
+        }
       }
-    }
+    },
   });
 
-  console.log("users: ", users.length);
+  console.log(users);
 })();
 
 export {};
