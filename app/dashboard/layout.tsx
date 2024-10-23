@@ -20,6 +20,7 @@ export default async function DashboardLayout({
   children,
 }: DashboardLayoutProps) {
   const session = (await auth()) as Session;
+  console.log("session.user: ", session.user);
   const user = await prisma.user.findFirst({
     where: {
       email: session.user?.email ?? "",
