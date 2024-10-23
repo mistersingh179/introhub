@@ -4,7 +4,7 @@ export const superUsers = [
   "mistersingh179@gmail.com",
 ];
 
-export const fullScope = `https://mail.google.com/ openid`;
+export const fullScope = `https://mail.google.com/ https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid`;
 
 export const allowedEmailsForTesting = [
   "rod@introhub.net",
@@ -12,7 +12,7 @@ export const allowedEmailsForTesting = [
   "rod@brandweaver.ai",
   "sandeep@brandweaver.ai",
   "ashnoorarneja@gmail.com",
-  "mistersingh179@gmail.com"
+  "mistersingh179@gmail.com",
 ];
 
 export const userProfileS3DirName = "user-profile-images";
