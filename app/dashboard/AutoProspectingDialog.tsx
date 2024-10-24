@@ -126,7 +126,7 @@ const AutoProspectingDialog = (props: AutoProspectingDialogProps) => {
             <form action={dispatch}>
               <Input type={"hidden"} name={"agreed"} value={"true"} />
               <Input type={"hidden"} name={"callbackUrl"} value={"/dashboard/home"} />
-              <Button type={"submit"} className={"w-full"} autoFocus={true}>
+              <Button type={"submit"} className="w-full ga-track-start-using-ih" autoFocus={true}>
                 Start Using IntroHub 3.0
               </Button>
             </form>
