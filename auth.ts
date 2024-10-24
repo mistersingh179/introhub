@@ -104,6 +104,12 @@ export const {
       if (trigger === "signUp") {
         console.log("user has just signed up: ", user);
         await makeOnboardCall(user.id!);
+        // Set user ID in GA4 upon sign-up
+        if (typeof window !== "undefined") {
+          window.gtag('set', 'user_properties', {
+            user_id: user.id,
+          });
+        }        
       }
       return token;
     },
