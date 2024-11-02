@@ -1,6 +1,7 @@
 import { PersonProfile } from "@prisma/client";
 import getPersonDescription from "@/services/llm/getPersonDescription";
 import prisma from "@/prismaClient";
+import addPersonProfileToPineCone from "@/services/llm/addPersonProfileToPineCone";
 
 const addLlmDescriptionOnPersonProfile = async (
   personProfile: PersonProfile,
@@ -12,10 +13,12 @@ const addLlmDescriptionOnPersonProfile = async (
 
   const llmDescription = await getPersonDescription(personProfile);
   if (llmDescription) {
-    await prisma.personProfile.update({
+    personProfile = await prisma.personProfile.update({
       where: { email: personProfile.email },
       data: { llmDescription },
     });
+
+    await addPersonProfileToPineCone(personProfile);
   }
 };
 

@@ -37,7 +37,7 @@ const OnBoardingCard = async () => {
     },
   });
   const hideMe =
-    weHavePermissions && filtersCount > 0 && wantedProspectsCount > 0;
+    weHavePermissions && filtersCount > 0 && wantedProspectsCount > 0 && user.icpDescription;
 
   console.log(
     "OnBoardingCard, permisions, filters, wanted ",
@@ -51,16 +51,18 @@ const OnBoardingCard = async () => {
       <CardHeader>
         <CardTitle>Onboarding Checklist</CardTitle>
         <CardDescription>
-          IntroHub will handle prospecting and manage introductions on your behalf. 
-          Complete the tasks below to start building valuable connections effortlessly.
+          IntroHub will handle prospecting and manage introductions on your
+          behalf. Complete the tasks below to start building valuable
+          connections effortlessly.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <ul className={"list-disc ml-4 [&>li]:mt-2"}>
           <li>
             <div className={"flex flex-row gap-2"}>
-              <div className={`${weHavePermissions ? "line-through" : ""}`}>
-                <LogoutLink label={"Log-in"} /> with Google and provide necessary permissions.
+              <div className={`${weHavePermissions ? "line-through decoration-1" : ""}`}>
+                <LogoutLink label={"Log-in"} /> with Google and provide
+                necessary permissions.
               </div>
               {weHavePermissions && <div> ✅ </div>}
               {!weHavePermissions && <div> ⚠️ ️</div>}
@@ -68,27 +70,41 @@ const OnBoardingCard = async () => {
           </li>
           <li>
             <div className={"flex flex-row gap-2"}>
-              <div className={`${filtersCount > 0 ? "line-through" : ""}`}>
+              <div className={`${user.icpDescription ? "line-through decoration-1" : ""}`}>
                 Go to the{" "}
-                <Link href={"/dashboard/prospects"} className={"underline"}>
-                  {"Prospects"}
+                <Link href={"/dashboard/icp"} className={"underline"}>
+                  {"ICP"}
                 </Link>{" "}
-                page and create a few filters that represent your ICP
+                page and describe your ICP in natural language
               </div>
-              {filtersCount > 0 && <div> ✅ </div>}
-              {filtersCount === 0 && <div> ⚠️ </div>}
+              {user.icpDescription && <div> ✅ </div>}
+              {!user.icpDescription && <div> ⚠️ </div>}
             </div>
           </li>
+          {/*<li>*/}
+          {/*  <div className={"flex flex-row gap-2"}>*/}
+          {/*    <div className={`${filtersCount > 0 ? "line-through decoration-1" : ""}`}>*/}
+          {/*      Go to the{" "}*/}
+          {/*      <Link href={"/dashboard/prospects"} className={"underline"}>*/}
+          {/*        {"Prospects"}*/}
+          {/*      </Link>{" "}*/}
+          {/*      page and create a few filters that represent your ICP*/}
+          {/*    </div>*/}
+          {/*    {filtersCount > 0 && <div> ✅ </div>}*/}
+          {/*    {filtersCount === 0 && <div> ⚠️ </div>}*/}
+          {/*  </div>*/}
+          {/*</li>*/}
           <li>
             <div className={"flex flex-row gap-2"}>
               <div
-                className={`${wantedProspectsCount > 0 ? "line-through" : ""}`}
+                className={`${wantedProspectsCount > 0 ? "line-through decoration-1" : ""}`}
               >
                 Go to the{" "}
                 <Link href={"/dashboard/prospects"} className={"underline"}>
                   {"Prospects"}
                 </Link>{" "}
-                page and star a few prospects that most accurately reflect your ICP
+                page and star a few prospects that most accurately reflect your
+                ICP
               </div>
               {wantedProspectsCount > 0 && <div> ✅ </div>}
               {wantedProspectsCount === 0 && <div> ⚠️ </div>}

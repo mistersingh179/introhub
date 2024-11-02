@@ -252,6 +252,7 @@ export const ProspectBox = ({
         <ShowChildren showIt={showLinkedInUrls}>
           <LinkWithExternalIcon href={personProfile?.linkedInUrl! ?? "-"} />
         </ShowChildren>
+        {process.env.NODE_ENV === "development" ? contact.email : ""}
       </div>
     </div>
   );

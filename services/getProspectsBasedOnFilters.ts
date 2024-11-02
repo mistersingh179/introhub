@@ -1,7 +1,7 @@
 import { Contact, Prisma, User } from "@prisma/client";
 import prisma from "@/prismaClient";
 import { IntroStates } from "@/lib/introStates";
-import {fullScope} from "@/app/utils/constants";
+import { fullScope } from "@/app/utils/constants";
 
 export type PaginatedValues = {
   currentPage: number;
@@ -98,9 +98,8 @@ const getProspectsBasedOnFilters = async (
       ? Prisma.sql``
       : Prisma.sql`and I.id is null`;
 
-  const sql = Prisma.sql`
-      select distinct on (C.email) C.*
-      from "Contact" C
+  const baseQuery = Prisma.sql`
+  from "Contact" C
                inner join public."User" U on U.id = C."userId"
                inner join public."Account" A on U.id = A."userId" and A.provider='google' and A.scope=${fullScope} -- drastically reduces prospects count
                inner join public."PersonProfile" PP
@@ -115,9 +114,13 @@ const getProspectsBasedOnFilters = async (
         and C."userId" != ${user.id}
         and C."available" = true
         and C."emailCheckPassed" = true
-        and C."lastReceivedAt"
-          >= now() - INTERVAL '1 year'
+        and C."lastReceivedAt" >= now() - INTERVAL '1 year'
         and U."agreedToAutoProspecting" = true -- drastically reduces the prospects we see
+  `;
+
+  const sql = Prisma.sql`
+      select distinct on (C.email) C.*
+      ${baseQuery}
       order by email ASC, "receivedCount" DESC
       offset ${recordsToSkip} limit ${itemsPerPage};
   `;
@@ -129,24 +132,7 @@ const getProspectsBasedOnFilters = async (
 
   const countSql = Prisma.sql`
       select count(distinct C.email)
-      from "Contact" C
-               inner join public."User" U on U.id = C."userId"
-               inner join public."Account" A on U.id = A."userId" and A.provider='google' and A.scope=${fullScope} -- drastically reduces prospects count
-               inner join public."PersonProfile" PP
-                          on C.email = PP.email and PP."linkedInUrl" is not null and PP."fullName" is not null
-               inner join public."PersonExperience" PE on PP.id = PE."personProfileId"
-               inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
-               left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
-               left join public."Category" CAT on CPC."categoryId" = CAT.id
-               left join public."Introduction" I
-                         on I."contactId" = C.id and I."requesterId" = ${user.id}
-      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
-        and C."userId" != ${user.id}
-        and C."available" = true
-        and C."emailCheckPassed" = true
-        and C."lastReceivedAt"
-          >= now() - INTERVAL '1 year'
-        and U."agreedToAutoProspecting" = true -- drastically reduces the prospects we see
+      ${baseQuery}
   `;
   const countSqlResult = await prisma.$queryRaw<{ count: number }[]>(countSql);
   const filteredRecordsCount = Number(countSqlResult[0].count);

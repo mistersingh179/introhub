@@ -52,8 +52,8 @@ const highWorker = new Worker<
     connection: redisClient,
     concurrency: Number(process.env.WORKER_CONCURRENCY_COUNT),
     limiter: {
-      max: 100,
-      duration: 1000,
+      max: 50,
+      duration: 60 * 1000,
     },
     autorun: false,
     metrics: {

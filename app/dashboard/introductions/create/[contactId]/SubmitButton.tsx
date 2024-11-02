@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
 import React from "react";
+import { Loader2 } from "lucide-react";
 
 type SubmitButtonProps = {
   label?: string | React.ReactElement;
@@ -26,6 +27,7 @@ const SubmitButton = React.forwardRef<HTMLButtonElement, SubmitButtonProps>(
   (props, ref) => {
     const { size, label, className, beDisabled, variant } = props;
     const { pending } = useFormStatus();
+    const labelMessage = label ?? "Submit";
     return (
       <Button
         ref={ref}
@@ -35,7 +37,12 @@ const SubmitButton = React.forwardRef<HTMLButtonElement, SubmitButtonProps>(
         disabled={pending || beDisabled}
         size={size}
       >
-        {label ?? "Submit"}
+        {pending && (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...
+          </>
+        )}
+        {!pending && labelMessage}
       </Button>
     );
   },
