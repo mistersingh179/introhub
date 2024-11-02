@@ -77,6 +77,7 @@ model User {
   missingPersonalInfo      Boolean         @default(false)
   forwardableBlurb         String          @default("")
   tokenIssue               Boolean         @default(false)
+  icpDescription           String?
 
   @@index([email])
 }

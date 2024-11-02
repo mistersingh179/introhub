@@ -45,7 +45,7 @@ prisma.$on("query", (e) => {});
     ),
   ]);
 
-  const model = new ChatOpenAI({ model: "gpt-4o" });
+  const model = new ChatOpenAI({ model: "gpt-4o", temperature: 0 });
   const structuredModel = model.withStructuredOutput(permissionAnalysisSchema);
   const chain = chatTemplate.pipe(structuredModel);
 

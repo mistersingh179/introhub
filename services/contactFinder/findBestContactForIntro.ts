@@ -1,14 +1,14 @@
 import { Contact, User } from "@prisma/client";
 import prisma from "@/prismaClient";
 import fetchWantedContact from "@/services/contactFinder/fetchWantedContact";
-import fetchContactFromUserFilters from "@/services/contactFinder/fetchContactFromUserFilters";
+import fetchContactUsingIcp from "@/services/contactFinder/fetchContactUsingIcp";
 
 const findBestContactForIntro = async (user: User): Promise<Contact | null> => {
   console.log("in findBestProspectForIntro for user: ", user.email);
 
   const fetchContactFunctions = [
     fetchWantedContact,
-    fetchContactFromUserFilters,
+    fetchContactUsingIcp
   ];
 
   for (const fetchContact of fetchContactFunctions) {

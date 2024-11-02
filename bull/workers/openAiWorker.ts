@@ -5,9 +5,7 @@ import {
   OpenAiJobNames,
   OpenAiOutputDataType,
 } from "@/bull/dataTypes";
-import enrichAllRemainingUsersUsingApollo from "@/services/enrichAllRemainingUsersUsingApollo";
-import { DownloadMetaDataInput } from "@/services/downloadMetaData";
-import addLlmDescriptionOnPersonProfile from "@/services/addLlmDescriptionOnPersonProfile";
+import addLlmDescriptionOnPersonProfile from "@/services/llm/addLlmDescriptionOnPersonProfile";
 import { PersonProfile } from "@prisma/client";
 import addLlmDescriptionOnAll from "@/services/addLlmDescriptionOnAll";
 
@@ -27,7 +25,7 @@ const openAiWorker: Worker<
         const pp = data as PersonProfile;
         return await addLlmDescriptionOnPersonProfile(pp);
       }
-      case "addLlmDescriptionOnAll" : {
+      case "addLlmDescriptionOnAll": {
         return await addLlmDescriptionOnAll();
       }
       default:
@@ -38,8 +36,8 @@ const openAiWorker: Worker<
     connection: redisClient,
     concurrency: Number(process.env.WORKER_CONCURRENCY_COUNT),
     limiter: {
-      max: 100, // Max 100 requests per minute
-      duration: 1000, // (1 minute)
+      max: 50, // Max 100 requests per minute
+      duration: 60 * 1000, // (1 minute)
     },
     autorun: false,
     metrics: {

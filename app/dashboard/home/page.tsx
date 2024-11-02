@@ -63,17 +63,16 @@ export default async function Home() {
       {user.agreedToAutoProspecting && (
         <Alert variant="default">
           <Check className="h-8 w-8" />
-          <AlertTitle className={"ml-8"}>
-            Sit Back, Relax, and Await Introductions
+          <AlertTitle className="ml-8">
+            Relax and Await Introductions
           </AlertTitle>
-          <AlertDescription className={"ml-8"}>
-            We will auto prospect for you based on your ICP. Keep an eye out for
-            intro emails, where you will be {"cc'd"} when a target prospect
-            consents to an introduction. In the meantime, visit the{" "}
-            <Link href={"/dashboard/prospects"} className={"underline"}>
-              {"Prospects"}
-            </Link>{" "}
-            page to add filters and star more profiles.
+          <AlertDescription className="ml-8">
+            We’ll auto-prospect based on your ICP. Look out for intro emails, as
+            {"you'll"} be {"cc'd"} when a target consents. Update your{" "}
+            <Link href="/dashboard/icp" className="underline">
+              ICP here
+            </Link>
+            .
           </AlertDescription>
         </Alert>
       )}
@@ -103,12 +102,18 @@ export default async function Home() {
       {user.unableToAutoProspect && (
         <Alert variant="destructive">
           <AlertCircle className="h-8 w-8" />
-          <AlertTitle className={"ml-8"}>
-            Auto Prospecting is Disabled
-          </AlertTitle>
-          <AlertDescription className={"ml-8"}>
-            Please consider widening your ICP by starring more prospects and /
-            or creating more Prospect filters.
+          <AlertTitle className="ml-8">Auto-Prospecting Unavailable</AlertTitle>
+          <AlertDescription className="ml-8">
+            We’ll continue attempting auto-prospecting for you daily. Meanwhile,
+            consider broadening your{" "}
+            <Link href={"/dashboard/icp"} className="underline">
+              ICP
+            </Link>{" "}
+            description or{" "}
+            <Link href={"/dashboard/prospects"} className="underline">
+              starring
+            </Link>{" "}
+            more prospects.
           </AlertDescription>
         </Alert>
       )}
