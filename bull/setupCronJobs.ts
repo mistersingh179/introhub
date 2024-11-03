@@ -147,11 +147,9 @@ const setupCronJobs = async () => {
   await addBuildContactsForAllUsers();
   await addEnrichAllContacts();
   // await addLlmDescriptionOnAll();
-  // await addEnrichAllRemainingContactsUsingApollo();
   await addEnrichAllRemainingUsersUsingApollo();
   await addSendProspectsCreateToday();
   await addProcessAllFiltersForEmail();
-  // await addSendEmailForAllApprovedIntros();
   // await addProcessAllUsersForAutoProspecting();
   await addBuildThreadIds();
 };
