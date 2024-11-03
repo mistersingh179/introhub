@@ -146,7 +146,7 @@ const setupCronJobs = async () => {
   // await addSetupMailboxWatchOnAllAccounts();
   await addBuildContactsForAllUsers();
   await addEnrichAllContacts();
-  // await addLlmDescriptionOnAll();
+  await addLlmDescriptionOnAll();
   await addEnrichAllRemainingUsersUsingApollo();
   await addSendProspectsCreateToday();
   await addProcessAllFiltersForEmail();

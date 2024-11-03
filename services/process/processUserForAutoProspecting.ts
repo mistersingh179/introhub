@@ -54,7 +54,7 @@ if (require.main === module) {
   (async () => {
     const user = await prisma.user.findFirstOrThrow({
       where: {
-        email: "sandeep@introhub.net",
+        email: "mistersingh179@gmail.com",
       },
     });
     const ans = await processUserForAutoProspecting(user);
