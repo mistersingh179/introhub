@@ -37,11 +37,9 @@ export default async function Home() {
   });
 
   const k = 1000;
-  // const pineconeMatchedEmails = [];
-  const pineconeMatchedEmails = await getMatchingProspectsFromPinecone(
-    user.icpDescription!,
-    k,
-  );
+  const pineconeMatchedEmails = user.icpDescription
+    ? await getMatchingProspectsFromPinecone(user.icpDescription, k)
+    : [];
 
   const batchSize = 100;
   // const llmMatchedEmails = [];
@@ -57,6 +55,7 @@ export default async function Home() {
       },
     },
   });
+  console.log("prospects found: ", prospects.length);
 
   const { emailToProfile, companyUrlToProfile } =
     await getEmailAndCompanyUrlProfiles(llmMatchedEmails);
@@ -97,9 +96,7 @@ export default async function Home() {
           <div>
             LLM Result Size after filtering the top {batchSize} records:
           </div>
-          <div>
-            {llmMatchedEmails.length}{" "}
-          </div>
+          <div>{llmMatchedEmails.length} </div>
         </div>
       </div>
 
