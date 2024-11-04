@@ -41,7 +41,7 @@ export default async function Home() {
     ? await getMatchingProspectsFromPinecone(user.icpDescription, k)
     : [];
 
-  const batchSize = 100;
+  const batchSize = pineconeMatchedEmails.length > 100 ? 100 : pineconeMatchedEmails.length;
   // const llmMatchedEmails = [];
   const llmMatchedEmails = await getMatchingProspectsFromLlm(
     user.icpDescription!,
