@@ -28,7 +28,6 @@ const getMatchingProspectsFromPinecone = async (
   );
 
   console.log("vectorMatchedProspects: ", vectorMatchedProspects.length);
-  console.log(vectorMatchedProspects);
 
   const emails: string[] = vectorMatchedProspects
     .filter((item) => item[1] >= minScore)
@@ -50,10 +49,9 @@ if (require.main === module) {
         },
       },
     });
+    
 
-    user.icpDescription = "works in sales";
-
-    const ans = await getMatchingProspectsFromPinecone(user.icpDescription!, 5);
+    const ans = await getMatchingProspectsFromPinecone(user.icpDescription!, 1000);
     console.log("ans: ", ans);
   })();
 }

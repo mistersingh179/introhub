@@ -69,40 +69,43 @@ export default async function Home() {
       <div>
         <p className="text-md">
           In natural language describe your ICP (Ideal Customer Profile), hit
-          submit and view the results.
+          submit to view sample prospects.
         </p>
         <ul className="my-4 ml-6 list-disc [&>li]:mt-2">
           <li>
-            If the results match your ICP, you are good and nothing more needs
-            to be done. ✅
+            If the sample prospects match your ICP, you are good and nothing
+            more needs to be done. ✅
           </li>
           <li>
-            If the results {"don't"} match your ICP, modify the the description,
-            hit submit and try again. 🔁
+            If the sample prospects {"don't"} match your ICP, modify the the
+            description, hit submit and try again. 🔁
           </li>
         </ul>
       </div>
       <UpdateIcpForm icpDescription={user.icpDescription ?? undefined} />
 
-      <div className={"flex flex-col gap-1 text-muted-foreground text-sm"}>
-        <div className={"flex flex-row gap-2"}>
-          <div>Vector Database Result Size:</div>
-          <div>
-            {pineconeMatchedEmails.length}{" "}
-            {pineconeMatchedEmails.length === k ? "+" : ""}
+      <div className={"text-2xl"}>Sample Prospects</div>
+
+      {process.env.NODE_ENV === "development" && (
+        <div className={"flex flex-col gap-1 text-muted-foreground text-sm"}>
+          <div className={"flex flex-row gap-2"}>
+            <div>Vector Database Result Size:</div>
+            <div>
+              {pineconeMatchedEmails.length}{" "}
+              {pineconeMatchedEmails.length === k ? "+" : ""}
+            </div>
+          </div>
+          <div className={"flex flex-row gap-2"}>
+            <div>
+              LLM Result Size after filtering the top {batchSize} records:
+            </div>
+            <div>{llmMatchedEmails.length} </div>
           </div>
         </div>
-        <div className={"flex flex-row gap-2"}>
-          <div>
-            LLM Result Size after filtering the top {batchSize} records:
-          </div>
-          <div>{llmMatchedEmails.length} </div>
-        </div>
-      </div>
+      )}
 
       <div>
         <Table>
-          <TableCaption>Matching Prospects</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className={"w-1/2"}>Prospect</TableHead>
@@ -110,6 +113,13 @@ export default async function Home() {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {prospects.length === 0 && (
+              <TableRow>
+                <TableCell className={"col-span-2 text-center"}>
+                  No Sample Prospects Found :-(
+                </TableCell>
+              </TableRow>
+            )}
             {prospects.map((p) => (
               <Row
                 key={p.email}
