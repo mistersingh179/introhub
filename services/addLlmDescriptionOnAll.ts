@@ -2,6 +2,8 @@ import prisma from "@/prismaClient";
 import OpenAiQueue from "@/bull/queues/openAiQueue";
 
 const addLlmDescriptionOnAll = async () => {
+
+  // todo - we are working on person profile without ensuring that a contact for that exists
   const personProfiles = await prisma.personProfile.findMany({
     where: {
       llmDescription: null,

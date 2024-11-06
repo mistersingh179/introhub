@@ -106,6 +106,7 @@ model Introduction {
   permissionEmailThreadId  String?
   introducingEmailThreadId String?
 
+  approvedAt              DateTime?
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
   permissionResponeEmails PermissionResponseEmail[]
