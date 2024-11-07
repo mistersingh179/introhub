@@ -20,6 +20,7 @@ import buildContactsForAllUsers from "@/services/buildContactsForAllUsers";
 import sendEmail, { SendEmailInput } from "@/services/emails/sendEmail";
 import buildThreadIds from "@/services/buildThreadIds";
 import setupMailboxWatchOnAllAccounts from "@/services/setupMailboxWatchOnAllAccounts";
+import processOldApprovedIntros from "@/services/intros/processOldApprovedIntros";
 
 const queueName = "medium";
 
@@ -78,6 +79,9 @@ const mediumWorker: Worker<
       }
       case "buildThreadIds": {
         return await buildThreadIds();
+      }
+      case "processOldApprovedIntros": {
+        return await processOldApprovedIntros();
       }
       default:
         console.error("got unknown job!");
