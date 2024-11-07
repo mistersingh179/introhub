@@ -31,6 +31,10 @@ export default generateAnIntroduction;
 
 if (require.main === module) {
   (async () => {
+    // requester - rod
+    // prospect - mister
+    // facilitator - sandeep
+
     const user = await prisma.user.findFirstOrThrow({
       where: {
         email: "rod@introhub.net",
@@ -38,7 +42,10 @@ if (require.main === module) {
     });
     const prospect = await prisma.contact.findFirstOrThrow({
       where: {
-        id: '2d4c33ce-3348-4c82-8fb0-b1483c49c35e'
+        email: 'mistersingh179@gmail.com',
+        user: {
+          email: 'sandeep@introhub.net'
+        }
       },
       include: {
         user: true

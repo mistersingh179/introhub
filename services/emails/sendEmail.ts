@@ -4,7 +4,7 @@ import { gmail_v1 } from "googleapis";
 import { Account, Introduction } from "@prisma/client";
 import { IntroStates } from "@/lib/introStates";
 import Schema$Message = gmail_v1.Schema$Message;
-import {allowedEmailsForTesting} from "@/app/utils/constants";
+import { allowedEmailsForTesting } from "@/app/utils/constants";
 
 export type PostEmailActionData = {
   intro: Introduction;
@@ -78,6 +78,17 @@ const sendEmail: SendEmail = async (input) => {
     "Entire email message in an RFC 2822 format and base64url encoded string: ",
   );
   console.log(encodedMessage);
+
+  if (postEmailActionData?.intro.id) {
+    const intro = await prisma.introduction.findFirstOrThrow({
+      where: {
+        id: postEmailActionData.intro.id ?? "",
+      },
+    });
+    if (intro.status === IntroStates["introducing email sent"]) {
+      return;
+    }
+  }
 
   try {
     const gmail = await getGmailObject(account);

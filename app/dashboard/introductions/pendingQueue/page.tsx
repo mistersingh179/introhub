@@ -6,6 +6,8 @@ import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfi
 import ScopeMissingMessage from "@/app/dashboard/home/ScopeMissingMessage";
 import { subDays } from "date-fns";
 import IntroTable from "@/app/dashboard/introductions/list/IntroTable";
+import Typography from "@/components/Typography";
+import { IntroStates } from "@/lib/introStates";
 
 export type IntroWithContactFacilitatorAndRequester = Introduction & {
   contact: Contact;
@@ -29,6 +31,7 @@ export default async function PendingQueue() {
         approvedAt: {
           gte: subDays(now, 7),
         },
+        status: IntroStates.approved,
       },
       include: {
         contact: true,
@@ -59,12 +62,26 @@ export default async function PendingQueue() {
       <div className={"flex flex-col gap-4 mt-4"}>
         <ScopeMissingMessage />
 
+        <Typography
+          affects={"lead"}
+          variant={"p"}
+          className={"my-4 mx-2 text-center"}
+        >
+          The following introductions have been approved by the requester and
+          are now in a <span className={"font-semibold"}> 7-day hold </span>{" "}
+          period. As the facilitator, you can review and cancel any
+          introductions within this period. If no action is taken, they will be
+          sent automatically after the hold period ends.
+        </Typography>
+
         <IntroTable
           introductions={recentIntros}
           user={user}
           emailToProfile={emailToProfile}
           companyUrlToProfile={companyUrlToProfile}
           showPagination={false}
+          showRequester={true}
+          showFacilitator={false}
         />
       </div>
     </>

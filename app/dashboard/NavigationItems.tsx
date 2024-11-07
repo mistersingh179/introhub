@@ -42,6 +42,11 @@ export default async function NavigationItems({
       />
       <NavLink
         inSheet={inSheet}
+        name={"Snooze-Queue"}
+        url={"/dashboard/introductions/pendingQueue"}
+      />
+      <NavLink
+        inSheet={inSheet}
         name={"Introductions"}
         url={"/dashboard/introductions/list"}
       />

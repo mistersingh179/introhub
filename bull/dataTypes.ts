@@ -11,6 +11,7 @@ import { OnBoardUserInput } from "@/services/onBoardUser";
 import { SendProspectsCreatedTodayOutput } from "@/services/emails/sendProspectsCreatedToday";
 import Schema$Message = gmail_v1.Schema$Message;
 import { ProcessAllFiltersForEmailOutput } from "@/services/process/processAllFiltersForEmail";
+import {IntroWithContactFacilitatorAndRequester} from "@/app/dashboard/introductions/pendingQueue/page";
 
 export type HighInputDataType = OnBoardUserInput | undefined | User;
 
@@ -44,6 +45,7 @@ export type OpenAiOutputDataType = void;
 export type MediumOutputDataType =
   | DownloadMessagesOutput
   | Schema$Message
+  | IntroWithContactFacilitatorAndRequester[]
   | number
   | undefined
   | void;
@@ -72,6 +74,7 @@ export type MediumJobNames =
   | "downloadMessages"
   | "downloadMetaData"
   | "sendEmail"
+  | "processOldApprovedIntros"
   | "downloadMessagesForAllAccounts"
   | "buildContacts"
   | "buildContactsForAllUsers"

@@ -30,7 +30,8 @@ import { Separator } from "@/components/ui/separator";
 import {
   CompanyProfileWithCategories,
   CompanyUrlToProfile,
-  EmailToProfile, PersonProfileWithExp,
+  EmailToProfile,
+  PersonProfileWithExp,
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { buildS3ImageUrl, getS3Url } from "@/lib/url";
@@ -42,6 +43,7 @@ import ShowChildren from "@/components/ShowChildren";
 import FacilitatorBox from "@/components/FacilitatorBox";
 import getAllProfiles from "@/services/getAllProfiles";
 import { userProfileS3DirName } from "@/app/utils/constants";
+import { format } from "date-fns";
 
 const IntroTable = ({
   introductions,
@@ -187,7 +189,11 @@ export const IntroStatusBadge = ({
             </Badge>
           </div>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent
+          side={"right"}
+          sideOffset={10}
+          className={"sm:max-w-sm md:max-w-xl"}
+        >
           <p className={"w-40"}>
             {IntroStatesWithMeaning[introduction.status as IntroStatesKey]}
           </p>
@@ -234,7 +240,6 @@ export const ProspectBox = ({
   personExp: PersonExperience;
   showLinkedInUrls?: boolean;
 }) => {
-
   if (!personProfile?.linkedInUrl || !personProfile?.fullName) {
     return <></>;
   }
@@ -344,7 +349,13 @@ const IntroRow = ({
               />
             )}
 
-            <IntroStatusBadge introduction={introduction} />
+            <div className={"w-fit"}>
+              <IntroStatusBadge introduction={introduction} />
+            </div>
+
+            {introduction.approvedAt && (
+              <div>Approved At: {format(introduction.approvedAt, "PPP")}</div>
+            )}
           </div>
         </TableCell>
       </TableRow>

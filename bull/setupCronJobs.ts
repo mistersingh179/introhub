@@ -141,6 +141,20 @@ const addProcessAllUsersForAutoProspecting = async () => {
 //   console.log("schedule job: ", name, id, opts);
 // };
 
+const addProcessOldApprovedIntros = async () => {
+  const jobObj = await mediumQueue.add(
+    "processOldApprovedIntros",
+    null,
+    {
+      repeat: {
+        pattern: "0 11 * * *",
+      },
+    },
+  );
+  const { name, id, opts } = jobObj;
+  console.log("schedule job: ", name, id, opts);
+}
+
 const setupCronJobs = async () => {
   await addDownloadMessagesForAllAccounts();
   // await addSetupMailboxWatchOnAllAccounts();
@@ -152,6 +166,7 @@ const setupCronJobs = async () => {
   await addProcessAllFiltersForEmail();
   // await addProcessAllUsersForAutoProspecting();
   await addBuildThreadIds();
+  await addProcessOldApprovedIntros()
 };
 
 export default setupCronJobs;
