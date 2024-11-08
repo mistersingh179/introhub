@@ -105,6 +105,7 @@ model Introduction {
   threadId                 String?
   permissionEmailThreadId  String?
   introducingEmailThreadId String?
+  cancellationReason       String?
 
   approvedAt              DateTime?
   createdAt               DateTime                  @default(now())
