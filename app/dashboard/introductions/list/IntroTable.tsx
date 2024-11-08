@@ -43,7 +43,7 @@ import ShowChildren from "@/components/ShowChildren";
 import FacilitatorBox from "@/components/FacilitatorBox";
 import getAllProfiles from "@/services/getAllProfiles";
 import { userProfileS3DirName } from "@/app/utils/constants";
-import { format } from "date-fns";
+import { format, formatDistance, subDays } from "date-fns";
 import CancelIntroDialog from "@/app/dashboard/introductions/pendingQueue/CancelIntroDialog";
 
 const IntroTable = ({
@@ -56,6 +56,7 @@ const IntroTable = ({
   showPagination = true,
   showCaption = true,
   showHeader = true,
+  showCancel = false,
 }: {
   introductions: IntroWithContactFacilitatorAndRequester[];
   user: User;
@@ -66,6 +67,7 @@ const IntroTable = ({
   showPagination?: boolean;
   showCaption?: boolean;
   showHeader?: boolean;
+  showCancel?: boolean;
 }) => {
   return (
     <>
@@ -79,6 +81,7 @@ const IntroTable = ({
                 {showRequester && <>Requester</>}
                 {showFacilitator && <>Facilitator</>}
               </TableHead>
+              {showCancel && <TableHead className={"p-2"}></TableHead>}
             </TableRow>
           </TableHeader>
         )}
@@ -100,6 +103,7 @@ const IntroTable = ({
                 companyUrlToProfile={companyUrlToProfile}
                 showRequester={showRequester}
                 showFacilitator={showFacilitator}
+                showCancel={showCancel}
               />
             );
           })}
@@ -313,6 +317,7 @@ const IntroRow = ({
   companyUrlToProfile,
   showRequester,
   showFacilitator,
+  showCancel,
 }: {
   introduction: IntroWithContactFacilitatorAndRequester;
   user: User;
@@ -320,6 +325,7 @@ const IntroRow = ({
   companyUrlToProfile: CompanyUrlToProfile;
   showRequester: boolean;
   showFacilitator: boolean;
+  showCancel: boolean;
 }) => {
   const { contactProfiles, requestProfiles, facilitatorProfiles } =
     getAllProfiles(introduction, emailToProfile, companyUrlToProfile);
@@ -327,7 +333,7 @@ const IntroRow = ({
   return (
     <>
       <TableRow className={""} key={introduction.id}>
-        <TableCell className={"p-2 w-1/2"}>
+        <TableCell className={"p-2 w-1/3"}>
           <div className={"flex flex-col gap-4 overflow-hidden text-ellipsis"}>
             <ProspectBox
               contact={introduction.contact}
@@ -341,7 +347,7 @@ const IntroRow = ({
           </div>
         </TableCell>
 
-        <TableCell className={"p-2 w-1/2"}>
+        <TableCell className={"p-2 w-1/3"}>
           <div className={"flex flex-col gap-4"}>
             {showRequester && (
               <RequesterBox
@@ -360,11 +366,21 @@ const IntroRow = ({
             <div className={"w-fit"}>
               <IntroStatusBadge introduction={introduction} />
             </div>
-
-            <div>Generated At: {format(introduction.createdAt, "PPP")}</div>
           </div>
-          <CancelIntroDialog intro={introduction} />
         </TableCell>
+
+        {showCancel && (
+          <TableCell>
+            <div className={"flex flex-col gap-4"}>
+              <div>Generated At: {format(introduction.createdAt, "PPP")}</div>
+              <div>
+                Time Left:{" "}
+                {formatDistance(introduction.createdAt, subDays(new Date(), 7))}
+              </div>
+              <CancelIntroDialog intro={introduction} />
+            </div>
+          </TableCell>
+        )}
       </TableRow>
     </>
   );

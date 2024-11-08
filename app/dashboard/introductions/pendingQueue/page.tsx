@@ -84,6 +84,7 @@ export default async function PendingQueue() {
           showPagination={false}
           showRequester={true}
           showFacilitator={false}
+          showCancel={true}
         />
       </div>
     </>

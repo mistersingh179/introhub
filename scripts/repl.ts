@@ -7,7 +7,7 @@ import {
 } from "@langchain/core/prompts";
 import { SystemMessage } from "@langchain/core/messages";
 import { RunnableSequence } from "@langchain/core/runnables";
-import {subDays} from "date-fns";
+import {differenceInMilliseconds, differenceInSeconds, formatDistance, subDays} from "date-fns";
 import {IntroStates} from "@/lib/introStates";
 
 const { PubSub } = require("@google-cloud/pubsub");
@@ -18,30 +18,16 @@ prisma.$on("query", (e) => {});
 (async () => {
   console.log("Starting repl!");
 
-  const user = await prisma.user.findFirstOrThrow({
-    where: {
-      email: "rod@introhub.net",
-    },
-  });
+  const introDate = new Date(2024, 10, 2);
   const now = new Date();
-  const ans = await prisma.introduction.findMany({
-    where: {
-      requesterId: user.id,
-      approvedAt: {
-        gte: subDays(now, 7),
-      },
-      status: IntroStates.approved
-    },
-    include: {
-      contact: true,
-      facilitator: true,
-      requester: true,
-    },
-    orderBy: {
-      updatedAt: "desc",
-    },
+  const targetDate = subDays(now, 7);
+
+  const timeLeft = differenceInMilliseconds(introDate, targetDate);
+  const words = formatDistance(introDate, targetDate, {
+    addSuffix: true
   });
-  console.log(ans);
+
+  console.log(words);
 })();
 
 export {};
