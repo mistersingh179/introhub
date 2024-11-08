@@ -9,13 +9,22 @@ import { redirect } from "next/navigation";
 import { Introduction, Prisma } from "@prisma/client";
 import IntroductionUncheckedUpdateInput = Prisma.IntroductionUncheckedUpdateInput;
 import { goingToChangeIntroStatus } from "@/services/canStateChange";
+import { z, ZodError } from "zod";
 
-export default async function cancelIntroAction(
-  introductionId: string,
-  prevState: undefined | string,
+const cancelIntroActionSchema = z.object({
+  introductionId: z.string(),
+  cancellationReason: z.string().min(1),
+});
+
+type cancelIntroActionFlattenErrorType = z.inferFlattenedErrors<
+  typeof cancelIntroActionSchema
+>;
+
+const cancelIntroAction = async (
+  prevState: cancelIntroActionFlattenErrorType| undefined | string,
   formData: FormData,
-) {
-  console.log("in cancelIntroAction with: ", introductionId);
+) => {
+  console.log("in cancelIntroAction with: ", formData);
   const session = (await auth()) as Session;
   const user = await prisma.user.findFirstOrThrow({
     where: {
@@ -24,11 +33,18 @@ export default async function cancelIntroAction(
   });
 
   try {
+    const { introductionId, cancellationReason } =
+      cancelIntroActionSchema.parse({
+        introductionId: formData.get("introductionId"),
+        cancellationReason: formData.get("cancellationReason"),
+      });
+
     await goingToChangeIntroStatus(introductionId, IntroStates.cancelled);
 
     await prisma.introduction.update({
       data: {
         status: IntroStates.cancelled,
+        cancellationReason: cancellationReason,
       },
       where: {
         id: introductionId,
@@ -43,14 +59,17 @@ export default async function cancelIntroAction(
       },
     });
   } catch (e) {
-    console.log("an error occurred!: ", e);
-    if (e instanceof Error) {
+    if (e instanceof ZodError) {
+      return e.flatten();
+    } else if (e instanceof Error) {
       return e.message;
     } else {
-      return "unable to cancel introduction!";
+      return "Unable to cancel introduction";
     }
   }
 
   revalidatePath("/dashboard/introductions/pendingQueue");
   redirect("/dashboard/introductions/pendingQueue");
-}
+};
+
+export default cancelIntroAction;

@@ -374,8 +374,10 @@ const IntroRow = ({
             <div className={"flex flex-col gap-4"}>
               <div>Generated At: {format(introduction.createdAt, "PPP")}</div>
               <div>
-                Time Left:{" "}
-                {formatDistance(introduction.createdAt, subDays(new Date(), 7))}
+                Hold Ends:{" "}
+                {formatDistance(introduction.createdAt, subDays(new Date(), 7), {
+                  addSuffix: true
+                })}
               </div>
               <CancelIntroDialog intro={introduction} />
             </div>
