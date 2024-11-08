@@ -74,7 +74,7 @@ export type MediumJobNames =
   | "downloadMessages"
   | "downloadMetaData"
   | "sendEmail"
-  | "processOldApprovedIntros"
+  | "processOldPendingApprovalIntros"
   | "downloadMessagesForAllAccounts"
   | "buildContacts"
   | "buildContactsForAllUsers"

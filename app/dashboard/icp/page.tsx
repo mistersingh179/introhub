@@ -115,7 +115,7 @@ export default async function Home() {
           <TableBody>
             {prospects.length === 0 && (
               <TableRow>
-                <TableCell className={"col-span-2 text-center"}>
+                <TableCell colSpan={2} className={"text-center"}>
                   No Sample Prospects Found :-(
                 </TableCell>
               </TableRow>
