@@ -28,10 +28,10 @@ export default async function PendingQueue() {
     await prisma.introduction.findMany({
       where: {
         requesterId: user.id,
-        approvedAt: {
+        createdAt: {
           gte: subDays(now, 7),
         },
-        status: IntroStates.approved,
+        status: IntroStates["pending approval"],
       },
       include: {
         contact: true,
@@ -63,15 +63,17 @@ export default async function PendingQueue() {
         <ScopeMissingMessage />
 
         <Typography
-          affects={"lead"}
           variant={"p"}
           className={"my-4 mx-2 text-center"}
         >
-          The following introductions have been approved by the requester and
-          are now in a <span className={"font-semibold"}> 7-day hold </span>{" "}
-          period. As the facilitator, you can review and cancel any
-          introductions within this period. If no action is taken, they will be
-          sent automatically after the hold period ends.
+          The following introductions have been auto-generated and are currently
+          in a <span className={"font-semibold"}>7-day hold</span> period. As
+          the facilitator, you may review and cancel any introductions during
+          this time. If no action is taken, the prospect will be emailed at the
+          end of the hold period to confirm if they want to proceed with the
+          introduction.{" "}
+          <span className={"font-semibold"}>Only if they accept</span> will the
+          introduction be made.
         </Typography>
 
         <IntroTable

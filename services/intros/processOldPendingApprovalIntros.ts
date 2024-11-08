@@ -4,18 +4,19 @@ import { subDays } from "date-fns";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/pendingQueue/page";
 import sendIntroducingBothEmail from "@/services/emails/sendIntroducingBothEmail";
 import { IntroStates } from "@/lib/introStates";
+import sendAskingPermissionToMakeIntroEmail from "@/services/emails/sendAskingPermissionToMakeIntroEmail";
 
-const processOldApprovedIntros = async (): Promise<
+const processOldPendingApprovalIntros = async (): Promise<
   IntroWithContactFacilitatorAndRequester[]
 > => {
   const now = new Date();
-  const allOldApprovedIntros: IntroWithContactFacilitatorAndRequester[] =
+  const allOldPendingApprovalIntros: IntroWithContactFacilitatorAndRequester[] =
     await prisma.introduction.findMany({
       where: {
-        approvedAt: {
+        createdAt: {
           lt: subDays(now, 7),
         },
-        status: IntroStates.approved,
+        status: IntroStates["pending approval"],
       },
       include: {
         contact: true,
@@ -23,17 +24,17 @@ const processOldApprovedIntros = async (): Promise<
         requester: true,
       },
     });
-  console.log("allOldApprovedIntros: ", allOldApprovedIntros);
-  for (const intro of allOldApprovedIntros) {
-    await sendIntroducingBothEmail(intro);
+  console.log("allOldPendingApprovalIntros: ", allOldPendingApprovalIntros);
+  for (const intro of allOldPendingApprovalIntros) {
+    await sendAskingPermissionToMakeIntroEmail(intro);
   }
-  return allOldApprovedIntros;
+  return allOldPendingApprovalIntros;
 };
 
-export default processOldApprovedIntros;
+export default processOldPendingApprovalIntros;
 
 if (require.main === module) {
   (async () => {
-    await processOldApprovedIntros();
+    await processOldPendingApprovalIntros();
   })();
 }

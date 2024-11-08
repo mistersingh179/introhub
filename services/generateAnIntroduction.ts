@@ -23,7 +23,7 @@ const generateAnIntroduction = async (
       requester: true,
     },
   });
-  await sendAskingPermissionToMakeIntroEmail(intro);
+  console.log("created intro: ", intro);
   return intro;
 };
 

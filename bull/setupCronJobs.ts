@@ -141,9 +141,9 @@ const addProcessAllUsersForAutoProspecting = async () => {
 //   console.log("schedule job: ", name, id, opts);
 // };
 
-const addProcessOldApprovedIntros = async () => {
+const addProcessOldPendingApprovalIntros = async () => {
   const jobObj = await mediumQueue.add(
-    "processOldApprovedIntros",
+    "processOldPendingApprovalIntros",
     null,
     {
       repeat: {
@@ -166,7 +166,7 @@ const setupCronJobs = async () => {
   await addProcessAllFiltersForEmail();
   // await addProcessAllUsersForAutoProspecting();
   await addBuildThreadIds();
-  await addProcessOldApprovedIntros()
+  await addProcessOldPendingApprovalIntros()
 };
 
 export default setupCronJobs;

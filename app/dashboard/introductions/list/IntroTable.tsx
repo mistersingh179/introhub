@@ -44,6 +44,7 @@ import FacilitatorBox from "@/components/FacilitatorBox";
 import getAllProfiles from "@/services/getAllProfiles";
 import { userProfileS3DirName } from "@/app/utils/constants";
 import { format } from "date-fns";
+import CancelIntroDialog from "@/app/dashboard/introductions/pendingQueue/CancelIntroDialog";
 
 const IntroTable = ({
   introductions,
@@ -82,6 +83,13 @@ const IntroTable = ({
           </TableHeader>
         )}
         <TableBody>
+          {introductions.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={2} className={"text-center"}>
+                No pending Intros
+              </TableCell>
+            </TableRow>
+          )}
           {introductions.map((introduction) => {
             return (
               <IntroRow
@@ -353,10 +361,9 @@ const IntroRow = ({
               <IntroStatusBadge introduction={introduction} />
             </div>
 
-            {introduction.approvedAt && (
-              <div>Approved At: {format(introduction.approvedAt, "PPP")}</div>
-            )}
+            <div>Generated At: {format(introduction.createdAt, "PPP")}</div>
           </div>
+          <CancelIntroDialog intro={introduction} />
         </TableCell>
       </TableRow>
     </>

@@ -85,7 +85,7 @@ const sendEmail: SendEmail = async (input) => {
         id: postEmailActionData.intro.id ?? "",
       },
     });
-    if (intro.status === IntroStates["introducing email sent"]) {
+    if (intro.status === postEmailActionData.successState) {
       return;
     }
   }

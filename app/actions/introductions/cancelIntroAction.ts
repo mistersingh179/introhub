@@ -51,6 +51,6 @@ export default async function cancelIntroAction(
     }
   }
 
-  revalidatePath("/dashboard/introductions/list");
-  redirect("/dashboard/introductions/list");
+  revalidatePath("/dashboard/introductions/pendingQueue");
+  redirect("/dashboard/introductions/pendingQueue");
 }
