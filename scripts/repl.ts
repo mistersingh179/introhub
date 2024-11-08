@@ -18,16 +18,24 @@ prisma.$on("query", (e) => {});
 (async () => {
   console.log("Starting repl!");
 
-  const introDate = new Date(2024, 10, 2);
-  const now = new Date();
-  const targetDate = subDays(now, 7);
+  const introductionId = 'cm395l9as0001oya4jyk32d0w'
 
-  const timeLeft = differenceInMilliseconds(introDate, targetDate);
-  const words = formatDistance(introDate, targetDate, {
-    addSuffix: true
+  const intro = await prisma.introduction.findFirstOrThrow({
+    where: {
+      // facilitatorId: user.id,
+      id: introductionId,
+      status: IntroStates["pending approval"],
+    },
+    include: {
+      contact: true,
+      facilitator: true,
+      requester: true,
+    },
   });
 
-  console.log(words);
+  console.log(intro);
+
+
 })();
 
 export {};

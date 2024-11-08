@@ -27,7 +27,7 @@ export default async function PendingQueue() {
   const recentIntros: IntroWithContactFacilitatorAndRequester[] =
     await prisma.introduction.findMany({
       where: {
-        requesterId: user.id,
+        facilitatorId: user.id,
         createdAt: {
           gte: subDays(now, 7),
         },

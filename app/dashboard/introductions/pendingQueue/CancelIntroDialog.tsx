@@ -27,7 +27,7 @@ const CancelIntroDialog = (props: CancelIntroDialogProps) => {
         <DialogTrigger asChild>
           <Button
             variant={"destructive"}
-            className={"ml-2 w-fit"}
+            className={"w-fit mt-4"}
           >
             <MessageCircleOff size={14} className={'mr-2'} />
             Cancel
