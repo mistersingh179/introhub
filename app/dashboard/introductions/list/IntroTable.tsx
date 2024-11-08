@@ -45,6 +45,7 @@ import getAllProfiles from "@/services/getAllProfiles";
 import { userProfileS3DirName } from "@/app/utils/constants";
 import { format, formatDistance, subDays } from "date-fns";
 import CancelIntroDialog from "@/app/dashboard/introductions/pendingQueue/CancelIntroDialog";
+import FastTrackIntroForm from "@/app/dashboard/introductions/pendingQueue/FastTrackIntroForm";
 
 const IntroTable = ({
   introductions,
@@ -375,11 +376,18 @@ const IntroRow = ({
               <div>Generated At: {format(introduction.createdAt, "PPP")}</div>
               <div>
                 Hold Ends:{" "}
-                {formatDistance(introduction.createdAt, subDays(new Date(), 7), {
-                  addSuffix: true
-                })}
+                {formatDistance(
+                  introduction.createdAt,
+                  subDays(new Date(), 7),
+                  {
+                    addSuffix: true,
+                  },
+                )}
               </div>
-              <CancelIntroDialog intro={introduction} />
+              <div className={"flex flex-row gap-4 mt-[-16px]"}>
+                <CancelIntroDialog intro={introduction} />
+                <FastTrackIntroForm intro={introduction} />
+              </div>
             </div>
           </TableCell>
         )}

@@ -8,6 +8,7 @@ import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/Submi
 import { useFormState } from "react-dom";
 import { useEffect, useState } from "react";
 import canStateChange from "@/services/canStateChange";
+import {Input} from "@/components/ui/input";
 
 type IntroCancelFormProps = {
   intro: IntroWithContactFacilitatorAndRequester;
@@ -15,7 +16,7 @@ type IntroCancelFormProps = {
 export default function IntroCancelForm(props: IntroCancelFormProps) {
   const { intro } = props;
   const [submittedAt, setSubmittedAt] = useState<undefined | number>(undefined);
-  const action = cancelIntroAction.bind(null, intro.id);
+  const action = cancelIntroAction;
   const [errorMessage, dispatch] = useFormState(action, undefined);
   const { toast } = useToast();
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function IntroCancelForm(props: IntroCancelFormProps) {
   return (
     <>
       <form action={formActionHandler}>
+        <Input type={'hidden'} name={'introductionId'} value={intro.id} />
         <SubmitButton variant={'link'} label={"Cancel Intro"} beDisabled={!canChange} />
       </form>
     </>
