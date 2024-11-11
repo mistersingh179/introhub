@@ -12,6 +12,7 @@ import Link from "next/link";
 import LogOutSimpleLink from "@/app/dashboard/home/LogOutSimpleLink";
 import AutoProspectingDialog from "@/app/dashboard/AutoProspectingDialog";
 import doWeHaveFullScope from "@/services/doWeHaveFullScope";
+import UserGaDataPush from "@/app/utils/UserGaDataPush";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -168,6 +169,9 @@ export default async function Home() {
             . We are missing important information.
           </AlertDescription>
         </Alert>
+      )}
+      {process.env.NODE_ENV === "production" && (
+        <UserGaDataPush user={user} pageTitle={"Home"} />
       )}
     </div>
   );
