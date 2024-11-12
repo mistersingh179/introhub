@@ -1,7 +1,10 @@
 import MediumQueue, { mediumQueueEvents } from "@/bull/queues/mediumQueue";
 import prisma from "@/prismaClient";
-import ApolloQueue from "@/bull/queues/apolloQueue";
-import {setupMailboxWatch} from "@/services/setupMailboxWatchOnAllAccounts";
+import ApolloQueue, { apolloQueueEvents } from "@/bull/queues/apolloQueue";
+import { setupMailboxWatch } from "@/services/setupMailboxWatchOnAllAccounts";
+import setupCompetitorsOnUser from "@/services/setupCompetitorsOnUser";
+
+export const FiveMinutes = 5 * 60 * 1000;
 
 export type OnBoardUserInput = {
   userId: string;
@@ -23,12 +26,13 @@ const onBoardUser: OnBoardUser = async (input) => {
   const email = user.email!;
   const account = user.accounts[0];
 
-  await ApolloQueue.add("enrichContactUsingApollo", email);
+  const enrichJobObj = await ApolloQueue.add("enrichContactUsingApollo", email);
+  await enrichJobObj.waitUntilFinished(apolloQueueEvents, FiveMinutes);
 
   const downloadMessagesJob = await MediumQueue.add("downloadMessages", {
     account: account,
   });
-  await downloadMessagesJob.waitUntilFinished(mediumQueueEvents, 5 * 60 * 1000);
+  await downloadMessagesJob.waitUntilFinished(mediumQueueEvents, FiveMinutes);
 
   // using delay to wait for the downloadMetaData job
   // using priority to run after downloadMetaData job
@@ -39,7 +43,7 @@ const onBoardUser: OnBoardUser = async (input) => {
     delay: 60 * 1000,
     priority: 10,
   });
-  await buildContactsJob.waitUntilFinished(mediumQueueEvents, 5 * 60 * 1000);
+  await buildContactsJob.waitUntilFinished(mediumQueueEvents, FiveMinutes);
 
   const contacts = await prisma.contact.findMany({
     where: {
@@ -49,7 +53,8 @@ const onBoardUser: OnBoardUser = async (input) => {
   for (const contact of contacts) {
     await ApolloQueue.add("enrichContactUsingApollo", email);
   }
-  await setupMailboxWatch({...account, user: user})
+  await setupMailboxWatch({ ...account, user: user });
+  await setupCompetitorsOnUser(user);
 };
 
 export default onBoardUser;

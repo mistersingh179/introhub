@@ -2,6 +2,7 @@ import prisma from "@/prismaClient";
 import peopleEnrichmentByLinkedinUrlApiCall from "@/services/helpers/apollo/peopleEnrichmentByLinkedinUrlApiCall";
 import enrichContactUsingApollo from "@/services/enrichContactUsingApollo";
 import isUserMissingPersonalInfo from "@/services/isUserMissingPersonalInfo";
+import setupCompetitorsOnUser from "@/services/setupCompetitorsOnUser";
 
 type ManuallyConnectEmailAndPeopleEnrichment = (
   email: string,
@@ -56,8 +57,9 @@ const manuallyConnectEmailAndPeopleEnrichment: ManuallyConnectEmailAndPeopleEnri
     });
     if (user) {
       await isUserMissingPersonalInfo(user);
+      await setupCompetitorsOnUser(user);
     }
-
+    
     return enrichmentResult?.response;
   };
 export default manuallyConnectEmailAndPeopleEnrichment;

@@ -6,6 +6,7 @@ import getFacilitatorIdsWhoAlreadyMadeIntros from "@/services/contactFinder/getF
 import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
 import getFacilitatorIdsWhoAreMissingFullScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingFullScope";
 import getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts";
+import getFacilitatorIdsOfCompetitors from "@/services/contactFinder/getFacilitatorIdsOfCompetitors";
 
 const fetchWantedContact = async (user: User): Promise<Contact | null> => {
   const contactIdsOfOthersUsersKnownToThisUser =
@@ -18,6 +19,7 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
     await getFacilitatorIdsWhoAlreadyMadeIntros();
   const facilitatorIdsWhoAreMissingFullScope =
     await getFacilitatorIdsWhoAreMissingFullScope();
+  const facilitatorIdsOfCompetitors = await getFacilitatorIdsOfCompetitors(user);
 
   const wantedContact = await prisma.contact.findFirst({
     where: {
@@ -38,6 +40,7 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
         notIn: [
           ...facilitatorIdsUsedRecently,
           ...facilitatorIdsWhoAreMissingFullScope,
+          ...facilitatorIdsOfCompetitors
         ],
       },
       user: {
