@@ -6,8 +6,8 @@ import getFacilitatorIdsWhoAlreadyMadeIntros from "@/services/contactFinder/getF
 import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
 import getFacilitatorIdsWhoAreMissingFullScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingFullScope";
 import getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts";
-import getContactIdsWhichHaveSameLinkedInUrlAsThisUser
-  from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlAsThisUser";
+import getContactIdsWhichHaveSameLinkedInUrlAsThisUser from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlAsThisUser";
+import getFacilitatorIdsOfCompetitors from "@/services/contactFinder/getFacilitatorIdsOfCompetitors";
 
 const fetchContactsFromProvidedEmails = async (
   user: User,
@@ -17,13 +17,16 @@ const fetchContactsFromProvidedEmails = async (
     await getContactIdsOfOthersUsersKnownToThisUser(user);
   const contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts =
     await getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts(user);
-  const contactIdsWhichHaveSameLinkedInUrlAsThisUser = await getContactIdsWhichHaveSameLinkedInUrlAsThisUser(user)
+  const contactIdsWhichHaveSameLinkedInUrlAsThisUser =
+    await getContactIdsWhichHaveSameLinkedInUrlAsThisUser(user);
   const contactIdsTouchedByUser = await getContactIdsTouchedByUser(user);
   const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
   const facilitatorIdsWhoAreMissingFullScope =
     await getFacilitatorIdsWhoAreMissingFullScope();
+  const facilitatorIdsOfCompetitors =
+    await getFacilitatorIdsOfCompetitors(user);
 
   const contactsAvailable = await prisma.contact.findMany({
     where: {
@@ -36,14 +39,15 @@ const fetchContactsFromProvidedEmails = async (
           ...contactIdsTouchedByUser,
           ...contactIdsOfOthersUsersKnownToThisUser,
           ...contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts,
-          ...contactIdsWhichHaveSameLinkedInUrlAsThisUser
+          ...contactIdsWhichHaveSameLinkedInUrlAsThisUser,
         ],
       },
       userId: {
         notIn: [
           ...facilitatorIdsUsedRecently,
           ...facilitatorIdsWhoAreMissingFullScope,
-          user.id
+          user.id,
+          ...facilitatorIdsOfCompetitors,
         ],
       },
       user: {

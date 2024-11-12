@@ -78,8 +78,27 @@ model User {
   forwardableBlurb         String          @default("")
   tokenIssue               Boolean         @default(false)
   icpDescription           String?
+  competitorsInitiated     Competition[]   @relation("UserAsInitiator")
+  competitorsReceived      Competition[]   @relation("UserAsReceiver")
 
   @@index([email])
+}
+
+model Competition {
+  id          String @id @default(cuid())
+  initiatorId String
+  initiator   User   @relation("UserAsInitiator", fields: [initiatorId], references: [id], onDelete: Cascade)
+  receiverId  String
+  receiver    User   @relation("UserAsReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  reason    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([initiatorId, receiverId], name: "unique_competition_pair_initiator_receiver")
+  @@unique([receiverId, initiatorId], name: "unique_competition_pair_receiver_initiator")
+  @@index([initiatorId])
+  @@index([receiverId])
 }
 
 model Profile {
