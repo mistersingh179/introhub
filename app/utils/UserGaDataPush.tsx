@@ -1,6 +1,7 @@
 import Script from "next/script";
 import * as React from "react";
 import { User } from "@prisma/client";
+import crypto from 'crypto';
 
 type UserGaDataPushProps = {
   user: User;
@@ -9,6 +10,9 @@ type UserGaDataPushProps = {
 
 export default function UserGaDataPush(props: UserGaDataPushProps) {
   const { user, pageTitle } = props;
+  const secretKey = process.env.INTERCOM_WEB_IDENTITY!; // IMPORTANT: your web Identity Verification secret key - keep it safe!
+  const userIdentifier = user.id.toString(); // IMPORTANT: a UUID to identify your user
+  const hash = crypto.createHmac('sha256', secretKey).update(userIdentifier).digest('hex');
   return (
     <>
       <Script id="ga-dataLayer" strategy="lazyOnload">
@@ -26,7 +30,8 @@ export default function UserGaDataPush(props: UserGaDataPushProps) {
             missingPersonalInfo: ${user.missingPersonalInfo},
             forwardableBlurb: ${JSON.stringify(user.forwardableBlurb)},
             tokenIssue: ${user.tokenIssue},
-            icpDescription: "${user.icpDescription}"
+            icpDescription: "${user.icpDescription}",
+            user_hash: "${hash}"
           });
         `}
       </Script>
