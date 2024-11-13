@@ -3,7 +3,7 @@ import { User } from "@prisma/client";
 import areTwoUsersCompetitive from "@/services/llm/areTwoUsersCompetitive";
 
 const setupCompetitorsOnUser = async (user: User) => {
-  console.log("in setupCompetitorsOnUser with user: ", user.email);
+  console.log("started setupCompetitorsOnUser with user: ", user.email);
 
   const otherUsers = await prisma.user.findMany({
     where: {
@@ -45,6 +45,7 @@ const setupCompetitorsOnUser = async (user: User) => {
       );
     }
   }
+  console.log("finished setupCompetitorsOnUser with user: ", user.email);
 };
 
 export default setupCompetitorsOnUser;

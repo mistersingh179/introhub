@@ -47,12 +47,13 @@ export default async function Competitors() {
   const { competitorsInitiated } = user;
   console.log("** competitorsInitiated: ", competitorsInitiated);
 
-  const competitorsIdHash = competitorsInitiated.reduce<
-    Record<string, string>
-  >((pv, cv) => {
-    pv[cv.receiverId] = cv.reason;
-    return pv;
-  }, {});
+  const competitorsIdHash = competitorsInitiated.reduce<Record<string, string>>(
+    (pv, cv) => {
+      pv[cv.receiverId] = cv.reason;
+      return pv;
+    },
+    {},
+  );
   console.log("** competitorsIdHash: ", competitorsIdHash);
 
   const otherUsers = await prisma.user.findMany({
@@ -71,9 +72,8 @@ export default async function Competitors() {
       <h1 className={"text-2xl my-8"}>Competitors</h1>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className={'flex flex-col sm:table-row'}>
             <TableHead>User</TableHead>
-            <TableHead>Company</TableHead>
             <TableHead>Status</TableHead>
           </TableRow>
         </TableHeader>
@@ -114,27 +114,57 @@ const Row = (props: RowProps) => {
   }
 
   return (
-    <TableRow>
+    <TableRow className={'flex flex-col sm:table-row'}>
       <TableCell>
-        <FacilitatorBox user={otherUser} personExp={personExp} />
-      </TableCell>
-      <TableCell>
-        <CompanyBox companyProfile={companyProfile} personExp={personExp} />
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className={"flex flex-col gap-4"}>
+                <FacilitatorBox user={otherUser} personExp={personExp} />
+                <CompanyBox
+                  companyProfile={companyProfile}
+                  personExp={personExp}
+                />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent
+              side={"right"}
+              sideOffset={10}
+              className={"sm:max-w-sm md:max-w-xl"}
+            >
+              {personProfile.llmDescription}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </TableCell>
       <TableCell>
         {competitorsIdHash[otherUser.id] ? (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge variant={"destructive"}>Competitive & thus Blocked</Badge>
+                <Badge variant={"destructive"}>Competitive</Badge>
               </TooltipTrigger>
               <TooltipContent className={"w-64"}>
-                {competitorsIdHash[otherUser.id]}
+                <div>
+                  This user is a competitor and cannot request introductions
+                  through you. 🚫
+                </div>
+                <div className={"my-2"}>{competitorsIdHash[otherUser.id]}</div>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         ) : (
-          <Badge variant={"default"}>Non-Competitive & thus may request Intros</Badge>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant={"default"}>Non-Competitive</Badge>
+              </TooltipTrigger>
+              <TooltipContent className={"w-64"}>
+                This user does not compete with you and can request
+                introductions through you. ✅ {competitorsIdHash[otherUser.id]}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
       </TableCell>
     </TableRow>
