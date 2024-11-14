@@ -205,7 +205,7 @@ export default async function Home() {
 
       {prospects.length > 0 && (
         <FoundResultsAlert
-          foundCount={`${prospects.length}${prospects.length === k ? "+" : ""}`}
+          foundCount={`${pineconeMatchedEmails.length}${pineconeMatchedEmails.length === k ? "+" : ""}`}
         />
       )}
 
