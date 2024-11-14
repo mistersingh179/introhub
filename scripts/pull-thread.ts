@@ -1,6 +1,5 @@
 import prisma from "../prismaClient";
 import OpenAI from "openai";
-import * as tf from "@tensorflow/tfjs";
 import { Contact, Food, Prisma } from "@prisma/client";
 import getGmailObject from "@/services/helpers/getGmailObject";
 import refreshAccessToken from "@/services/helpers/refreshAccessToken";
