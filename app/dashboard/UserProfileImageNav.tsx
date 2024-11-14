@@ -81,9 +81,6 @@ const UserProfileImageNav = async () => {
           <Link href={"/dashboard/profile"}>
             <DropdownMenuItem>Profile</DropdownMenuItem>
           </Link>
-          <Link href={"/dashboard/icp"}>
-            <DropdownMenuItem>ICP</DropdownMenuItem>
-          </Link>
           <Link href={"/dashboard/competitors"}>
             <DropdownMenuItem>Competitors</DropdownMenuItem>
           </Link>

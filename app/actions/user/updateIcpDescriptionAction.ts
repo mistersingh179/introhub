@@ -51,8 +51,8 @@ const updateIcpDescriptionAction = async (
     }
   }
 
-  revalidatePath("/dashboard/icp");
-  redirect("/dashboard/icp");
+  revalidatePath("/dashboard/home");
+  redirect("/dashboard/home");
 };
 
 export default updateIcpDescriptionAction;

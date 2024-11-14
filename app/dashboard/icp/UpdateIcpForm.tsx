@@ -25,7 +25,7 @@ export default function UpdateIcpForm(props: {
   const [errorMessage, dispatch] = useFormState(action, undefined);
 
   return (
-    <form action={dispatch} className={"max-w-2xl flex flex-col gap-6"}>
+    <form action={dispatch} className={"flex flex-col gap-6"}>
       <ShowChildren showIt={!!errorMessage}>
         <ErrorMessage description={JSON.stringify(errorMessage, null, 2)} />
       </ShowChildren>
@@ -41,25 +41,30 @@ export default function UpdateIcpForm(props: {
               <TooltipContent
                 side={"right"}
                 sideOffset={10}
-                className={'sm:max-w-sm md:max-w-xl'}
+                className={"sm:max-w-sm md:max-w-xl"}
               >
                 <TooltipArrow width={16} height={10} className="fill-current" />
                 <strong>ICP Examples:</strong>
                 <ul className="my-4 ml-6 list-disc text-sm font-light italic leading-normal">
                   <li>
-                    Software engineers in San Francisco with cloud computing experience, open to discussing AI.
+                    Software engineers in San Francisco with cloud computing
+                    experience, open to discussing AI.
                   </li>
                   <li>
-                    Founders or CEOs in small to medium-sized health tech companies focusing on digital health solutions.
+                    Founders or CEOs in small to medium-sized health tech
+                    companies focusing on digital health solutions.
                   </li>
                   <li>
-                    Senior marketing professionals skilled in content strategy and SEO, working in e-commerce or retail.
+                    Senior marketing professionals skilled in content strategy
+                    and SEO, working in e-commerce or retail.
                   </li>
                   <li>
-                    Developers in SaaS using Python, with machine learning experience in financial services.
+                    Developers in SaaS using Python, with machine learning
+                    experience in financial services.
                   </li>
                   <li>
-                    Product managers in the European automotive sector working on electric vehicles and sustainability.
+                    Product managers in the European automotive sector working
+                    on electric vehicles and sustainability.
                   </li>
                 </ul>
               </TooltipContent>
@@ -72,7 +77,6 @@ export default function UpdateIcpForm(props: {
           placeholder={
             "Describe your ICP here, like: Part-time cold-callers in financial startups."
           }
-          className={"w-full"}
           defaultValue={icpDescription}
           onKeyDown={(evt) => {
             if (evt.key === "Enter" && evt.metaKey) {
@@ -81,12 +85,12 @@ export default function UpdateIcpForm(props: {
           }}
         />
         <p className={"text-sm text-muted-foreground"}>
-          Tip: Press Cmd+Enter to Submit
+          Tip: Press Cmd+Enter to Preview Results
         </p>
       </div>
 
-      <div className={"flex flex-row justify-center mt-4"}>
-        <SubmitButton label={"Submit"} className={"w-fit"} />
+      <div className={"flex flex-row justify-center mt-4 gap-4"}>
+        <SubmitButton label={"Preview"} className={"w-fit"} />
       </div>
     </form>
   );
