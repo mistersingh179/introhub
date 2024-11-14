@@ -72,8 +72,8 @@ const OnBoardingCard = async () => {
             <div className={"flex flex-row gap-2"}>
               <div className={`${user.icpDescription ? "line-through decoration-1" : ""}`}>
                 Go to the{" "}
-                <Link href={"/dashboard/icp"} className={"underline"}>
-                  {"ICP"}
+                <Link href={"/dashboard/home"} className={"underline"}>
+                  {"home"}
                 </Link>{" "}
                 page and describe your ICP in natural language
               </div>

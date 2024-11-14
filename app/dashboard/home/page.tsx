@@ -134,11 +134,7 @@ export default async function Home() {
           <AlertTitle className="ml-8">Auto-Prospecting Unavailable</AlertTitle>
           <AlertDescription className="ml-8">
             We’ll continue attempting auto-prospecting for you daily. Meanwhile,
-            consider broadening your{" "}
-            <Link href={"/dashboard/icp"} className="underline">
-              ICP
-            </Link>{" "}
-            description or{" "}
+            consider broadening your ICP description or{" "}
             <Link href={"/dashboard/prospects"} className="underline">
               starring
             </Link>{" "}
