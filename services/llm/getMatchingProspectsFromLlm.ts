@@ -2,6 +2,8 @@ import prisma from "@/prismaClient";
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { z } from "zod";
+import redisClient from "@/lib/redisClient";
+import { RedisCache } from "@langchain/community/caches/ioredis";
 
 export const matchingProspectsSchema = z.object({
   emails: z
@@ -23,17 +25,22 @@ const getMatchingProspectsFromLlm = async (
         in: emails,
       },
       llmDescription: {
-        not: null
-      }
+        not: null,
+      },
     },
   });
   const prospectsDescription = personProfiles.reduce((acc, cv, ci, arr) => {
     return acc + cv.email + " : " + cv.llmDescription + "\n";
   }, "");
 
+  const cache = new RedisCache(redisClient, {
+    ttl: 60 * 60, // 60 minutes of cache in seconds
+  });
+
   const model = new ChatOpenAI({
     model: "gpt-4o",
     temperature: 0,
+    cache,
   });
   const structuredModel = model.withStructuredOutput(matchingProspectsSchema);
 
@@ -85,7 +92,7 @@ if (require.main === module) {
         email: "sandeep@introhub.net",
       },
     });
-    user.icpDescription = "is a software developer";
+    user.icpDescription = "is maybe a software developer";
 
     const emails = (
       await prisma.contact.findMany({
@@ -95,5 +102,10 @@ if (require.main === module) {
 
     const ans = await getMatchingProspectsFromLlm(user.icpDescription!, emails);
     console.log(ans);
+    const ans2 = await getMatchingProspectsFromLlm(
+      user.icpDescription!,
+      emails,
+    );
+    console.log(ans2);
   })();
 }

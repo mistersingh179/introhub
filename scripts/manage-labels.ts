@@ -1,9 +1,6 @@
 import prisma from "../prismaClient";
-import OpenAI from "openai";
-import * as tf from "@tensorflow/tfjs";
-import { Contact, Food, Prisma } from "@prisma/client";
 import getGmailObject from "@/services/helpers/getGmailObject";
-import refreshAccessToken from "@/services/helpers/refreshAccessToken";
+
 const { PubSub } = require("@google-cloud/pubsub");
 
 // @ts-ignore
@@ -28,7 +25,7 @@ prisma.$on("query", (e) => {});
   const gmail = await getGmailObject(account);
 
   const labels = await gmail.users.labels.list({
-    userId: 'me'
+    userId: "me",
   });
 
   console.log(labels.data.labels);
@@ -43,7 +40,6 @@ prisma.$on("query", (e) => {});
   // });
   //
   // console.log(creationResponse);
-
 })();
 
 export {};
