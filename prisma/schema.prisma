@@ -80,8 +80,35 @@ model User {
   icpDescription           String?
   competitorsInitiated     Competition[]   @relation("UserAsInitiator")
   competitorsReceived      Competition[]   @relation("UserAsReceiver")
+  memberships              Membership[]
+  groupsCreated            Group[]         @relation("UserGroupsCreated")
 
   @@index([email])
+}
+
+model Membership {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groupId   String
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, groupId]) // Ensures a user can join a group only once
+  @@index([userId])
+  @@index([groupId])
+}
+
+model Group {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String
+  creatorId   String
+  creator     User         @relation("UserGroupsCreated", fields: [creatorId], references: [id], onDelete: Cascade)
+  memberships Membership[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Competition {
