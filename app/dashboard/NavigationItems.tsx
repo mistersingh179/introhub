@@ -32,23 +32,13 @@ export default async function NavigationItems({
       {/*/>*/}
       <NavLink
         inSheet={inSheet}
-        name={"My Contacts"}
-        url={"/dashboard/my-contacts"}
-      />
-      <NavLink
-        inSheet={inSheet}
-        name={"Prospects"}
-        url={"/dashboard/prospects"}
-      />
-      <NavLink
-        inSheet={inSheet}
         name={"Snooze-Queue"}
         url={"/dashboard/introductions/pendingQueue"}
       />
       <NavLink
         inSheet={inSheet}
-        name={"Introductions"}
-        url={"/dashboard/introductions/list"}
+        name={"Groups"}
+        url={"/dashboard/groups"}
       />
 
       <ShowChildren showIt={superUsers.includes(user.email!)}>

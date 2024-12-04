@@ -16,6 +16,7 @@ import {
 import { getS3Url } from "@/lib/url";
 import { userProfileS3DirName } from "@/app/utils/constants";
 import Link from "next/link";
+import NavLink from "@/components/NavLink";
 
 export const getInitials = (input: string | null | undefined) => {
   if (!input) {
@@ -78,11 +79,23 @@ const UserProfileImageNav = async () => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Link href={"/dashboard/profile"}>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+          <Link href={"/dashboard/prospects"}>
+            <DropdownMenuItem>All Prospects</DropdownMenuItem>
+          </Link>
+          <Link href={"/dashboard/my-contacts"}>
+            <DropdownMenuItem>My Contacts</DropdownMenuItem>
+          </Link>
+          <Link href={"/dashboard/introductions/list"}>
+            <DropdownMenuItem>All Introductions</DropdownMenuItem>
           </Link>
           <Link href={"/dashboard/competitors"}>
             <DropdownMenuItem>Competitors</DropdownMenuItem>
+          </Link>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <Link href={"/dashboard/profile"}>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
           </Link>
           <Link href={"/dashboard/user/forwardableBlurb"}>
             <DropdownMenuItem>Forwardable Blurb</DropdownMenuItem>
