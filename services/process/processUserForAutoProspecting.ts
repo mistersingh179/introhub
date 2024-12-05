@@ -1,30 +1,27 @@
 import prisma from "@/prismaClient";
-import { Introduction, User } from "@prisma/client";
+import { Group, Introduction, User } from "@prisma/client";
 import findBestContactForIntro from "@/services/contactFinder/findBestContactForIntro";
 import generateAnIntroduction from "@/services/generateAnIntroduction";
 import isUserMissingPersonalInfo from "@/services/isUserMissingPersonalInfo";
 import isProspectEmailVerified from "@/services/isProspectEmailVerified";
 
-const processUserForAutoProspecting = async (
+const findAndGenerateIntro = async (
   user: User,
+  group: Group,
 ): Promise<Introduction | null> => {
-  const userMissingPersonalInfo = await isUserMissingPersonalInfo(user);
-  if (userMissingPersonalInfo) {
-    console.log("wont process user as missing personal info", user);
-    return null;
-  }
+  console.log("processing user for group: ", user.email, group.name);
 
-  const prospect = await findBestContactForIntro(user);
+  const prospect = await findBestContactForIntro(user, group);
   if (!prospect) {
     console.log("unable to find best contact for auto intro: ", user, prospect);
-    await prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        unableToAutoProspect: true,
-      },
-    });
+    // await prisma.user.update({
+    //   where: {
+    //     id: user.id,
+    //   },
+    //   data: {
+    //     unableToAutoProspect: true,
+    //   },
+    // });
     return null;
   }
 
@@ -36,16 +33,55 @@ const processUserForAutoProspecting = async (
   const intro = await generateAnIntroduction(user, prospect);
   console.log("auto generated intro: ", user.email, prospect.email, intro.id);
 
-  await prisma.user.update({
+  return intro;
+};
+
+const processUserForAutoProspecting = async (
+  user: User,
+): Promise<Introduction[] | null> => {
+  const userMissingPersonalInfo = await isUserMissingPersonalInfo(user);
+  if (userMissingPersonalInfo) {
+    console.log("wont process user as missing personal info", user);
+    return null;
+  }
+
+  const myGroups = await prisma.group.findMany({
     where: {
-      id: user.id,
-    },
-    data: {
-      unableToAutoProspect: false,
+      memberships: {
+        some: {
+          userId: user.id,
+        },
+      },
     },
   });
 
-  return intro;
+  const introsGenerated: Introduction[] = [];
+  for (const group of myGroups) {
+    try {
+      const result = await findAndGenerateIntro(user, group);
+      if (result) {
+        introsGenerated.push(result);
+      } else {
+        // todo - will make unable to auto prospect true unable to auto prospect for any group
+        // await prisma.user.update({
+        //   where: {
+        //     id: user.id,
+        //   },
+        //   data: {
+        //     unableToAutoProspect: false,
+        //   },
+        // });
+      }
+    } catch (err) {
+      console.log(
+        "got error while calling findAndGenerateIntro. will continue with next group.",
+        user,
+        group,
+      );
+    }
+  }
+
+  return introsGenerated;
 };
 
 export default processUserForAutoProspecting;

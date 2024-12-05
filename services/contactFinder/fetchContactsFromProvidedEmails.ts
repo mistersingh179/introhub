@@ -1,4 +1,4 @@
-import { Contact, User } from "@prisma/client";
+import {Contact, Group, User} from "@prisma/client";
 import prisma from "@/prismaClient";
 import getContactIdsTouchedByUser from "@/services/contactFinder/getContactIdsTouchedByUser";
 import getContactIdsTouchedRecently from "@/services/contactFinder/getContactIdsTouchedRecently";
@@ -8,10 +8,12 @@ import getFacilitatorIdsWhoAreMissingFullScope from "@/services/contactFinder/ge
 import getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts";
 import getContactIdsWhichHaveSameLinkedInUrlAsThisUser from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlAsThisUser";
 import getFacilitatorIdsOfCompetitors from "@/services/contactFinder/getFacilitatorIdsOfCompetitors";
+import {PlatformGroupName} from "@/app/utils/constants";
 
 const fetchContactsFromProvidedEmails = async (
   user: User,
   emails: string[],
+  group: Group,
 ): Promise<Contact[]> => {
   const contactIdsOfOthersUsersKnownToThisUser =
     await getContactIdsOfOthersUsersKnownToThisUser(user);
@@ -53,6 +55,11 @@ const fetchContactsFromProvidedEmails = async (
       user: {
         agreedToAutoProspecting: true,
         tokenIssue: false,
+        memberships: {
+          some: {
+            group
+          }
+        }
       },
       available: true,
       emailCheckPassed: true,
@@ -67,6 +74,11 @@ export default fetchContactsFromProvidedEmails;
 
 if (require.main === module) {
   (async () => {
+    const platfromGroup = await prisma.group.findFirstOrThrow({
+      where: {
+        name: PlatformGroupName
+      }
+    })
     const user = await prisma.user.findFirstOrThrow({
       where: {
         email: "sandeep@introhub.net",
@@ -78,7 +90,7 @@ if (require.main === module) {
       })
     ).map((c) => c.email);
 
-    const ans = await fetchContactsFromProvidedEmails(user, emails);
+    const ans = await fetchContactsFromProvidedEmails(user, emails, platfromGroup);
     console.log(ans);
   })();
 }

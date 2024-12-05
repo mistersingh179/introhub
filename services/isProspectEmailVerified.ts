@@ -28,7 +28,7 @@ export default isProspectEmailVerified;
 
 if (require.main === module) {
   (async () => {
-    const prospect = await prisma.contact.findFirstOrThrow();
+    const prospect = await prisma.contact.findFirstOrThrow({});
     const ans = await isProspectEmailVerified(prospect);
     console.log("ans: ", ans);
     process.exit(0);
