@@ -21,3 +21,5 @@ export const rodEmail = "rod@introhub.net";
 
 export const defaultForwardableBlurb =
   "Hi {facilitator-name}, I noticed you're connected to {prospect-name}. I'm really impressed by their work at {prospect-company-name}.\r\n\r\nCan you introduce us?";
+
+export const PlatformGroupName = "Platform"

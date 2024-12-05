@@ -41,7 +41,7 @@ export default verifyEmail;
 
 if (require.main === module) {
   (async () => {
-    const ans = await verifyEmail("invalid@example.com");
+    const ans = await verifyEmail("rodrigo@introhub.net");
     console.log("ans: ", ans);
   })();
 }

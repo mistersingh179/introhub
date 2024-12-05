@@ -1,4 +1,4 @@
-import { Contact, User } from "@prisma/client";
+import {Contact, Group, User} from "@prisma/client";
 import prisma from "@/prismaClient";
 import getContactIdsTouchedByUser from "@/services/contactFinder/getContactIdsTouchedByUser";
 import getContactIdsTouchedRecently from "@/services/contactFinder/getContactIdsTouchedRecently";
@@ -7,8 +7,9 @@ import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/
 import getFacilitatorIdsWhoAreMissingFullScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingFullScope";
 import getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts";
 import getFacilitatorIdsOfCompetitors from "@/services/contactFinder/getFacilitatorIdsOfCompetitors";
+import {PlatformGroupName} from "@/app/utils/constants";
 
-const fetchWantedContact = async (user: User): Promise<Contact | null> => {
+const fetchWantedContact = async (user: User, group: Group): Promise<Contact | null> => {
   const contactIdsOfOthersUsersKnownToThisUser =
     await getContactIdsOfOthersUsersKnownToThisUser(user);
   const contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts =
@@ -46,6 +47,11 @@ const fetchWantedContact = async (user: User): Promise<Contact | null> => {
       user: {
         agreedToAutoProspecting: true,
         tokenIssue: false,
+        memberships: {
+          some: {
+            group
+          }
+        }
       },
       available: true,
       emailCheckPassed: true,
@@ -59,12 +65,17 @@ export default fetchWantedContact;
 
 if (require.main === module) {
   (async () => {
+    const platfromGroup = await prisma.group.findFirstOrThrow({
+      where: {
+        name: PlatformGroupName
+      }
+    })
     const user = await prisma.user.findFirstOrThrow({
       where: {
         email: "sandeep@introhub.net",
       },
     });
-    const ans = await fetchWantedContact(user);
+    const ans = await fetchWantedContact(user, platfromGroup);
     console.log("ans: ", ans);
   })();
 }
