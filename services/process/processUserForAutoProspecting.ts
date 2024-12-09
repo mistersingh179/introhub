@@ -45,18 +45,19 @@ const processUserForAutoProspecting = async (
     return null;
   }
 
-  const myGroups = await prisma.group.findMany({
+  const myApprovedGroups = await prisma.group.findMany({
     where: {
       memberships: {
         some: {
           userId: user.id,
+          approved: true
         },
       },
     },
   });
 
   const introsGenerated: Introduction[] = [];
-  for (const group of myGroups) {
+  for (const group of myApprovedGroups) {
     try {
       const result = await findAndGenerateIntro(user, group);
       if (result) {

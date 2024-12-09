@@ -9,16 +9,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Prisma } from "@prisma/client";
+import { Group, Prisma } from "@prisma/client";
 import { CompanyBox } from "@/app/dashboard/introductions/list/IntroTable";
 import * as React from "react";
 import getProfiles from "@/services/getProfiles";
 import getEmailAndCompanyUrlProfiles, {
   CompanyUrlToProfile,
-  EmailToProfile
+  EmailToProfile,
 } from "@/services/getEmailAndCompanyUrlProfiles";
 import FacilitatorBox from "@/components/FacilitatorBox";
 import { Badge } from "@/components/ui/badge";
+import DeleteGroupDialog from "@/app/dashboard/groups/DeleteGroupDialog";
+import { PlatformGroupName } from "@/app/utils/constants";
+import UpdateMembershipForm from "@/app/dashboard/groups/[id]/manage/UpdateMembershipForm";
 
 type MembershipWithUser = Prisma.MembershipGetPayload<{
   include: {
@@ -26,7 +29,7 @@ type MembershipWithUser = Prisma.MembershipGetPayload<{
   };
 }>;
 
-const MembersList = async ({
+const ManageGroup = async ({
   params,
   searchParams,
 }: {
@@ -40,6 +43,8 @@ const MembersList = async ({
       email: session.user?.email ?? "",
     },
   });
+
+  const group = await prisma.group.findFirstOrThrow({ where: { id } });
 
   const memberships: MembershipWithUser[] = await prisma.membership.findMany({
     where: {
@@ -58,7 +63,10 @@ const MembersList = async ({
   return (
     <>
       <div className={"flex flex-row my-8 justify-between"}>
-        <h1 className={"text-2xl"}>Members</h1>
+        <h1 className={"text-2xl"}>Manage Group – {group.name}</h1>
+        {group.name !== PlatformGroupName && group.creatorId === user.id && (
+          <DeleteGroupDialog group={group} />
+        )}
       </div>
 
       <Table>
@@ -67,11 +75,13 @@ const MembersList = async ({
             <TableHead>User</TableHead>
             <TableHead>Company</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {memberships.map((m) => (
             <MemberRow
+              group={group}
               membership={m}
               key={m.id}
               emailToProfile={emailToProfile}
@@ -85,19 +95,21 @@ const MembersList = async ({
 };
 
 type GroupRowProps = {
+  group: Group;
   membership: MembershipWithUser;
   emailToProfile: EmailToProfile;
   companyUrlToProfile: CompanyUrlToProfile;
 };
 
 const MemberRow = (props: GroupRowProps) => {
-  const { membership, emailToProfile, companyUrlToProfile } = props;
+  const { group, membership, emailToProfile, companyUrlToProfile } = props;
   const contactProfiles = getProfiles(
     membership.user.email!,
     emailToProfile,
     companyUrlToProfile,
   );
   const { personExp, personProfile, companyProfile } = contactProfiles;
+
   return (
     <>
       <TableRow className={"flex flex-col sm:table-row"}>
@@ -105,14 +117,31 @@ const MemberRow = (props: GroupRowProps) => {
           <FacilitatorBox user={membership.user} personExp={personExp} />
         </TableCell>
         <TableCell>
-          <CompanyBox showLinkedInUrls={true} companyProfile={companyProfile} personExp={personExp} />
+          <CompanyBox
+            showLinkedInUrls={true}
+            companyProfile={companyProfile}
+            personExp={personExp}
+          />
         </TableCell>
         <TableCell>
-          <Badge>{membership.approved ? "Approved Member" : "Pending Organizer Approval"}</Badge>
+          <Badge>
+            {membership.approved
+              ? "Approved Member"
+              : "Pending Organizer Approval"}
+          </Badge>
+        </TableCell>
+        <TableCell>
+          <div className={"flex flex-row gap-4"}>
+            <UpdateMembershipForm
+              shouldApprove={!membership.approved}
+              group={group}
+              membership={membership}
+            />
+          </div>
         </TableCell>
       </TableRow>
     </>
   );
 };
 
-export default MembersList;
+export default ManageGroup;

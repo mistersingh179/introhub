@@ -291,7 +291,9 @@ export const CompanyBox = ({
       <div className={"flex flex-col gap-2"}>
         <div>{personExp.companyName} </div>
         <p className={"text-muted-foreground"}>{companyProfile.industry}</p>
-        <ShowChildren showIt={showLinkedInUrls}>
+        <ShowChildren
+          showIt={Boolean(showLinkedInUrls && personExp.companyLinkedInUrl)}
+        >
           <LinkWithExternalIcon href={personExp.companyLinkedInUrl} />
         </ShowChildren>
       </div>

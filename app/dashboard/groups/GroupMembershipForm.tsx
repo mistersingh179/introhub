@@ -3,7 +3,7 @@
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
 import React from "react";
 import { useFormState } from "react-dom";
-import setupMembershipAction from "@/app/actions/memberships/setupMembershipAction";
+import createOrDeleteMembershipByUser from "@/app/actions/memberships/createOrDeleteMembershipByUser";
 import ErrorMessage from "@/app/dashboard/introductions/create/[contactId]/ErrorMessage";
 import ShowChildren from "@/components/ShowChildren";
 import { Input } from "@/components/ui/input";
@@ -15,7 +15,7 @@ type GroupMembershipFormProps = {
 
 const GroupMembershipForm = (props: GroupMembershipFormProps) => {
   const { groupId, wantsToJoin } = props;
-  const action = setupMembershipAction;
+  const action = createOrDeleteMembershipByUser;
   const [errorMessage, dispatch] = useFormState(action, undefined);
   return (
     <>

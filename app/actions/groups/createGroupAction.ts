@@ -39,6 +39,13 @@ export default async function createGroupAction(
         description,
       },
     });
+    await prisma.membership.create({
+      data: {
+        groupId: group.id,
+        userId: user.id,
+        approved: true
+      },
+    });
     console.log("group created: ", group);
   } catch (e) {
     if (e instanceof ZodError) {

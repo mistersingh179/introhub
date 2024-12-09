@@ -7,16 +7,15 @@ import { z, ZodError } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-const setupMembershipActionSchema = z.object({
-  wantsToJoin: z.string().transform((s) => s.toLowerCase() === "true"),
-  groupId: z.string(),
+const deleteGroupActionSchema = z.object({
+  groupId: z.string().max(100).min(1),
 });
 
 type CreateGroupActionFlattenErrorType = z.inferFlattenedErrors<
-  typeof setupMembershipActionSchema
+  typeof deleteGroupActionSchema
 >;
 
-export default async function setupMembershipAction(
+export default async function deleteGroupAction(
   prevState: CreateGroupActionFlattenErrorType | undefined | string,
   formData: FormData,
 ) {
@@ -28,37 +27,25 @@ export default async function setupMembershipAction(
   });
 
   try {
-    const { wantsToJoin, groupId } = setupMembershipActionSchema.parse({
-      wantsToJoin: formData.get("wantsToJoin"),
+    const { groupId } = deleteGroupActionSchema.parse({
       groupId: formData.get("groupId"),
     });
 
-    if (wantsToJoin) {
-      await prisma.membership.create({
-        data: {
-          groupId,
-          userId: user.id,
-        },
-      });
-      console.log("membership has been created for", groupId);
-    } else if (!wantsToJoin) {
-      await prisma.membership.delete({
-        where: {
-          userId_groupId: {
-            groupId,
-            userId: user.id,
-          },
-        },
-      });
-      console.log("membership has been deleted to", groupId);
-    }
+    const group = await prisma.group.delete({
+      where: {
+        creatorId: user.id,
+        id: groupId,
+      },
+    });
+
+    console.log("group deleted: ", group);
   } catch (e) {
     if (e instanceof ZodError) {
       return e.flatten();
     } else if (e instanceof Error) {
       return e.message;
     } else {
-      return "Unable to Create Group!";
+      return "Unable to Delete Group!";
     }
   }
 

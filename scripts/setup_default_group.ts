@@ -37,6 +37,7 @@ import { PlatformGroupName } from "@/app/utils/constants";
         data: {
           groupId: platformGroup.id,
           userId: user.id,
+          approved: true,
         },
       });
     } catch (err) {

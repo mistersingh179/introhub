@@ -26,6 +26,8 @@ import getEmailAndCompanyUrlProfiles, {
   CompanyUrlToProfile,
   EmailToProfile,
 } from "@/services/getEmailAndCompanyUrlProfiles";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 type GroupWithMembersAndCreator = Prisma.GroupGetPayload<{
   include: {
@@ -103,7 +105,7 @@ type GroupRowProps = {
 
 const GroupRow = (props: GroupRowProps) => {
   const { currentUser, group, emailToProfile, companyUrlToProfile } = props;
-  const userHasMembership = group.memberships.find(
+  const usersMembership = group.memberships.find(
     (m) => m.userId === currentUser.id,
   );
   const contactProfiles = getProfiles(
@@ -111,8 +113,7 @@ const GroupRow = (props: GroupRowProps) => {
     emailToProfile,
     companyUrlToProfile,
   );
-  const { personExp, personProfile, companyProfile } = contactProfiles;
-  const { fullName, linkedInUrl } = personProfile;
+  const { personExp } = contactProfiles;
   return (
     <>
       <TableRow className={"flex flex-col sm:table-row"}>
@@ -139,16 +140,24 @@ const GroupRow = (props: GroupRowProps) => {
           </Link>
         </TableCell>
         <TableCell>
-          {!userHasMembership && (
-            <>
+          <div className={"flex flex-col gap-4"}>
+            {group.creator.id === currentUser.id && (
+              <Button asChild className={"w-fit"}>
+                <Link href={`/dashboard/groups/${group.id}/manage`}>
+                  Manage 🛠
+                </Link>
+              </Button>
+            )}
+            {!usersMembership && (
               <GroupMembershipForm wantsToJoin={true} groupId={group.id} />
-            </>
-          )}
-          {userHasMembership && (
-            <>
+            )}
+            {usersMembership && !usersMembership.approved && (
+              <Badge className={"w-fit"}>Pending Organizer Approval</Badge>
+            )}
+            {usersMembership && usersMembership.approved && (
               <GroupMembershipForm wantsToJoin={false} groupId={group.id} />
-            </>
-          )}
+            )}
+          </div>
         </TableCell>
       </TableRow>
     </>
