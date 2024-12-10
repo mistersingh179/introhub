@@ -5,6 +5,25 @@ import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import { superUsers } from "@/app/utils/constants";
 
+const addSearchParam = ({
+  host,
+  url,
+  param,
+  value,
+}: {
+  host: string;
+  url: string;
+  param: string;
+  value: string;
+}) => {
+  console.log("in addSearchParam with: ", host, url, param, value);
+  const base = new URL(url, host);
+  base.searchParams.set(param, value);
+  const result = base.pathname + base.search + base.hash;
+  console.log("result: ", result);
+  return result;
+};
+
 export async function signOutAction() {
   await signOut({
     redirectTo: "/auth/signIn",
@@ -15,6 +34,7 @@ export async function signInWithGoogleAction(formData: FormData) {
   console.log("in signInWithGoogle with: ", [...formData.entries()]);
   const callbackUrl = formData.get("callbackUrl") as string;
   const metaKey = formData.get("metaKey") as string;
+  const groupName = formData.get("groupName") as string;
   const authorizationParams: { prompt?: string } = {
     prompt: "consent",
   };
@@ -23,11 +43,17 @@ export async function signInWithGoogleAction(formData: FormData) {
     delete authorizationParams["prompt"];
   }
   console.log("authorizationParams: ", authorizationParams);
+  const redirectTo = addSearchParam({
+    host: process.env.BASE_API_URL!,
+    url: callbackUrl || "/dashboard/home",
+    param: "groupName",
+    value: groupName,
+  });
 
   await signIn(
     "google",
     {
-      redirectTo: callbackUrl ? callbackUrl : "/dashboard/home",
+      redirectTo,
     },
     authorizationParams,
   );

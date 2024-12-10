@@ -4,9 +4,25 @@ import React, { Suspense } from "react";
 import Typography from "@/components/Typography";
 import networking from "./networking.png";
 import SignInWithGoogleForm from "@/app/auth/signIn/SignInWithGoogleForm";
-import SignInWithLinkedInForm from "@/app/auth/signIn/SignInWithLinkedInForm";
+import prisma from "@/prismaClient";
+import { PlatformGroupName } from "@/app/utils/constants";
 
-export default function AuthenticationPage() {
+type SearchParams = { groupName?: string };
+
+export default async function AuthenticationPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  let { groupName } = searchParams;
+  groupName = groupName || PlatformGroupName;
+  console.log("in AuthenticationPage, with: ", searchParams, groupName);
+  const group = await prisma.group.findFirstOrThrow({
+    where: {
+      name: groupName,
+    },
+  });
+
   return (
     <div className={"flex flex-row flex-grow"}>
       <div
@@ -24,6 +40,12 @@ export default function AuthenticationPage() {
         <Typography variant={"p"} affects={"removePMargin"}>
           Warm introductions await in the IntroHub beta program.
         </Typography>
+
+        <div className={"bg-yellow-50 dark:bg-yellow-700 "}>
+          <p>You are joining group: {group.name}</p>
+          <p>{group.description}</p>
+        </div>
+
         <Image src={networking} alt={"networking"}></Image>
       </div>
       <div
