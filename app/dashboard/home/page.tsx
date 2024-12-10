@@ -18,8 +18,16 @@ import SampleProspectsMatchingIcp from "@/app/dashboard/icp/SampleProspectsMatch
 import getMatchingProspectsFromPinecone from "@/services/llm/getMatchingProspectsFromPinecone";
 import getMatchingProspectsFromLlm from "@/services/llm/getMatchingProspectsFromLlm";
 import FoundResultsAlert from "@/app/dashboard/icp/FoundResultsAlert";
+import setupInitialMembership from "@/services/setupInitialMembership";
 
-export default async function Home() {
+type SearchParams = {
+  groupName: string;
+};
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
   const session = (await auth()) as Session;
   const user = await prisma.user.findFirstOrThrow({
     where: {
@@ -29,6 +37,12 @@ export default async function Home() {
       accounts: true,
     },
   });
+
+  const groupName = searchParams.groupName;
+  if (groupName) {
+    await setupInitialMembership(user, groupName.trim());
+  }
+
   const foundFullScope = doWeHaveFullScope(user.accounts);
 
   const k = 1000;
