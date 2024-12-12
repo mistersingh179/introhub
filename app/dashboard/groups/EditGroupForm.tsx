@@ -25,6 +25,8 @@ export default function CreateGroupForm(props: CreateGroupFormProps) {
 
   const [submittedAt, setSubmittedAt] = useState<undefined | number>();
 
+  const [fileSelected, setFileSelected] = useState(false);
+
   useEffect(() => {
     if (submittedAt && errorMessage) {
       setOpen(true);
@@ -40,6 +42,14 @@ export default function CreateGroupForm(props: CreateGroupFormProps) {
       formData.delete("image");
     }
     await dispatch(formData);
+  };
+
+  const fileChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (
+    evt,
+  ) => {
+    if (evt.target.files?.length && evt.target.files.length > 0) {
+      setFileSelected(true);
+    }
   };
 
   return (
@@ -79,13 +89,18 @@ export default function CreateGroupForm(props: CreateGroupFormProps) {
           Image
         </Label>
         <div className={"flex flex-col gap-4"}>
-          {group.imageName && (
+          {!fileSelected && group.imageName && (
             <img
               src={buildS3ImageUrlFromKey(group.imageName)}
               className={"w-48"}
             />
           )}
-          <Input name={"image"} type={"file"} id="image"></Input>
+          <Input
+            name={"image"}
+            type={"file"}
+            id="image"
+            onChange={fileChangeHandler}
+          ></Input>
         </div>
       </div>
       <div className={"flex flex-row justify-center my-4"}>

@@ -6,7 +6,7 @@ import networking from "./networking.png";
 import SignInWithGoogleForm from "@/app/auth/signIn/SignInWithGoogleForm";
 import prisma from "@/prismaClient";
 import { PlatformGroupName } from "@/app/utils/constants";
-import {buildS3ImageUrlFromKey} from "@/lib/url";
+import { buildS3ImageUrlFromKey } from "@/lib/url";
 
 type SearchParams = { groupName?: string };
 
@@ -24,41 +24,33 @@ export default async function AuthenticationPage({
     },
   });
 
-  const imageUrl = group.imageName ? buildS3ImageUrlFromKey(group.imageName) : networking.src;
+  const imageUrl = group.imageName
+    ? buildS3ImageUrlFromKey(group.imageName)
+    : networking.src;
 
   return (
-    <div className={"flex flex-row flex-grow"}>
+    <div className={"flex flex-col lg:flex-row flex-grow"}>
       <div
         className={
-          "hidden lg:flex basis-1/2 flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900"
+          "flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 p-4 lg:basis-1/2"
         }
       >
         <Typography
           variant={"h2"}
           style={{ borderBottom: "0" }}
           affects={"removePMargin"}
+          className={"text-center lg:text-left"}
         >
-          Connect with your target prospects
+          Connect with your target prospects @ {group.name}
         </Typography>
-        <Typography variant={"p"} affects={"removePMargin"}>
-          Warm introductions await in the IntroHub beta program.
+        <Typography variant={"p"} affects={"removePMargin"} className={"text-center lg:text-left"}>
+          {group.description}
         </Typography>
-
-        <div className={"bg-yellow-50 dark:bg-yellow-700 "}>
-          <p>You are joining group: {group.name}</p>
-          <p>{group.description}</p>
-        </div>
-
-        <img
-          src={imageUrl}
-          alt="networking"
-          className="w-full h-auto max-w-md max-h-72"
-        />
-
+        <img src={imageUrl} alt="networking" className="w-full max-h-48 lg:max-h-96 object-contain" />
       </div>
       <div
         className={
-          "basis-full lg:basis-1/2 flex flex-col gap-4 justify-center items-center"
+          "flex flex-col gap-4 justify-center items-center p-4 lg:basis-1/2"
         }
       >
         <Typography className={"text-purple-600"}>introhub</Typography>
@@ -74,14 +66,13 @@ export default async function AuthenticationPage({
           <Suspense>
             <div className={"flex flex-col gap-4 items-center"}>
               <SignInWithGoogleForm />
-              {/*<SignInWithLinkedInForm />*/}
             </div>
           </Suspense>
         </div>
         <Typography
           variant={"p"}
           affects={"removePMargin"}
-          className={"text-sm font-medium leading-none"}
+          className={"text-sm font-medium leading-none text-center"}
         >
           By clicking continue, you agreed to our{" "}
           <Link
@@ -103,4 +94,5 @@ export default async function AuthenticationPage({
       </div>
     </div>
   );
+
 }
