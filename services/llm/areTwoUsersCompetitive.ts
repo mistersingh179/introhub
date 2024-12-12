@@ -2,8 +2,9 @@ import prisma from "@/prismaClient";
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { z } from "zod";
-import { User } from "@prisma/client";
 import getPersonJsonObject from "@/services/getPersonJsonObject";
+import { RedisCache } from "@langchain/community/caches/ioredis";
+import redisClient from "@/lib/redisClient";
 
 export const areTwoUsersCompetitiveSchema = z.object({
   competitive: z
@@ -26,9 +27,15 @@ const areTwoUsersCompetitive = async (
   email1: string,
   email2: string,
 ): Promise<AreTwoUsersCompetitveType> => {
+
+  const cache = new RedisCache(redisClient, {
+    ttl: 30 * 24 * 60 * 60, // 30 days
+  });
+
   const model = new ChatOpenAI({
     model: "gpt-4o",
     temperature: 0,
+    cache,
   });
   const structuredModel = model.withStructuredOutput(
     areTwoUsersCompetitiveSchema,
