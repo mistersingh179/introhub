@@ -24,19 +24,22 @@ prisma.$on("query", (e) => {});
 (async () => {
   console.log("Starting repl!");
 
-  const m = await prisma.membership.update({
-    where: {
-      id: 'cm4d4byhu0002ihsi8pj5e4cc',
-      group: {
-        creatorId: 'clzrcdffo0000n0kuuplb1p9h'
-      }
-    },
-    data: {
-      approved: true
-    }
-  });
+  const fd = new FormData();
+  console.log(fd.get("aa"));
 
-  console.log('m: ', m);
+  // const m = await prisma.membership.update({
+  //   where: {
+  //     id: 'cm4d4byhu0002ihsi8pj5e4cc',
+  //     group: {
+  //       creatorId: 'clzrcdffo0000n0kuuplb1p9h'
+  //     }
+  //   },
+  //   data: {
+  //     approved: true
+  //   }
+  // });
+  //
+  // console.log('m: ', m);
 
   // const foobarGroup = await prisma.group.findFirstOrThrow({
   //   where: {

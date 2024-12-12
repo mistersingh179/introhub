@@ -12,30 +12,23 @@ import { z, ZodError } from "zod";
 
   const schema = z.object({
     name: z.string(),
-    age: z.coerce.number(),
-    dailyEmail: z
-      .string()
-      .nullable()
-      .optional()
-      .transform((s) => (s ? s.toLowerCase() === "true" : false)),
-    agreed: z.coerce.boolean(),
-    address: z.string().optional(),
+    image: z
+      .instanceof(File)
+      .refine((file) => file.type.startsWith("image/"), {
+        message: "Only image files are allowed",
+      })
+      .refine((file) => file.size <= 5 * 1024 * 1024, {
+        message: "Image size must be 5MB or less",
+      })
+      .optional(),
   });
 
   const fd = new FormData();
   fd.set("name", "hi");
-  fd.set("age", "5");
-  fd.set("address", "hello st");
-  fd.set("dailyEmail", "false");
-  fd.set("agreed", "false");
 
   try {
     const ans = schema.parse({
       name: fd.get("name"),
-      age: fd.get("age"),
-      address: fd.get("address"),
-      dailyEmail: fd.get("dailyEmail"),
-      agreed: fd.get("agreed"),
     });
     console.table(ans);
   } catch (e) {
