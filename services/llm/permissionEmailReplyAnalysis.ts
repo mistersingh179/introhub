@@ -5,6 +5,8 @@ import {
 } from "@langchain/core/prompts";
 import { SystemMessage } from "@langchain/core/messages";
 import { ChatOpenAI } from "@langchain/openai";
+import { RedisCache } from "@langchain/community/caches/ioredis";
+import redisClient from "@/lib/redisClient";
 
 export const permissionGrantedEnum = z.enum(["yes", "no", "unknown"]);
 
@@ -35,7 +37,11 @@ const permissionEmailReplyAnalysis = async (
     ),
   ]);
 
-  const model = new ChatOpenAI({ model: "gpt-4o", temperature: 0 });
+  const cache = new RedisCache(redisClient, {
+    ttl: 30 * 24 * 60 * 60,
+  });
+
+  const model = new ChatOpenAI({ model: "gpt-4o", temperature: 0, cache });
   const structuredModel = model.withStructuredOutput(permissionAnalysisSchema);
   const chain = chatTemplate.pipe(structuredModel);
 

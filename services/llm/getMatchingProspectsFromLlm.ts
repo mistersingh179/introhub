@@ -34,7 +34,7 @@ const getMatchingProspectsFromLlm = async (
   }, "");
 
   const cache = new RedisCache(redisClient, {
-    ttl: 60 * 60, // 60 minutes of cache in seconds
+    ttl: 30 * 24 * 60 * 60, // 30 days
   });
 
   const model = new ChatOpenAI({

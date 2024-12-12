@@ -12,6 +12,8 @@ import {
   RunnablePassthrough,
   RunnableSequence,
 } from "@langchain/core/runnables";
+import {RedisCache} from "@langchain/community/caches/ioredis";
+import redisClient from "@/lib/redisClient";
 
 const getPersonDescription = async (
   personProfile: PersonProfile,
@@ -36,7 +38,11 @@ const getPersonDescription = async (
     HumanMessagePromptTemplate.fromTemplate("JSON: {personJsonObject}"),
   ]);
 
-  const model = new ChatOpenAI({ model: "gpt-4o", temperature: 0 });
+  const cache = new RedisCache(redisClient, {
+    ttl: 30 * 24 * 60 * 60,
+  });
+
+  const model = new ChatOpenAI({ model: "gpt-4o", temperature: 0, cache });
   const parser = new StringOutputParser();
   const chain1 = chatTemplate.pipe(model).pipe(parser);
 
