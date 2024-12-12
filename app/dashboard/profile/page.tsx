@@ -10,7 +10,6 @@ import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
 import ShowChildren from "@/components/ShowChildren";
 import { Badge } from "@/components/ui/badge";
 import ProfileStatusUpdateForm from "@/app/dashboard/profile/ProfileStatusUpdateForm";
-import doWeHaveFullScope from "@/services/doWeHaveFullScope";
 
 export default async function Profile() {
   const session = (await auth()) as Session;

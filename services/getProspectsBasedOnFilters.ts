@@ -1,6 +1,5 @@
 import { Contact, Prisma, User } from "@prisma/client";
 import prisma from "@/prismaClient";
-import { IntroStates } from "@/lib/introStates";
 import { fullScope } from "@/app/utils/constants";
 
 export type PaginatedValues = {
@@ -98,10 +97,12 @@ const getProspectsBasedOnFilters = async (
       ? Prisma.sql``
       : Prisma.sql`and I.id is null`;
 
+  const fullScopeWithWildChars = '%'+fullScope+'%';
+
   const baseQuery = Prisma.sql`
   from "Contact" C
                inner join public."User" U on U.id = C."userId"
-               inner join public."Account" A on U.id = A."userId" and A.provider='google' and A.scope=${fullScope} -- drastically reduces prospects count
+               inner join public."Account" A on U.id = A."userId" and A.provider='google' and A.scope like ${fullScopeWithWildChars}
                inner join public."PersonProfile" PP
                           on C.email = PP.email and PP."linkedInUrl" is not null and PP."fullName" is not null
                inner join public."PersonExperience" PE on PP.id = PE."personProfileId"

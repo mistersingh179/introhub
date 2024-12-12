@@ -1,10 +1,10 @@
-import NextAuth, { Session, User } from "next-auth";
+import NextAuth from "next-auth";
 import Google from "@auth/core/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/prismaClient";
 import Credentials from "@auth/core/providers/credentials";
 import LinkedIn, { LinkedInProfile } from "@auth/core/providers/linkedin";
-import {fullScope} from "@/app/utils/constants";
+import { scopeWeAskForDuringGoogleAuth } from "@/app/utils/constants";
 
 const makeOnboardCall = async (userId: string) => {
   console.log("going to make fetch call to onboard user: ", userId);
@@ -74,7 +74,7 @@ export const {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: fullScope,
+          scope: scopeWeAskForDuringGoogleAuth,
           access_type: "offline",
         },
       },
@@ -94,7 +94,7 @@ export const {
         return user;
       },
     }),
-],
+  ],
   callbacks: {
     authorized: (params) => {
       return !!params.auth?.user;

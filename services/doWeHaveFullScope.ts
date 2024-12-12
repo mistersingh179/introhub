@@ -7,11 +7,10 @@ const doWeHaveFullScope = (accounts: Account[]) => {
   if (!googleAccount) {
     return false;
   }
-  console.log(doWeHaveFullScope, googleAccount.scope === fullScope);
-
+  console.log(doWeHaveFullScope, googleAccount.scope?.includes(fullScope));
   console.log("googleAccount.scope: ", googleAccount.scope);
   console.log("fullScope: ", fullScope);
-  return googleAccount.scope === fullScope;
+  return googleAccount.scope?.includes(fullScope);
 };
 
 export default doWeHaveFullScope;

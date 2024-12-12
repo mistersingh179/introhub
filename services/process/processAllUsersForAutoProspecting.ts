@@ -1,6 +1,6 @@
 import prisma from "@/prismaClient";
 import HighQueue from "@/bull/queues/highQueue";
-import {fullScope} from "@/app/utils/constants";
+import { fullScope } from "@/app/utils/constants";
 
 const processAllUsersForAutoProspecting = async () => {
   const users = await prisma.user.findMany({
@@ -8,9 +8,9 @@ const processAllUsersForAutoProspecting = async () => {
       agreedToAutoProspecting: true,
       accounts: {
         some: {
-          scope: fullScope
-        }
-      }
+          scope: { contains: fullScope },
+        },
+      },
     },
   });
   for (const user of users) {

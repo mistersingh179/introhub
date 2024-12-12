@@ -26,6 +26,7 @@ const refreshScopes = async (userId: string): Promise<string[]> => {
   });
   const { scopes } = await oauth2Client.getTokenInfo(at);
   // console.log("tokenInfo: ", tokenInfo);
+  console.log("scopes: ", scopes);
 
   await prisma.account.update({
     where: {
@@ -43,7 +44,8 @@ export default refreshScopes;
 
 if (require.main === module) {
   (async () => {
-    const scopes = await refreshScopes("clv1bzdqt0019fat3ocatxdyk");
+    const user = await prisma.user.findFirstOrThrow();
+    const scopes = await refreshScopes(user.id);
     console.log("scopes: ", scopes.join(" "));
     process.exit(0);
   })();

@@ -4,7 +4,6 @@ import prisma from "@/prismaClient";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import * as React from "react";
-import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
 import doWeHaveFullScope from "@/services/doWeHaveFullScope";
 
 const ScopeMissingMessage = async () => {
