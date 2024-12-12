@@ -4,7 +4,8 @@ export const superUsers = [
   "mistersingh179@gmail.com",
 ];
 
-export const fullScope = `https://mail.google.com/ https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid`;
+export const fullScope = "https://mail.google.com/";
+export const scopeWeAskForDuringGoogleAuth = `https://mail.google.com/ https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid`;
 
 export const allowedEmailsForTesting = [
   "rod@introhub.net",
@@ -22,4 +23,4 @@ export const rodEmail = "rod@introhub.net";
 export const defaultForwardableBlurb =
   "Hi {facilitator-name}, I noticed you're connected to {prospect-name}. I'm really impressed by their work at {prospect-company-name}.\r\n\r\nCan you introduce us?";
 
-export const PlatformGroupName = "Platform"
+export const PlatformGroupName = "Platform";
