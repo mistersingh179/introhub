@@ -18,6 +18,10 @@ export const buildS3ImageUrl = (dirName: string, key: string): string => {
   }
 };
 
+export const buildS3ImageUrlFromKey = (key: string): string => {
+  return `https://${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${key}`;
+};
+
 type UrlProperties = {
   origin: string;
   originWithPathName: string;

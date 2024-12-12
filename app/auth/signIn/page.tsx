@@ -6,6 +6,7 @@ import networking from "./networking.png";
 import SignInWithGoogleForm from "@/app/auth/signIn/SignInWithGoogleForm";
 import prisma from "@/prismaClient";
 import { PlatformGroupName } from "@/app/utils/constants";
+import {buildS3ImageUrlFromKey} from "@/lib/url";
 
 type SearchParams = { groupName?: string };
 
@@ -22,6 +23,8 @@ export default async function AuthenticationPage({
       name: groupName,
     },
   });
+
+  const imageUrl = group.imageName ? buildS3ImageUrlFromKey(group.imageName) : networking.src;
 
   return (
     <div className={"flex flex-row flex-grow"}>
@@ -46,7 +49,12 @@ export default async function AuthenticationPage({
           <p>{group.description}</p>
         </div>
 
-        <Image src={networking} alt={"networking"}></Image>
+        <img
+          src={imageUrl}
+          alt="networking"
+          className="w-full h-auto max-w-md max-h-72"
+        />
+
       </div>
       <div
         className={
@@ -64,7 +72,7 @@ export default async function AuthenticationPage({
         </Typography>
         <div className={"my-4"}>
           <Suspense>
-            <div className={'flex flex-col gap-4 items-center'}>
+            <div className={"flex flex-col gap-4 items-center"}>
               <SignInWithGoogleForm />
               {/*<SignInWithLinkedInForm />*/}
             </div>
