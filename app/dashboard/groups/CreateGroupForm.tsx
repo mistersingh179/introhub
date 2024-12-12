@@ -38,7 +38,7 @@ export default function CreateGroupForm(props: CreateGroupFormProps) {
   return (
     <form action={formActionHandler} className={"max-w-2xl flex flex-col gap-4"}>
       <ShowChildren showIt={!!errorMessage}>
-        <ErrorMessage description={JSON.stringify(errorMessage, null, 2)} />
+        <ErrorMessage description={JSON.stringify(errorMessage, null, 2)}/>
       </ShowChildren>
       <div className={"flex flex-row gap-4 items-center"}>
         <Label className={"min-w-48"} htmlFor={"name"}>
@@ -63,8 +63,18 @@ export default function CreateGroupForm(props: CreateGroupFormProps) {
           rows={3}
         ></Textarea>
       </div>
+      <div className={"flex flex-row gap-4 items-center"}>
+        <Label className={"min-w-48"} htmlFor={"name"}>
+          Image
+        </Label>
+        <Input
+          name={"image"}
+          type={"file"}
+          id="image"
+        ></Input>
+      </div>
       <div className={"flex flex-row justify-center my-4"}>
-        <SubmitButton label={"Create Group"} className={"w-fit"} />
+        <SubmitButton label={"Create Group"} className={"w-fit"}/>
       </div>
     </form>
   );

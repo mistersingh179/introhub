@@ -109,6 +109,7 @@ model Group {
   description String
   creatorId   String
   creator     User         @relation("UserGroupsCreated", fields: [creatorId], references: [id], onDelete: Cascade)
+  imageName   String?
   memberships Membership[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
