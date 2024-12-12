@@ -22,6 +22,8 @@ import { Badge } from "@/components/ui/badge";
 import DeleteGroupDialog from "@/app/dashboard/groups/DeleteGroupDialog";
 import { PlatformGroupName } from "@/app/utils/constants";
 import UpdateMembershipForm from "@/app/dashboard/groups/[id]/manage/UpdateMembershipForm";
+import EditGroupDialog from "../../EditGroupDialog";
+import LinkWithExternalIcon from "@/components/LinkWithExternalIcon";
 
 type MembershipWithUser = Prisma.MembershipGetPayload<{
   include: {
@@ -60,13 +62,22 @@ const ManageGroup = async ({
   const { emailToProfile, companyUrlToProfile } =
     await getEmailAndCompanyUrlProfiles(emails);
 
+  const signUpUrl = `${process.env.NEXT_PUBLIC_BASE_API_URL}/auth/signIn?groupName=${group.name}`;
+
   return (
     <>
       <div className={"flex flex-row my-8 justify-between"}>
-        <h1 className={"text-2xl"}>Manage Group – {group.name}</h1>
-        {group.name !== PlatformGroupName && group.creatorId === user.id && (
-          <DeleteGroupDialog group={group} />
-        )}
+        <h1 className={"text-2xl flex flex-row gap-4 items-baseline"}>
+          <div>Manage Group</div>
+          <div>{group.name}</div>
+          <LinkWithExternalIcon href={signUpUrl} />
+        </h1>
+        <div className={"flex flex-row gap-4"}>
+          <EditGroupDialog group={group} />
+          {group.name !== PlatformGroupName && group.creatorId === user.id && (
+            <DeleteGroupDialog group={group} />
+          )}
+        </div>
       </div>
 
       <Table>
