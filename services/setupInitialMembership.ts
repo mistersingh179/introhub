@@ -4,6 +4,20 @@ import { PlatformGroupName } from "@/app/utils/constants";
 
 const setupInitialMembership = async (user: User, groupName: string) => {
   console.log("in setupInitialMembership with: ", user.email, groupName);
+
+  if (groupName === PlatformGroupName) {
+    console.log("in setupInitialMembership with platform group name");
+    const existingMembershipsCount = await prisma.membership.count({
+      where: {
+        userId: user.id,
+      },
+    });
+    if (existingMembershipsCount > 0) {
+      console.log("bail as already have memberships", existingMembershipsCount);
+      return;
+    }
+  }
+
   const existingMembership = await prisma.membership.findFirst({
     where: {
       userId: user.id,
