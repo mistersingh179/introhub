@@ -17,6 +17,7 @@ const fetchContactUsingIcp = async (user: User, group: Group): Promise<Contact |
     1000,
   );
   if (pineconeMatchedEmails.length === 0) {
+    console.log("no pine cone matched emails when using: ", user.icpDescription, group)
     return null;
   }
 
@@ -27,6 +28,7 @@ const fetchContactUsingIcp = async (user: User, group: Group): Promise<Contact |
     group
   );
   if (contactsAvailable.length === 0) {
+    console.log("no contacts available when using: ", pineconeMatchedEmails, group)
     return null;
   }
 

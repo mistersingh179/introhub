@@ -157,14 +157,14 @@ const addProcessOldPendingApprovalIntros = async () => {
 
 const setupCronJobs = async () => {
   await addDownloadMessagesForAllAccounts();
-  // await addSetupMailboxWatchOnAllAccounts();
+  await addSetupMailboxWatchOnAllAccounts();
   await addBuildContactsForAllUsers();
   await addEnrichAllContacts();
   await addLlmDescriptionOnAll();
   await addEnrichAllRemainingUsersUsingApollo();
   await addSendProspectsCreateToday();
   await addProcessAllFiltersForEmail();
-  // await addProcessAllUsersForAutoProspecting();
+  await addProcessAllUsersForAutoProspecting();
   await addBuildThreadIds();
   await addProcessOldPendingApprovalIntros()
 };

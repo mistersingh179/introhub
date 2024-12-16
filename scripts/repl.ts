@@ -15,6 +15,7 @@ import {
 } from "date-fns";
 import { IntroStates } from "@/lib/introStates";
 import { PlatformGroupName } from "@/app/utils/constants";
+import refreshScopes from "@/services/refreshScopes";
 
 const { PubSub } = require("@google-cloud/pubsub");
 
@@ -24,8 +25,17 @@ prisma.$on("query", (e) => {});
 (async () => {
   console.log("Starting repl!");
 
-  const fd = new FormData();
-  console.log(fd.get("aa"));
+  const users = await prisma.user.findMany();
+  for(const user of users){
+    try{
+      await refreshScopes(user.id)
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  // const fd = new FormData();
+  // console.log(fd.get("aa"));
 
   // const m = await prisma.membership.update({
   //   where: {
