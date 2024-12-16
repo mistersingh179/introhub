@@ -37,6 +37,7 @@ const extractBody = (message: Schema$Message): string => {
 };
 
 export const messageHandler = async (message: Message) => {
+  console.log("In messageHandler with: ", message);
   try {
     const data = JSON.parse(message.data.toString());
     const { emailAddress, historyId } = data as {
@@ -135,6 +136,7 @@ export const messageHandler = async (message: Message) => {
 };
 
 const startSubscriber = async () => {
+  console.log("in startSubscriber");
   const pubSubClient = new PubSub();
   const subscriptionName = process.env.SUBSCRIPTION_NAME!;
   const subscription = pubSubClient.subscription(subscriptionName);
