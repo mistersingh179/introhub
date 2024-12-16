@@ -4,7 +4,6 @@ import { gmail_v1 } from "googleapis";
 import { Account, Introduction } from "@prisma/client";
 import { IntroStates } from "@/lib/introStates";
 import Schema$Message = gmail_v1.Schema$Message;
-import { allowedEmailsForTesting } from "@/app/utils/constants";
 
 export type PostEmailActionData = {
   intro: Introduction;
@@ -31,19 +30,6 @@ export const systemEmail =
 type SendEmail = (input: SendEmailInput) => Promise<Schema$Message | undefined>;
 const sendEmail: SendEmail = async (input) => {
   const { account, from, to, cc, subject, body, postEmailActionData } = input;
-
-  if (allowedEmailsForTesting.find((x) => from.includes(x))) {
-    console.log("from is allowed: ", from);
-  } else {
-    console.log("from is not allowed: ", from);
-    return;
-  }
-  if (allowedEmailsForTesting.find((x) => to.includes(x))) {
-    console.log("to is allowed: ", to);
-  } else {
-    console.log("to is not allowed: ", to);
-    return;
-  }
 
   const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString("base64")}?=`;
   const htmlBody = body.replaceAll("\r\n", "<br>");
