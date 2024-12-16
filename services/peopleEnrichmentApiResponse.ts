@@ -44,7 +44,7 @@ export default peopleEnrichmentApiResponse;
 
 if (require.main === module) {
   (async () => {
-    const ans = await peopleEnrichmentApiResponse("sandeep@introhub.net");
+    const ans = await peopleEnrichmentApiResponse("egzonmehmedi01@gmail.com");
     console.log("*** ans: ", ans);
   })();
 }

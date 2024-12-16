@@ -8,11 +8,10 @@ import { IntroStates } from "@/lib/introStates";
 import moveIntroToBeApproved from "@/services/moveIntroToBeApproved";
 import moveIntroToBeRejected from "@/services/moveIntroToBeRejected";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/list/page";
-import Schema$Message = gmail_v1.Schema$Message;
 import permissionEmailReplyAnalysis, {
   permissionGrantedEnum,
 } from "@/services/llm/permissionEmailReplyAnalysis";
-import { allowedEmailsForTesting } from "@/app/utils/constants";
+import Schema$Message = gmail_v1.Schema$Message;
 
 const extractBody = (message: Schema$Message): string => {
   const body = message.payload?.body;
@@ -46,14 +45,6 @@ export const messageHandler = async (message: Message) => {
     };
 
     console.log("in message Handler with", emailAddress, historyId);
-
-    if (allowedEmailsForTesting.find((x) => emailAddress.includes(x))) {
-      console.log("email allowed: ", emailAddress);
-    } else {
-      console.log("email not allowed: ", emailAddress);
-      message.ack();
-      return;
-    }
 
     const user = await prisma.user.findFirstOrThrow({
       where: {
