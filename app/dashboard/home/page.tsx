@@ -142,20 +142,20 @@ export default async function Home({
       {/*  </Alert>*/}
       {/*)}*/}
 
-      {user.unableToAutoProspect && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-8 w-8" />
-          <AlertTitle className="ml-8">Auto-Prospecting Unavailable</AlertTitle>
-          <AlertDescription className="ml-8">
-            We’ll continue attempting auto-prospecting for you daily. Meanwhile,
-            consider broadening your ICP description or{" "}
-            <Link href={"/dashboard/prospects"} className="underline">
-              starring
-            </Link>{" "}
-            more prospects.
-          </AlertDescription>
-        </Alert>
-      )}
+      {/*{user.unableToAutoProspect && (*/}
+      {/*  <Alert variant="destructive">*/}
+      {/*    <AlertCircle className="h-8 w-8" />*/}
+      {/*    <AlertTitle className="ml-8">Auto-Prospecting Unavailable</AlertTitle>*/}
+      {/*    <AlertDescription className="ml-8">*/}
+      {/*      We’ll continue attempting auto-prospecting for you daily. Meanwhile,*/}
+      {/*      consider broadening your ICP description or{" "}*/}
+      {/*      <Link href={"/dashboard/prospects"} className="underline">*/}
+      {/*        starring*/}
+      {/*      </Link>{" "}*/}
+      {/*      more prospects.*/}
+      {/*    </AlertDescription>*/}
+      {/*  </Alert>*/}
+      {/*)}*/}
 
       {/*{foundFullScope && (*/}
       {/*  <Alert variant="default">*/}
