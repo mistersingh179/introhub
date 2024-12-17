@@ -76,7 +76,7 @@ const GroupsList = async () => {
           <TableRow className={"flex flex-col sm:table-row"}>
             <TableHead>Name</TableHead>
             <TableHead>Owner</TableHead>
-            <TableHead>Count</TableHead>
+            <TableHead>Counts</TableHead>
             <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -135,9 +135,14 @@ const GroupRow = (props: GroupRowProps) => {
           <FacilitatorBox user={group.creator} personExp={personExp} />
         </TableCell>
         <TableCell>
+          <div className={'flex flex-col gap-4'}>
           <Link href={`/dashboard/groups/${group.id}/members`}>
             View {group.memberships.length} Members
           </Link>
+            <Link href={`/dashboard/prospects?selectedGroups=${group.name}`}>
+              View Prospects through Members
+            </Link>
+          </div>
         </TableCell>
         <TableCell>
           <div className={"flex flex-col gap-4"}>
