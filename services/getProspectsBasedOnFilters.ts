@@ -13,6 +13,7 @@ export type SelectedFilterValues = {
   selectedStates?: string[] | undefined;
   selectedJobTitles?: string[] | undefined;
   selectedIndustries?: string[] | undefined;
+  selectedGroups?: string[] | undefined;
   selectedCategories?: string[] | undefined;
   selectedUserEmails?: string[] | undefined;
   selectedEmail?: string | undefined;
@@ -41,6 +42,7 @@ const getProspectsBasedOnFilters = async (
     sizeTo,
     selectedWebsite,
     selectedIndustries,
+    selectedGroups,
     selectedCategories,
     selectedUserEmails,
     createdAfter,
@@ -62,6 +64,10 @@ const getProspectsBasedOnFilters = async (
 
   const industryFilterSql = selectedIndustries
     ? Prisma.sql`and lower(CP."industry") in (${Prisma.join(selectedIndustries.map((x) => x.toLowerCase()))})`
+    : Prisma.sql``;
+
+  const groupFilterSql = selectedGroups
+    ? Prisma.sql`and lower(G."name") in (${Prisma.join(selectedGroups.map((x) => x.toLowerCase()))})`
     : Prisma.sql``;
 
   const categoriesFilterSql = selectedCategories
@@ -97,7 +103,7 @@ const getProspectsBasedOnFilters = async (
       ? Prisma.sql``
       : Prisma.sql`and I.id is null`;
 
-  const fullScopeWithWildChars = '%'+fullScope+'%';
+  const fullScopeWithWildChars = "%" + fullScope + "%";
 
   const baseQuery = Prisma.sql`
   from "Contact" C
@@ -107,11 +113,13 @@ const getProspectsBasedOnFilters = async (
                           on C.email = PP.email and PP."linkedInUrl" is not null and PP."fullName" is not null
                inner join public."PersonExperience" PE on PP.id = PE."personProfileId"
                inner join public."CompanyProfile" CP on CP."linkedInUrl" = PE."companyLinkedInUrl"
+               inner join public."Membership" M on M."userId" = U.id
+               inner join public."Group" G on M."groupId" = G.id
                left join public."CompanyProfileCategory" CPC on CP.id = CPC."companyProfileId"
                left join public."Category" CAT on CPC."categoryId" = CAT.id
                left join public."Introduction" I
                          on I."contactId" = C.id and I."requesterId" = ${user.id}
-      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement}
+      where 1 = 1 ${cityFilterSql} ${stateFilterSql} ${jobTitleFilterSql} ${emailFilterSql} ${websiteFilterSql} ${industryFilterSql} ${categoriesFilterSql} ${userEmailsFilterSql} ${createdAfterFilterSql} ${sizeFromSql} ${sizeToSql} ${introsMustBeNullRequirement} ${groupFilterSql}
         and C."userId" != ${user.id}
         and C."available" = true
         and C."emailCheckPassed" = true
@@ -154,7 +162,7 @@ if (require.main === module) {
     const d = new Date(2024, 4, 16);
     console.log(d.toISOString());
     const filters: SelectedFilterValues = {
-      selectedStates: ["New York"],
+      selectedGroups: ["foobar"],
     };
 
     const { prospects, filteredRecordsCount } =
