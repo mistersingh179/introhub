@@ -29,6 +29,7 @@ const getFiltersFromSearchParams: GetFiltersFromSearchParams = (
   const selectedStates = getValueAsArray(searchParams?.selectedStates);
   const selectedJobTitles = getValueAsArray(searchParams?.selectedJobTitles);
   const selectedIndustries = getValueAsArray(searchParams?.selectedIndustries);
+  const selectedGroups = getValueAsArray(searchParams?.selectedGroups);
   const selectedCategories = getValueAsArray(searchParams?.selectedCategories);
   const selectedUserEmails = getValueAsArray(searchParams?.selectedUserEmails);
   const selectedEmail = searchParams?.selectedEmail;
@@ -42,6 +43,7 @@ const getFiltersFromSearchParams: GetFiltersFromSearchParams = (
     selectedStates,
     selectedJobTitles,
     selectedIndustries,
+    selectedGroups,
     selectedCategories,
     selectedEmail,
     selectedWebsite,

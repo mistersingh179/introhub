@@ -16,6 +16,7 @@ import {
 import { IntroStates } from "@/lib/introStates";
 import { PlatformGroupName } from "@/app/utils/constants";
 import refreshScopes from "@/services/refreshScopes";
+import getUniqueValuesWithOrderPreserved from "@/services/getUniqueValuesWithOrderPreserved";
 
 const { PubSub } = require("@google-cloud/pubsub");
 
@@ -25,14 +26,25 @@ prisma.$on("query", (e) => {});
 (async () => {
   console.log("Starting repl!");
 
-  const users = await prisma.user.findMany();
-  for(const user of users){
-    try{
-      await refreshScopes(user.id)
-    }catch(err){
-      console.log(err);
-    }
-  }
+  const groupsWithCount = await prisma.membership.groupBy({
+    by: "groupId",
+    _count: {
+      groupId: true,
+    },
+    orderBy: {
+      _count: {
+        groupId: "desc",
+      },
+    },
+  });
+  const groupsIds = getUniqueValuesWithOrderPreserved(
+    groupsWithCount,
+    "groupId",
+  );
+  const groups = await prisma.group.findMany({
+    where: { id: { in: groupsIds } },
+  });
+  console.log(groups);
 
   // const fd = new FormData();
   // console.log(fd.get("aa"));
@@ -66,7 +78,6 @@ prisma.$on("query", (e) => {});
   //     },
   //   });
   // }
-
 })();
 
 export {};

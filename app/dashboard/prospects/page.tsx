@@ -35,6 +35,7 @@ export type ProspectsSearchParams = {
   selectedIndustries?: string | string[];
   selectedCategories?: string | string[];
   selectedUserEmails?: string | string[];
+  selectedGroups?: string | string[];
   selectedEmail?: string;
   sizeFrom?: string;
   sizeTo?: string;
@@ -75,6 +76,7 @@ type GetAllFilterValues = (user: User) => Promise<{
   states: string[];
   jobTitles: string[];
   industries: string[];
+  groups: string[];
   categories: string[];
   userEmails: string[];
 }>;
@@ -173,6 +175,20 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
   const userEmails = getUniqueValuesWithOrderPreserved(usersWithCount, "email");
   console.log("userEmails.length: ", userEmails.length);
 
+  const groupsWithCount = await prisma.group.groupBy({
+    by: "name",
+    _count: {
+      name: true,
+    },
+    orderBy: {
+      _count: {
+        name: "desc",
+      },
+    },
+  });
+  const groups = getUniqueValuesWithOrderPreserved(groupsWithCount, "name");
+  console.log("groups.length: ", groups.length);
+
   const result = {
     cities,
     states,
@@ -180,6 +196,7 @@ const getAllFilterValues: GetAllFilterValues = async (user) => {
     industries,
     categories,
     userEmails,
+    groups,
   };
 
   return result;
@@ -208,7 +225,7 @@ export default async function Prospects({
   // await sleep(500);
   console.log("*** searchParams ***: ", searchParams);
 
-  const { cities, states, jobTitles, industries, categories, userEmails } =
+  const { cities, states, jobTitles, industries, categories, userEmails, groups } =
     await getAllFilterValues(user);
 
   const paginationValues: PaginatedValues = getPaginationValues(searchParams);
@@ -319,6 +336,7 @@ export default async function Prospects({
                   industries={industries}
                   categories={categories}
                   userEmails={userEmails}
+                  groups={groups}
                 />
                 <SaveFiltersDialog />
               </>

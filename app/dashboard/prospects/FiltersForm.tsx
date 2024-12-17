@@ -43,11 +43,19 @@ type FiltersFormProps = {
   industries: string[];
   categories: string[];
   userEmails: string[];
+  groups: string[];
 };
 
 const FiltersForm = (props: FiltersFormProps) => {
-  const { cities, states, jobTitles, industries, categories, userEmails } =
-    props;
+  const {
+    cities,
+    states,
+    jobTitles,
+    industries,
+    categories,
+    userEmails,
+    groups,
+  } = props;
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -77,6 +85,13 @@ const FiltersForm = (props: FiltersFormProps) => {
   const [selectedIndustries, setSelectedIndustries] = useState<FancyOption[]>(
     buildOptions(searchParams.getAll("selectedIndustries")),
   );
+  const [selectedGroups, setSelectedGroups] = useState<FancyOption[]>(
+    buildOptions(
+      searchParams.getAll("selectedGroups").length > 0
+        ? searchParams.getAll("selectedGroups")
+        : groups,
+    ),
+  );
 
   const [selectedCategories, setSelectedCategories] = useState<FancyOption[]>(
     buildOptions(searchParams.getAll("selectedCategories")),
@@ -99,6 +114,7 @@ const FiltersForm = (props: FiltersFormProps) => {
     selectedStates,
     selectedJobTitles,
     selectedIndustries,
+    selectedGroups,
     selectedCategories,
     selectedUserEmails,
     sizeFrom,
@@ -120,6 +136,7 @@ const FiltersForm = (props: FiltersFormProps) => {
     addMultiOptionsToParams(params, selectedStates, "selectedStates");
     addMultiOptionsToParams(params, selectedJobTitles, "selectedJobTitles");
     addMultiOptionsToParams(params, selectedIndustries, "selectedIndustries");
+    addMultiOptionsToParams(params, selectedGroups, "selectedGroups");
     addMultiOptionsToParams(params, selectedCategories, "selectedCategories");
     addMultiOptionsToParams(params, selectedUserEmails, "selectedUserEmails");
 
@@ -209,6 +226,13 @@ const FiltersForm = (props: FiltersFormProps) => {
           options={buildOptions(industries)}
           selected={selectedIndustries}
           setSelected={setSelectedIndustries}
+          limit={50}
+        />
+        <MyDropDown
+          placeholder={"Groups"}
+          options={buildOptions(groups)}
+          selected={selectedGroups}
+          setSelected={setSelectedGroups}
           limit={50}
         />
         <MyDropDown
