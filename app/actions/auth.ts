@@ -49,6 +49,7 @@ export async function signInWithGoogleAction(formData: FormData) {
     param: "groupName",
     value: groupName,
   });
+  console.log("auth has set signIn url to be: ", redirectTo);
 
   await signIn(
     "google",
