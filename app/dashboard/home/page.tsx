@@ -39,6 +39,7 @@ export default async function Home({
   });
 
   const groupName = searchParams.groupName;
+  console.log("in home page with groupName: ", groupName);
   if (groupName) {
     await setupInitialMembership(user, groupName.trim());
   }

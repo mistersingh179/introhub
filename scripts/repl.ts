@@ -24,27 +24,46 @@ const { PubSub } = require("@google-cloud/pubsub");
 prisma.$on("query", (e) => {});
 
 (async () => {
-  console.log("Starting repl!");
+  const addSearchParam = ({
+    host,
+    url,
+    param,
+    value,
+  }: {
+    host: string;
+    url: string;
+    param: string;
+    value: string;
+  }) => {
+    console.log("in addSearchParam with: ", host, url, param, value);
+    const base = new URL(url, host);
+    base.searchParams.set(param, value);
+    const result = base.pathname + base.search + base.hash;
+    console.log("result: ", result);
+    return result;
+  };
 
-  const groupsWithCount = await prisma.membership.groupBy({
-    by: "groupId",
-    _count: {
-      groupId: true,
-    },
-    orderBy: {
-      _count: {
-        groupId: "desc",
-      },
-    },
+  // in addSearchParam with:  https://app.introhub.net /dashboard/home groupName Platform
+
+  const ans = addSearchParam({
+    host: "https://app.introhub.net",
+    url: "/dashboard/home",
+    param: "groupName",
+    value: "Platform",
   });
-  const groupsIds = getUniqueValuesWithOrderPreserved(
-    groupsWithCount,
-    "groupId",
-  );
-  const groups = await prisma.group.findMany({
-    where: { id: { in: groupsIds } },
+  console.log("ans: ", ans);
+
+  // in addSearchParam with:  https://app.introhub.net https://app.introhub.net/ groupName Platform
+
+  const ans2 = addSearchParam({
+    host: "https://app.introhub.net",
+    url: "https://app.introhub.net/",
+    param: "groupName",
+    value: "Platform",
   });
-  console.log(groups);
+  console.log("ans2: ", ans2);
+
+
 
   // const fd = new FormData();
   // console.log(fd.get("aa"));
