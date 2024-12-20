@@ -124,6 +124,7 @@ const getProspectsBasedOnFilters = async (
         and C."available" = true
         and C."emailCheckPassed" = true
         and C."lastReceivedAt" >= now() - INTERVAL '1 year'
+        and M."approved" = true
         and U."agreedToAutoProspecting" = true -- drastically reduces the prospects we see
   `;
 

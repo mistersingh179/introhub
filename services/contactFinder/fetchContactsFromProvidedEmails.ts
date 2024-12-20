@@ -57,8 +57,9 @@ const fetchContactsFromProvidedEmails = async (
         tokenIssue: false,
         memberships: {
           some: {
-            group
-          }
+            group,
+            approved: true
+          },
         }
       },
       available: true,
