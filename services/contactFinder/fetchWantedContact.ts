@@ -49,7 +49,8 @@ const fetchWantedContact = async (user: User, group: Group): Promise<Contact | n
         tokenIssue: false,
         memberships: {
           some: {
-            group
+            group,
+            approved: true,
           }
         }
       },
