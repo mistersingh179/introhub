@@ -111,7 +111,7 @@ const Super = async () => {
                 <TableCell>
                   <div className={"flex flex-col gap-4"}>
                     <ImpersonateForm userId={user.id} />
-                    <ShowChildren showIt={user.missingPersonalInfo || !personProfile.linkedInUrl}>
+                    <ShowChildren showIt={user.missingPersonalInfo || !personProfile?.linkedInUrl}>
                       <AddLinkedInUrlDialog userEmail={user.email!} />
                     </ShowChildren>
                   </div>
