@@ -2,7 +2,7 @@ import prisma from "@/prismaClient";
 import peopleEnrichmentByLinkedinUrlApiCall from "@/services/helpers/apollo/peopleEnrichmentByLinkedinUrlApiCall";
 import enrichContactUsingApollo from "@/services/enrichContactUsingApollo";
 import isUserMissingPersonalInfo from "@/services/isUserMissingPersonalInfo";
-import setupCompetitorsOnUser from "@/services/setupCompetitorsOnUser";
+import HighQueue from "@/bull/queues/highQueue";
 
 type ManuallyConnectEmailAndPeopleEnrichment = (
   email: string,
@@ -57,9 +57,13 @@ const manuallyConnectEmailAndPeopleEnrichment: ManuallyConnectEmailAndPeopleEnri
     });
     if (user) {
       await isUserMissingPersonalInfo(user);
-      await setupCompetitorsOnUser(user);
+      // await setupCompetitorsOnUser(user);
+      const { id } = await HighQueue.add("onBoardUser", {
+        userId: user.id,
+      });
+      console.log("scheduled job to onboard user. job id: ", id);
     }
-    
+
     return enrichmentResult?.response;
   };
 export default manuallyConnectEmailAndPeopleEnrichment;
