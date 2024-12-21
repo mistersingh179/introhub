@@ -51,7 +51,7 @@ const onBoardUser: OnBoardUser = async (input) => {
     },
   });
   for (const contact of contacts) {
-    await ApolloQueue.add("enrichContactUsingApollo", email);
+    await ApolloQueue.add("enrichContactUsingApollo", contact.email);
   }
   await setupMailboxWatch({ ...account, user: user });
   await setupCompetitorsOnUser(user);
