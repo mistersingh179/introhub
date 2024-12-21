@@ -24,79 +24,25 @@ const { PubSub } = require("@google-cloud/pubsub");
 prisma.$on("query", (e) => {});
 
 (async () => {
-  const addSearchParam = ({
-    host,
-    url,
-    param,
-    value,
-  }: {
-    host: string;
-    url: string;
-    param: string;
-    value: string;
-  }) => {
-    console.log("in addSearchParam with: ", host, url, param, value);
-    const base = new URL(url, host);
-    base.searchParams.set(param, value);
-    const result = base.pathname + base.search + base.hash;
-    console.log("result: ", result);
-    return result;
-  };
-
-  // in addSearchParam with:  https://app.introhub.net /dashboard/home groupName Platform
-
-  const ans = addSearchParam({
-    host: "https://app.introhub.net",
-    url: "/dashboard/home",
-    param: "groupName",
-    value: "Platform",
+  const intro = await prisma.introduction.findFirstOrThrow({
+    where: {
+      id: 'cm4ykntza0003josk3dqrvata'
+    },
+    include: {
+      contact: true,
+      requester: true,
+      facilitator: true
+    }
   });
-  console.log("ans: ", ans);
-
-  // in addSearchParam with:  https://app.introhub.net https://app.introhub.net/ groupName Platform
-
-  const ans2 = addSearchParam({
-    host: "https://app.introhub.net",
-    url: "https://app.introhub.net/",
-    param: "groupName",
-    value: "Platform",
-  });
-  console.log("ans2: ", ans2);
-
-
-
-  // const fd = new FormData();
-  // console.log(fd.get("aa"));
-
-  // const m = await prisma.membership.update({
-  //   where: {
-  //     id: 'cm4d4byhu0002ihsi8pj5e4cc',
-  //     group: {
-  //       creatorId: 'clzrcdffo0000n0kuuplb1p9h'
-  //     }
-  //   },
+  console.log(intro);
+  // await prisma.personProfile.update({
   //   data: {
-  //     approved: true
-  //   }
-  // });
-  //
-  // console.log('m: ', m);
-
-  // const foobarGroup = await prisma.group.findFirstOrThrow({
-  //   where: {
-  //     name: "foobar",
+  //     fullName: 'Sandeep Arneja'
   //   },
-  // });
-  //
-  // const users = await prisma.user.findMany();
-  // for (const user of users) {
-  //   await prisma.membership.create({
-  //     data: {
-  //       groupId: foobarGroup.id,
-  //       userId: user.id,
-  //     },
-  //   });
-  // }
+  //   where: {
+  //     email: 'sandeep@introhub.net'
+  //   }
+  // })
 })();
 
 export {};

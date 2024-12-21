@@ -17,6 +17,7 @@ import * as React from "react";
 import ShowChildren from "@/components/ShowChildren";
 import { Badge } from "@/components/ui/badge";
 import AddLinkedInUrlDialog from "@/app/dashboard/super/AddLinkedInUrlDialog";
+import GenerateIntroDialog from "./GenerateIntroDialog";
 
 const Super = async () => {
   const allUsers = await prisma.user.findMany({
@@ -114,6 +115,7 @@ const Super = async () => {
                     <ShowChildren showIt={user.missingPersonalInfo || !personProfile?.linkedInUrl}>
                       <AddLinkedInUrlDialog userEmail={user.email!} />
                     </ShowChildren>
+                    <GenerateIntroDialog userEmail={user.email!} />
                   </div>
                 </TableCell>
               </TableRow>
