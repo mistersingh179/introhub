@@ -13,18 +13,13 @@ const FoundResultsAlert = ({ foundCount }: { foundCount: string }) => {
         <ul className="my-4 list-disc [&>li]:mt-4">
           <li>
             <div>
-              If the sample prospects below match your ICP, relax and wait for
-              introductions to arrive in your inbox 🎉.
-            </div>
-            <div>
-              {"We'll"} reach out to matching prospects, and if {"they're"}{" "}
-              interested, {"you'll"} receive an intro email with you {"cc'd"}.
-              Get ready for meetings to be booked with interested prospects! ✅
+              If the contacts below are the type of people you want to meet, then you are all done! 
+              Intros will arrive in your email soon 🎉
             </div>
           </li>
           <li>
-            If the sample prospects {"don't"} match your ICP, modify the ICP
-            description and hit preview to try again. 🔁
+            If the contacts {"don't"} match your ideal persona, update the 
+            description and try again 🔁
           </li>
         </ul>
       </AlertDescription>

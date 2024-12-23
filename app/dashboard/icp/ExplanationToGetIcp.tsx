@@ -3,10 +3,7 @@ import * as React from "react";
 const ExplanationToGetIcp = () => {
   return (
     <div>
-      <p className="text-md">
-        In natural language describe your ICP (Ideal Customer Profile) and hit
-         preview to see sample prospects.
-      </p>
+      <h2 className="text-xl">Who are you looking to connect with?</h2>
     </div>
   );
 };
