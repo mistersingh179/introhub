@@ -33,6 +33,7 @@ const AskPermissionToMakeIntroHtml = (
   const prospectName = getFirstName(contactProfiles.personProfile.fullName);
   const prospectCompanyName = contactProfiles.personExp.companyName ?? "";
   const facilitatorName = getFirstName(intro.facilitator.name);
+  const requesterLlmDescription = requestProfiles.personProfile.llmDescription;
 
   let forwardableBlurb =
     intro.requester.forwardableBlurb || defaultForwardableBlurb;
@@ -67,11 +68,7 @@ const AskPermissionToMakeIntroHtml = (
               Hi {prospectName},
               <br />
               <br />
-              {requesterName} asked me for an introduction to you. Is that OK{" "}
-              with you? <br />
-            </Text>
-            <Text>
-              {"Here's"} some context:
+              {requesterName} asked me for an introduction to you. {"Here's"} some context:
             </Text>
             <Text
               style={{
@@ -91,21 +88,24 @@ const AskPermissionToMakeIntroHtml = (
               {/*their thoughts.*/}
             </Text>
             <Text>
-              {"Here's"} LinkedIn:{" "}
+              This is {" "}
               <Link
                 href={`${requesterLinkedInUrl}`}
                 style={{ color: "blue", textDecoration: "underline" }}
               >
-                {requesterLinkedInUrl}
-              </Link>{" "}
+                their LinkedIn profile
+              </Link>{" "} and a short bio:
             </Text>
             <Text>
-              Let me know yes or no and {"I'll"} accordingly handle it.
+              {requesterLlmDescription}
             </Text>
-            - {facilitatorName}
+            <Text>
+              Can I connect you to {requesterName}?
+            </Text>
+            -{facilitatorName}
             <br />
             <br />
-            p.s. {"I'm"} using an automated system to manage these emails.{" "}
+            p.s. {"I'm"} using automated software to manage these introductions.{" "}
             {/*<br />*/}
             {/*<br />*/}
             {/*<img*/}
