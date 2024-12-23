@@ -40,24 +40,21 @@ const IntroducingBothHtml = (props: IntroducingBothHtmlProps) => {
               {"I'd"} like to introduce you to {requesterName}, who is now{" "}
               {"cc'd"} on this email. <br />
               <br />
-              {"I'll"} leave it to the two of you to connect further. Wishing
-              you both a productive and valuable discussion! <br />
+              Wishing you both a productive discussion! <br />
               <br />
-              Best regards,
-              <br />
-              {facilitatorName}
+              -{facilitatorName}
             </Text>
             {contactLlmDescription && (
               <Text>
                 ---------------------------- <br />
-                <br />A little about {contactName}:<br />
+                <br />About {contactName}:<br />
                 {contactLlmDescription}
               </Text>
             )}
             {requesterLlmDescription && (
               <Text>
                 ---------------------------- <br />
-                <br />A little about {requesterName}:<br />
+                <br />About {requesterName}:<br />
                 {requesterLlmDescription}
               </Text>
             )}
