@@ -25,7 +25,7 @@ const matchingSampleProspects = async () => {
     <>
       <div className="flex flex-col lg:flex-row flex-grow">
         {/* Left Section */}
-        <div className="flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 lg:basis-1/2">
+        <div className="hidden sm:flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 lg:basis-1/2">
           <div className="flex flex-col gap-4 justify-center items-center p-4 2xl:px-10">
             <Image
               src={matchingSampleProspectsImage}
@@ -60,7 +60,7 @@ const matchingSampleProspects = async () => {
               </Suspense>
             </div>
 
-            <div className="flex flex-row gap-10 w-full">
+            <div className="flex flex-col sm:flex-row gap-10 w-full">
               <Button asChild className="flex-1 py-6">
                 <Link href="/onboarding/setupIcp">Not Quite - Refine ICP</Link>
               </Button>

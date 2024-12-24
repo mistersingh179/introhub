@@ -22,7 +22,7 @@ const setupIcp = async () => {
       <div className={"flex flex-col lg:flex-row flex-grow"}>
         <div
           className={
-            "flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 p-4 lg:basis-1/2"
+            "hidden sm:flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 p-4 lg:basis-1/2"
           }
         >
           <div className="flex flex-col gap-4 justify-center items-center p-4 2xl:px-10">

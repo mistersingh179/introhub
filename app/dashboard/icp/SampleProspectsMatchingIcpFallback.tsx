@@ -17,7 +17,7 @@ const SampleProspectsMatchingIcpFallback = () => {
         <TableHeader>
           <TableRow>
             <TableHead className={"w-1/2"}>Prospect</TableHead>
-            <TableHead className={"w-1/2"}>Company</TableHead>
+            <TableHead className={"hidden sm:table-cell w-1/2"}>Company</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -32,7 +32,7 @@ const SampleProspectsMatchingIcpFallback = () => {
                   </div>
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell className={'hidden sm:table-cell'}>
                 <div className="flex items-center gap-4">
                   <Skeleton className="h-8 w-8 rounded-full"/>
                   <div className="flex flex-col gap-2">

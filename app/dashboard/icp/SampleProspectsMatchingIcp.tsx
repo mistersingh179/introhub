@@ -70,7 +70,7 @@ const SampleProspectsMatchingIcp = async (
         <TableHeader>
           <TableRow>
             <TableHead className={"w-1/2"}>Prospect</TableHead>
-            <TableHead className={"w-1/2"}>Company</TableHead>
+            <TableHead className={"hidden sm:table-cell w-1/2"}>Company</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -124,7 +124,7 @@ const Row = (props: RowProps) => {
             showLinkedInUrls={true}
           ></ProspectBox>
         </TableCell>
-        <TableCell>
+        <TableCell className={'hidden sm:table-cell'}>
           <CompanyBox companyProfile={companyProfile} personExp={personExp} />
         </TableCell>
       </TableRow>
