@@ -1,22 +1,7 @@
 import prisma from "../prismaClient";
-import { ChatOpenAI } from "@langchain/openai";
-import { StringOutputParser } from "@langchain/core/output_parsers";
-import {
-  ChatPromptTemplate,
-  HumanMessagePromptTemplate,
-} from "@langchain/core/prompts";
-import { SystemMessage } from "@langchain/core/messages";
-import { RunnableSequence } from "@langchain/core/runnables";
-import {
-  differenceInMilliseconds,
-  differenceInSeconds,
-  formatDistance,
-  subDays,
-} from "date-fns";
+import { subDays } from "date-fns";
 import { IntroStates } from "@/lib/introStates";
-import { PlatformGroupName } from "@/app/utils/constants";
-import refreshScopes from "@/services/refreshScopes";
-import getUniqueValuesWithOrderPreserved from "@/services/getUniqueValuesWithOrderPreserved";
+import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/pendingQueue/page";
 
 const { PubSub } = require("@google-cloud/pubsub");
 
@@ -24,25 +9,51 @@ const { PubSub } = require("@google-cloud/pubsub");
 prisma.$on("query", (e) => {});
 
 (async () => {
-  const intro = await prisma.introduction.findFirstOrThrow({
+  const user = await prisma.user.findFirstOrThrow({
     where: {
-      id: 'cm4ykntza0003josk3dqrvata'
+      email: "sandeep@introhub.net",
     },
-    include: {
-      contact: true,
-      requester: true,
-      facilitator: true
-    }
   });
-  console.log(intro);
-  // await prisma.personProfile.update({
-  //   data: {
-  //     fullName: 'Sandeep Arneja'
-  //   },
-  //   where: {
-  //     email: 'sandeep@introhub.net'
-  //   }
-  // })
+  const now = new Date();
+
+  const introsInYourQueue: IntroWithContactFacilitatorAndRequester[] =
+    await prisma.introduction.findMany({
+      where: {
+        facilitatorId: user.id,
+        createdAt: {
+          gte: subDays(now, 7),
+        },
+        status: IntroStates["pending approval"],
+      },
+      include: {
+        contact: true,
+        facilitator: true,
+        requester: true,
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+  console.log("introsInYourQueue: ", introsInYourQueue);
+
+  const introsWeAreMakingForYou: IntroWithContactFacilitatorAndRequester[] =
+    await prisma.introduction.findMany({
+      where: {
+        requesterId: user.id,
+      },
+      include: {
+        contact: true,
+        facilitator: true,
+        requester: true,
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+      take: 10
+    });
+
+  console.log("introsWeAreMakingForYou: ", introsWeAreMakingForYou);
 })();
 
 export {};
