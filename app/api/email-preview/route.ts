@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 
   // const html = await sendAskingPermissionToMakeIntroEmail(intro, false);
   // const html = await sendIntroducingBothEmail(intro, false);
-  const html = await sendIntroDigestEmail(user, true);
+  const html = await sendIntroDigestEmail(user, false);
 
   const htmlBody = html.replaceAll("\r\n", "<br>");
   console.log("htmlBody: ", htmlBody);
