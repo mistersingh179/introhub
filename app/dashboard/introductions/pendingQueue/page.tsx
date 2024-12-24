@@ -70,9 +70,9 @@ export default async function PendingQueue() {
           </h2>
           <p className={"my-4"}>
             These intro requests are on hold for seven days. During this time, you can 
-            review and cancel any that aren't needed. If no action is taken, the prospect 
+            cancel or approve those requests. If no action is taken, the prospect 
             will be emailed at the end of the hold period to confirm if they want to 
-            proceed with the introduction.
+            accept the introduction.
           </p>
         </div>
         <IntroTable
