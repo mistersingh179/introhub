@@ -48,6 +48,9 @@ const sendIntroDigestEmail = async (
     await prisma.introduction.findMany({
       where: {
         requesterId: user.id,
+        updatedAt: {
+          gte: subDays(now, 30),
+        },
       },
       include: {
         contact: true,
