@@ -25,14 +25,20 @@ export default function UpdateIcpForm(props: {
   const [errorMessage, dispatch] = useFormState(action, undefined);
 
   return (
-    <form action={dispatch} className={"flex flex-col gap-2"}>
+    <form action={dispatch} className={"flex flex-col gap-6"}>
       <ShowChildren showIt={!!errorMessage}>
         <ErrorMessage description={JSON.stringify(errorMessage, null, 2)} />
       </ShowChildren>
 
       <div className={"flex flex-col gap-4"}>
         <div className={"flex flex-row gap-2 items-center"}>
-          <Label htmlFor={"icpDescription"}>Describe your ideal customers or referral partners in a sentence or two.</Label>
+          <Label
+            htmlFor={"icpDescription"}
+            className="text-xl text-muted-foreground"
+          >
+            Describe your ideal customers or referral partners in a sentence or
+            two.
+          </Label>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -44,7 +50,7 @@ export default function UpdateIcpForm(props: {
                 className={"sm:max-w-sm md:max-w-xl"}
               >
                 <TooltipArrow width={16} height={10} className="fill-current" />
-                <strong>Examples:</strong>
+                <strong>ICP Examples:</strong>
                 <ul className="my-4 ml-6 list-disc text-sm font-light italic leading-normal">
                   <li>
                     Software engineers in San Francisco with cloud computing
@@ -57,6 +63,14 @@ export default function UpdateIcpForm(props: {
                   <li>
                     Senior marketing professionals skilled in content strategy
                     and SEO, working in e-commerce or retail.
+                  </li>
+                  <li>
+                    Developers in SaaS using Python, with machine learning
+                    experience in financial services.
+                  </li>
+                  <li>
+                    Product managers in the European automotive sector working
+                    on electric vehicles and sustainability.
                   </li>
                 </ul>
               </TooltipContent>
@@ -76,13 +90,16 @@ export default function UpdateIcpForm(props: {
             }
           }}
         />
-        <p className={"text-sm text-muted-foreground"}>
-          Tip: Press Cmd+Enter to Preview Results
-        </p>
+        {/*<p className={"text-sm text-muted-foreground"}>*/}
+        {/*  Tip: Press Cmd+Enter to Preview Results*/}
+        {/*</p>*/}
       </div>
 
       <div className={"flex flex-row justify-center mt-4 gap-4"}>
-        <SubmitButton label={"Preview"} className={"w-fit"} />
+        <SubmitButton
+          label={"Show me Sample Matches"}
+          className={"w-full py-6 my-14"} variant={'branded'}
+        />
       </div>
     </form>
   );

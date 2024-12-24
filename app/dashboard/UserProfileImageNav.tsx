@@ -91,6 +91,9 @@ const UserProfileImageNav = async () => {
           <Link href={"/dashboard/competitors"}>
             <DropdownMenuItem>Competitors</DropdownMenuItem>
           </Link>
+          <Link href={"/onboarding/setupIcp"}>
+            <DropdownMenuItem>Setup ICP</DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

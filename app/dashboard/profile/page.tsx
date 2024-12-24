@@ -10,6 +10,7 @@ import RefreshScopesForm from "@/app/dashboard/home/RefreshScopesForm";
 import ShowChildren from "@/components/ShowChildren";
 import { Badge } from "@/components/ui/badge";
 import ProfileStatusUpdateForm from "@/app/dashboard/profile/ProfileStatusUpdateForm";
+import Link from "next/link";
 
 export default async function Profile() {
   const session = (await auth()) as Session;
@@ -125,6 +126,13 @@ export default async function Profile() {
             <ShowChildren showIt={scopes.length == 0}>None</ShowChildren>
           </div>
         </div>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          To change anything in your profile please email{" "}
+          <Link href={"mailto:rod@introhub.net?Subject=Update+Profile+Request"} className={'underline'} target={"_blank"}>
+            rod@introhub.net
+          </Link>{" "}
+          as we need to verify it before we can change it.
+        </p>
       </div>
     </>
   );

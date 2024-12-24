@@ -10,8 +10,6 @@ import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import ClarityMetrics from "@/app/utils/ClarityMetrics";
 import ShowChildren from "@/components/ShowChildren";
-import checkUserPermissions from "@/services/checkUserPermissions";
-import MissingPermissionsDialog from "@/app/dashboard/MissingPermissionsDialog";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -20,7 +18,7 @@ export default async function DashboardLayout({
   children,
 }: DashboardLayoutProps) {
   const session = (await auth()) as Session;
-  console.log("session.user: ", session.user);
+  console.log("DashboardLayout session.user: ", session.user);
   const user = await prisma.user.findFirst({
     where: {
       email: session.user?.email ?? "",
@@ -29,7 +27,6 @@ export default async function DashboardLayout({
       accounts: true,
     },
   });
-  const weHavePermissions = await checkUserPermissions(user!.id);
 
   return (
     <div className={""}>
@@ -55,10 +52,6 @@ export default async function DashboardLayout({
         <SoonerToaster richColors />
         <ShowChildren showIt={!!user}>
           <ClarityMetrics user={user!} />
-        </ShowChildren>
-
-        <ShowChildren showIt={!weHavePermissions}>
-          <MissingPermissionsDialog />
         </ShowChildren>
       </div>
     </div>

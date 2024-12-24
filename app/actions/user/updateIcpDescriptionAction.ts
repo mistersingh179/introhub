@@ -51,8 +51,8 @@ const updateIcpDescriptionAction = async (
     }
   }
 
-  revalidatePath("/dashboard/home");
-  redirect("/dashboard/home");
+  revalidatePath("/onboarding/matchingSampleProspects");
+  redirect("/onboarding/matchingSampleProspects");
 };
 
 export default updateIcpDescriptionAction;

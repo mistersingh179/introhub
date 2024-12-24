@@ -17,15 +17,46 @@ import {
   CompanyBox,
   ProspectBox,
 } from "@/app/dashboard/introductions/list/IntroTable";
+import prisma from "@/prismaClient";
+import getMatchingProspectsFromPinecone from "@/services/llm/getMatchingProspectsFromPinecone";
+import getMatchingProspectsFromLlm from "@/services/llm/getMatchingProspectsFromLlm";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
 
-type SampleProspectsMatchingIcpProps = {
-  prospects: Contact[];
-};
+type SampleProspectsMatchingIcpProps = {};
 
 const SampleProspectsMatchingIcp = async (
   props: SampleProspectsMatchingIcpProps,
 ) => {
-  const { prospects } = props;
+  const session = (await auth()) as Session;
+  const user = await prisma.user.findFirstOrThrow({
+    where: {
+      email: session.user?.email ?? "",
+    },
+    include: {
+      accounts: true,
+    },
+  });
+  const k = 1000;
+  const pineconeMatchedEmails = user.icpDescription
+    ? await getMatchingProspectsFromPinecone(user.icpDescription, k)
+    : [];
+
+  const batchSize =
+    pineconeMatchedEmails.length > 100 ? 100 : pineconeMatchedEmails.length;
+  // const llmMatchedEmails = []; // for dev testing
+  const llmMatchedEmails = await getMatchingProspectsFromLlm(
+    user.icpDescription!,
+    pineconeMatchedEmails.slice(0, batchSize),
+  );
+  const prospects = await prisma.contact.findMany({
+    where: {
+      email: {
+        in: llmMatchedEmails,
+      },
+    },
+    take: 5,
+  });
 
   const emails = prospects.map((p) => p.email);
 

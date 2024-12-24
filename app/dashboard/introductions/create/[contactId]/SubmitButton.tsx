@@ -18,6 +18,7 @@ type SubmitButtonProps = {
     | "link"
     | "primary"
     | "success"
+    | "branded"
     | null
     | undefined;
   beDisabled?: boolean;

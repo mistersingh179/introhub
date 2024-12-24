@@ -45,7 +45,7 @@ export async function signInWithGoogleAction(formData: FormData) {
   console.log("authorizationParams: ", authorizationParams);
   const redirectTo = addSearchParam({
     host: process.env.BASE_API_URL!,
-    url: callbackUrl || "/dashboard/home",
+    url: callbackUrl || "/",
     param: "groupName",
     value: groupName,
   });
@@ -64,7 +64,7 @@ export async function signInWithLinkedInAction(formData: FormData) {
   console.log("in signInWithLinkedIAction");
   const callbackUrl = formData.get("callbackUrl") as string;
   await signIn("linkedin", {
-    redirectTo: callbackUrl ? callbackUrl : "/dashboard/home",
+    redirectTo: callbackUrl ? callbackUrl : "/",
   });
 }
 

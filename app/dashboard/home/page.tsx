@@ -11,23 +11,14 @@ import Link from "next/link";
 import LogOutSimpleLink from "@/app/dashboard/home/LogOutSimpleLink";
 import AutoProspectingDialog from "@/app/dashboard/AutoProspectingDialog";
 import doWeHaveFullScope from "@/services/doWeHaveFullScope";
-import UserGaDataPush from "@/app/utils/UserGaDataPush";
-import ExplanationToGetIcp from "@/app/dashboard/icp/ExplanationToGetIcp";
-import UpdateIcpForm from "@/app/dashboard/icp/UpdateIcpForm";
-import SampleProspectsMatchingIcp from "@/app/dashboard/icp/SampleProspectsMatchingIcp";
-import getMatchingProspectsFromPinecone from "@/services/llm/getMatchingProspectsFromPinecone";
-import getMatchingProspectsFromLlm from "@/services/llm/getMatchingProspectsFromLlm";
-import FoundResultsAlert from "@/app/dashboard/icp/FoundResultsAlert";
-import setupInitialMembership from "@/services/setupInitialMembership";
+import ShowChildren from "@/components/ShowChildren";
+import EverythingIsGoodAlert from "@/app/dashboard/home/EverythingIsGoodAlert";
+import relaxingImage from "@/app/dashboard/home/illustration-coastal-relaxation-man-lounging-beach.jpg";
+import Image from "next/image";
+import MissingPermissionsDialog from "@/app/dashboard/MissingPermissionsDialog";
+import checkUserPermissions from "@/services/checkUserPermissions";
 
-type SearchParams = {
-  groupName: string;
-};
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function Home() {
   const session = (await auth()) as Session;
   const user = await prisma.user.findFirstOrThrow({
     where: {
@@ -38,88 +29,42 @@ export default async function Home({
     },
   });
 
-  const groupName = searchParams.groupName;
-  console.log("in home page with groupName: ", groupName);
-  if (groupName) {
-    await setupInitialMembership(user, groupName.trim());
-  }
-
   const foundFullScope = doWeHaveFullScope(user.accounts);
-
-  const k = 1000;
-  const pineconeMatchedEmails = user.icpDescription
-    ? await getMatchingProspectsFromPinecone(user.icpDescription, k)
-    : [];
-
-  const batchSize =
-    pineconeMatchedEmails.length > 100 ? 100 : pineconeMatchedEmails.length;
-  // const llmMatchedEmails = [];
-  const llmMatchedEmails = await getMatchingProspectsFromLlm(
-    user.icpDescription!,
-    pineconeMatchedEmails.slice(0, batchSize),
-  );
-
-  const prospects = await prisma.contact.findMany({
-    where: {
-      email: {
-        in: llmMatchedEmails,
-      },
-    },
+  const weHavePermissions = await checkUserPermissions(user.id);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { tokenIssue: !weHavePermissions },
   });
-  console.log("prospects found: ", prospects.length);
-
-  // const contactStats = await getContactStats();
-
-  // const jobTitlesWithCount = await prisma.personExperience.groupBy({
-  //   by: "jobTitle",
-  //   _count: true,
-  // });
-  // const jobTitles = jobTitlesWithCount
-  //   .filter((rec) => rec.jobTitle)
-  //   .map((rec) => rec.jobTitle as string);
-  //
-  // const jobTitleOptions = jobTitles.map((jobTitle) => {
-  //   return {
-  //     value: jobTitle,
-  //     label: jobTitle,
-  //   };
-  // });
-  //
-  // const options = [
-  //   { value: "chocolate", label: "Chocolate" },
-  //   { value: "strawberry", label: "Strawberry" },
-  //   { value: "vanilla", label: "Vanilla" },
-  // ];
 
   return (
-    <div className={"flex flex-col gap-8"}>
-      <div className={"flex flex-row items-center gap-2"}>
-        <h1 className={"text-2xl mt-6"}>Home</h1>
-        {/*<RefreshStatsForm />*/}
+    <div className="flex flex-col gap-8 min-h-0">
+      <div className="flex flex-row items-center gap-2">
+        <h1 className="text-2xl mt-6">Home</h1>
       </div>
+
+      <ShowChildren
+        showIt={
+          user.agreedToAutoProspecting &&
+          foundFullScope &&
+          !user.tokenIssue &&
+          !user.missingPersonalInfo &&
+          weHavePermissions
+        }
+      >
+        <>
+          <EverythingIsGoodAlert />
+          <Image
+            className="w-full h-full"
+            src={relaxingImage}
+            alt="time to relax"
+            priority
+          />
+        </>
+      </ShowChildren>
 
       <AutoProspectingDialog
         agreedToAutoProspecting={user!.agreedToAutoProspecting}
       />
-
-      {/*<OnBoardingCard />*/}
-
-      {/*{user.agreedToAutoProspecting && (*/}
-      {/*  <Alert variant="default">*/}
-      {/*    <Check className="h-8 w-8" />*/}
-      {/*    <AlertTitle className="ml-8">*/}
-      {/*      Relax and Await Introductions*/}
-      {/*    </AlertTitle>*/}
-      {/*    <AlertDescription className="ml-8">*/}
-      {/*      We’ll auto-prospect based on your ICP. Look out for intro emails, as*/}
-      {/*      {"you'll"} be {"cc'd"} when a target consents. Update your{" "}*/}
-      {/*      <Link href="/dashboard/icp" className="underline">*/}
-      {/*        ICP here*/}
-      {/*      </Link>*/}
-      {/*      .*/}
-      {/*    </AlertDescription>*/}
-      {/*  </Alert>*/}
-      {/*)}*/}
 
       {!user.agreedToAutoProspecting && (
         <Alert variant="destructive">
@@ -132,42 +77,6 @@ export default async function Home({
           </AlertDescription>
         </Alert>
       )}
-
-      {/*{!user.unableToAutoProspect && (*/}
-      {/*  <Alert variant="default">*/}
-      {/*    <Check className="h-8 w-8" />*/}
-      {/*    <AlertTitle className={"ml-8"}>Your ICP is well defined</AlertTitle>*/}
-      {/*    <AlertDescription className={"ml-8"}>*/}
-      {/*      We are able to find prospects matching your ICP.*/}
-      {/*    </AlertDescription>*/}
-      {/*  </Alert>*/}
-      {/*)}*/}
-
-      {/*{user.unableToAutoProspect && (*/}
-      {/*  <Alert variant="destructive">*/}
-      {/*    <AlertCircle className="h-8 w-8" />*/}
-      {/*    <AlertTitle className="ml-8">Auto-Prospecting Unavailable</AlertTitle>*/}
-      {/*    <AlertDescription className="ml-8">*/}
-      {/*      We’ll continue attempting auto-prospecting for you daily. Meanwhile,*/}
-      {/*      consider broadening your ICP description or{" "}*/}
-      {/*      <Link href={"/dashboard/prospects"} className="underline">*/}
-      {/*        starring*/}
-      {/*      </Link>{" "}*/}
-      {/*      more prospects.*/}
-      {/*    </AlertDescription>*/}
-      {/*  </Alert>*/}
-      {/*)}*/}
-
-      {/*{foundFullScope && (*/}
-      {/*  <Alert variant="default">*/}
-      {/*    <Check className="h-8 w-8" />*/}
-      {/*    <AlertTitle className={"ml-8"}>Your Account is Ready</AlertTitle>*/}
-      {/*    <AlertDescription className={"ml-8"}>*/}
-      {/*      Google permissions were found. {"You're"} ready to get and make*/}
-      {/*      intros.*/}
-      {/*    </AlertDescription>*/}
-      {/*  </Alert>*/}
-      {/*)}*/}
 
       {!foundFullScope && (
         <Alert variant="destructive">
@@ -210,21 +119,70 @@ export default async function Home({
         </Alert>
       )}
 
-      {process.env.NODE_ENV === "production" && (
-        <UserGaDataPush user={user} pageTitle={"Home"} />
-      )}
+      <ShowChildren showIt={!weHavePermissions}>
+        <MissingPermissionsDialog />
+      </ShowChildren>
 
-      {prospects.length > 0 && (
-        <FoundResultsAlert
-          foundCount={`${pineconeMatchedEmails.length}${pineconeMatchedEmails.length === k ? "+" : ""}`}
-        />
-      )}
+      {/*<OnBoardingCard />*/}
 
-      <ExplanationToGetIcp />
+      {/*{user.agreedToAutoProspecting && (*/}
+      {/*  <Alert variant="default">*/}
+      {/*    <Check className="h-8 w-8" />*/}
+      {/*    <AlertTitle className="ml-8">*/}
+      {/*      Relax and Await Introductions*/}
+      {/*    </AlertTitle>*/}
+      {/*    <AlertDescription className="ml-8">*/}
+      {/*      We’ll auto-prospect based on your ICP. Look out for intro emails, as*/}
+      {/*      {"you'll"} be {"cc'd"} when a target consents. Update your{" "}*/}
+      {/*      <Link href="/dashboard/icp" className="underline">*/}
+      {/*        ICP here*/}
+      {/*      </Link>*/}
+      {/*      .*/}
+      {/*    </AlertDescription>*/}
+      {/*  </Alert>*/}
+      {/*)}*/}
 
-      <UpdateIcpForm icpDescription={user.icpDescription ?? undefined} />
+      {/*{!user.unableToAutoProspect && (*/}
+      {/*  <Alert variant="default">*/}
+      {/*    <Check className="h-8 w-8" />*/}
+      {/*    <AlertTitle className={"ml-8"}>Your ICP is well defined</AlertTitle>*/}
+      {/*    <AlertDescription className={"ml-8"}>*/}
+      {/*      We are able to find prospects matching your ICP.*/}
+      {/*    </AlertDescription>*/}
+      {/*  </Alert>*/}
+      {/*)}*/}
 
-      <SampleProspectsMatchingIcp prospects={prospects} />
+      {/*{user.unableToAutoProspect && (*/}
+      {/*  <Alert variant="destructive">*/}
+      {/*    <AlertCircle className="h-8 w-8" />*/}
+      {/*    <AlertTitle className="ml-8">Auto-Prospecting Unavailable</AlertTitle>*/}
+      {/*    <AlertDescription className="ml-8">*/}
+      {/*      We’ll continue attempting auto-prospecting for you daily. Meanwhile,*/}
+      {/*      consider broadening your ICP description or{" "}*/}
+      {/*      <Link href={"/dashboard/prospects"} className="underline">*/}
+      {/*        starring*/}
+      {/*      </Link>{" "}*/}
+      {/*      more prospects.*/}
+      {/*    </AlertDescription>*/}
+      {/*  </Alert>*/}
+      {/*)}*/}
+
+      {/*{foundFullScope && (*/}
+      {/*  <Alert variant="default">*/}
+      {/*    <Check className="h-8 w-8" />*/}
+      {/*    <AlertTitle className={"ml-8"}>Your Account is Ready</AlertTitle>*/}
+      {/*    <AlertDescription className={"ml-8"}>*/}
+      {/*      Google permissions were found. {"You're"} ready to get and make*/}
+      {/*      intros.*/}
+      {/*    </AlertDescription>*/}
+      {/*  </Alert>*/}
+      {/*)}*/}
+
+      {/*{prospects.length > 0 && (*/}
+      {/*  <FoundResultsAlert*/}
+      {/*    foundCount={`${pineconeMatchedEmails.length}${pineconeMatchedEmails.length === k ? "+" : ""}`}*/}
+      {/*  />*/}
+      {/*)}*/}
     </div>
   );
 }
