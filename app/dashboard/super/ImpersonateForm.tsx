@@ -2,8 +2,8 @@
 
 import { Input } from "@/components/ui/input";
 import SubmitButton from "@/app/dashboard/introductions/create/[contactId]/SubmitButton";
-import addCreditsUserAction from "@/app/actions/user/addCreditsUserAction";
 import { SignInWithCredentials } from "@/app/actions/auth";
+import { VenetianMask } from "lucide-react";
 
 type ImpersonateFormProps = {
   userId: string;
@@ -13,10 +13,7 @@ const ImpersonateForm = (props: ImpersonateFormProps) => {
   const { userId } = props;
   return (
     <>
-      <form
-        action={SignInWithCredentials}
-        className={"flex flex-col gap-4"}
-      >
+      <form action={SignInWithCredentials} className={"flex flex-col gap-4"}>
         <Input
           type={"hidden"}
           name={"userToImpersonate"}
@@ -25,7 +22,11 @@ const ImpersonateForm = (props: ImpersonateFormProps) => {
         <SubmitButton
           className={"w-full"}
           variant={"secondary"}
-          label={"Impersonate"}
+          label={
+            <>
+              <VenetianMask size={16} className={"mr-2"} /> Impersonate
+            </>
+          }
         />
       </form>
     </>

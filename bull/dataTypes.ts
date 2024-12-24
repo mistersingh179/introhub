@@ -11,7 +11,7 @@ import { OnBoardUserInput } from "@/services/onBoardUser";
 import { SendProspectsCreatedTodayOutput } from "@/services/emails/sendProspectsCreatedToday";
 import Schema$Message = gmail_v1.Schema$Message;
 import { ProcessAllFiltersForEmailOutput } from "@/services/process/processAllFiltersForEmail";
-import {IntroWithContactFacilitatorAndRequester} from "@/app/dashboard/introductions/pendingQueue/page";
+import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/pendingQueue/page";
 
 export type HighInputDataType = OnBoardUserInput | undefined | User;
 
@@ -27,6 +27,7 @@ export type MediumInputDataType =
   | SendEmailInput
   | User
   | OnBoardUserInput
+  | undefined
   | null;
 
 export type HighOutputDataType =
@@ -47,6 +48,7 @@ export type MediumOutputDataType =
   | Schema$Message
   | IntroWithContactFacilitatorAndRequester[]
   | number
+  | string
   | undefined
   | void;
 
@@ -79,4 +81,6 @@ export type MediumJobNames =
   | "buildContacts"
   | "buildContactsForAllUsers"
   | "buildThreadIds"
+  | "sendIntroDigestEmail"
+  | "processAllUsersForIntroDigest"
   | "setupMailboxWatchOnAllAccounts";

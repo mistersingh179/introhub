@@ -127,6 +127,20 @@ const addProcessAllUsersForAutoProspecting = async () => {
   console.log("schedule job: ", name, id, opts);
 };
 
+const addProcessAllUsersForIntroDigest = async () => {
+  const jobObj = await mediumQueue.add(
+    "processAllUsersForIntroDigest",
+    undefined,
+    {
+      repeat: {
+        pattern: "0 22 * * *",
+      },
+    },
+  );
+  const { name, id, opts } = jobObj;
+  console.log("schedule job: ", name, id, opts);
+};
+
 // const addSendEmailForAllApprovedIntros = async () => {
 //   const jobObj = await highQueue.add(
 //     "sendEmailForAllApprovedIntros",
@@ -165,6 +179,7 @@ const setupCronJobs = async () => {
   await addSendProspectsCreateToday();
   await addProcessAllFiltersForEmail();
   await addProcessAllUsersForAutoProspecting();
+  await addProcessAllUsersForIntroDigest();
   await addBuildThreadIds();
   await addProcessOldPendingApprovalIntros()
 };

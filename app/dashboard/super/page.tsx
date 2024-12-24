@@ -18,6 +18,7 @@ import ShowChildren from "@/components/ShowChildren";
 import { Badge } from "@/components/ui/badge";
 import AddLinkedInUrlDialog from "@/app/dashboard/super/AddLinkedInUrlDialog";
 import GenerateIntroDialog from "./GenerateIntroDialog";
+import SendIntroDigestForm from "@/app/dashboard/super/SendIntroDigestForm";
 
 const Super = async () => {
   const allUsers = await prisma.user.findMany({
@@ -112,6 +113,7 @@ const Super = async () => {
                 <TableCell>
                   <div className={"flex flex-col gap-4"}>
                     <ImpersonateForm userId={user.id} />
+                    <SendIntroDigestForm userId={user.id} />
                     <ShowChildren showIt={user.missingPersonalInfo || !personProfile?.linkedInUrl}>
                       <AddLinkedInUrlDialog userEmail={user.email!} />
                     </ShowChildren>

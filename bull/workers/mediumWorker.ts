@@ -21,6 +21,8 @@ import sendEmail, { SendEmailInput } from "@/services/emails/sendEmail";
 import buildThreadIds from "@/services/buildThreadIds";
 import setupMailboxWatchOnAllAccounts from "@/services/setupMailboxWatchOnAllAccounts";
 import processOldPendingApprovalIntros from "@/services/intros/processOldPendingApprovalIntros";
+import sendIntroDigestEmail from "@/services/emails/sendIntroDigestEmail";
+import processAllUsersForIntroDigest from "@/services/process/processAllUsersForIntroDigest";
 
 const queueName = "medium";
 
@@ -82,6 +84,13 @@ const mediumWorker: Worker<
       }
       case "processOldPendingApprovalIntros": {
         return await processOldPendingApprovalIntros();
+      }
+      case "processAllUsersForIntroDigest": {
+        return await processAllUsersForIntroDigest();
+      }
+      case "sendIntroDigestEmail": {
+        const input = data as User;
+        return await sendIntroDigestEmail(input);
       }
       default:
         console.error("got unknown job!");
