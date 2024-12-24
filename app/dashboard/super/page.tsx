@@ -19,6 +19,9 @@ import { Badge } from "@/components/ui/badge";
 import AddLinkedInUrlDialog from "@/app/dashboard/super/AddLinkedInUrlDialog";
 import GenerateIntroDialog from "./GenerateIntroDialog";
 import SendIntroDigestForm from "@/app/dashboard/super/SendIntroDigestForm";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ExternalLink, ScanEye } from "lucide-react";
 
 const Super = async () => {
   const allUsers = await prisma.user.findMany({
@@ -114,7 +117,21 @@ const Super = async () => {
                   <div className={"flex flex-col gap-4"}>
                     <ImpersonateForm userId={user.id} />
                     <SendIntroDigestForm userId={user.id} />
-                    <ShowChildren showIt={user.missingPersonalInfo || !personProfile?.linkedInUrl}>
+                    <Button asChild variant={"secondary"}>
+                      <Link
+                        href={`/api/email-preview/sendIntroDigestEmail?userId=${user.id}`}
+                        target={"_blank"}
+                      >
+                        <ScanEye size={16} className={"mr-2"} />
+                        Preview Intro Digest
+                        <ExternalLink className={"inline ml-2"} size={16} />
+                      </Link>
+                    </Button>
+                    <ShowChildren
+                      showIt={
+                        user.missingPersonalInfo || !personProfile?.linkedInUrl
+                      }
+                    >
                       <AddLinkedInUrlDialog userEmail={user.email!} />
                     </ShowChildren>
                     <GenerateIntroDialog userEmail={user.email!} />

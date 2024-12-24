@@ -2,6 +2,9 @@ import prisma from "../prismaClient";
 import { subDays } from "date-fns";
 import { IntroStates } from "@/lib/introStates";
 import { IntroWithContactFacilitatorAndRequester } from "@/app/dashboard/introductions/pendingQueue/page";
+import {fullScope} from "@/app/utils/constants";
+import MediumQueue from "@/bull/queues/mediumQueue";
+import sendIntroDigestEmail from "@/services/emails/sendIntroDigestEmail";
 
 const { PubSub } = require("@google-cloud/pubsub");
 
@@ -9,51 +12,25 @@ const { PubSub } = require("@google-cloud/pubsub");
 prisma.$on("query", (e) => {});
 
 (async () => {
-  const user = await prisma.user.findFirstOrThrow({
+  const users = await prisma.user.findMany({
     where: {
-      email: "sandeep@introhub.net",
+      agreedToAutoProspecting: true,
+      accounts: {
+        some: {
+          scope: { contains: fullScope },
+        },
+      },
     },
   });
-  const now = new Date();
+  const foo: string[] = []
+  for (const user of users) {
+    const result = await sendIntroDigestEmail(user, false);
+    if(result){
+      foo.push(user.email!)
+    }
+  }
+  console.log(foo);
 
-  const introsInYourQueue: IntroWithContactFacilitatorAndRequester[] =
-    await prisma.introduction.findMany({
-      where: {
-        facilitatorId: user.id,
-        createdAt: {
-          gte: subDays(now, 7),
-        },
-        status: IntroStates["pending approval"],
-      },
-      include: {
-        contact: true,
-        facilitator: true,
-        requester: true,
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-    });
-
-  console.log("introsInYourQueue: ", introsInYourQueue);
-
-  const introsWeAreMakingForYou: IntroWithContactFacilitatorAndRequester[] =
-    await prisma.introduction.findMany({
-      where: {
-        requesterId: user.id,
-      },
-      include: {
-        contact: true,
-        facilitator: true,
-        requester: true,
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      take: 10
-    });
-
-  console.log("introsWeAreMakingForYou: ", introsWeAreMakingForYou);
 })();
 
 export {};
