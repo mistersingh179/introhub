@@ -53,12 +53,6 @@ export default async function Home() {
       >
         <>
           <EverythingIsGoodAlert />
-          <Image
-            className="w-full h-full"
-            src={relaxingImage}
-            alt="time to relax"
-            priority
-          />
         </>
       </ShowChildren>
 
