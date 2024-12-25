@@ -91,145 +91,18 @@ const IntroDigestHtml = ({
             margin: "0",
           }}
         >
-          <h1>Intro Digest</h1>
-          <Text>
-            Here is a summary of recent introductions involving you. This
-            includes introductions we are making for you and introductions
-            pending your approval for others.
-          </Text>
-
-          {/* Intros We Are Making For You */}
+          <h1>IntroHub Digest</h1>
           <Section>
-            <h2>Introductions We Are Making for You</h2>
-            {introsWeAreMakingForYou.length > 0 ? (
-              <table
-                style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  marginBottom: "15px",
-                }}
-              >
-                <tbody>
-                  {introsWeAreMakingForYou.map((introduction, index) => {
-                    const {
-                      contactProfiles,
-                      requestProfiles,
-                      facilitatorProfiles,
-                    } = getAllProfiles(
-                      introduction,
-                      emailToProfile,
-                      companyUrlToProfile,
-                    );
-
-                    return (
-                      <tr key={index}>
-                        <td valign={"top"}>
-                          <table
-                            style={{
-                              borderBottom: "1px solid #ddd",
-                              paddingBottom: "10px",
-                              marginBottom: "10px",
-                            }}
-                          >
-                            <thead>
-                              <tr>
-                                <th
-                                  style={{
-                                    width: "50%",
-                                    textAlign: "left",
-                                    verticalAlign: "top",
-                                    fontSize: "18px",
-                                  }}
-                                >
-                                  Prospect
-                                </th>
-                                <th
-                                  style={{
-                                    width: "50%",
-                                    textAlign: "left",
-                                    verticalAlign: "top",
-                                    fontSize: "18px",
-                                  }}
-                                >
-                                  Facilitator
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td valign={"top"}>
-                                  <ProfileBox
-                                    name={
-                                      contactProfiles.personProfile?.fullName ||
-                                      ""
-                                    }
-                                    jobTitle={
-                                      contactProfiles.personExp?.jobTitle || ""
-                                    }
-                                    companyName={
-                                      contactProfiles.personExp?.companyName ||
-                                      ""
-                                    }
-                                    industry={
-                                      contactProfiles.companyProfile
-                                        ?.industry || ""
-                                    }
-                                    linkedInUrl={
-                                      contactProfiles.personProfile
-                                        ?.linkedInUrl || ""
-                                    }
-                                  />
-                                </td>
-                                <td valign={"top"}>
-                                  <ProfileBox
-                                    name={
-                                      facilitatorProfiles.personProfile
-                                        ?.fullName ||
-                                      introduction.facilitator.name ||
-                                      ""
-                                    }
-                                    jobTitle={
-                                      facilitatorProfiles.personExp?.jobTitle ||
-                                      ""
-                                    }
-                                    companyName={
-                                      facilitatorProfiles.personExp
-                                        ?.companyName || ""
-                                    }
-                                    industry={
-                                      facilitatorProfiles.companyProfile
-                                        ?.industry || ""
-                                    }
-                                    linkedInUrl={
-                                      facilitatorProfiles.personProfile
-                                        ?.linkedInUrl || ""
-                                    }
-                                  />
-                                </td>
-                              </tr>
-                              <tr>
-                                <td colSpan={2}>
-                                  Status:{" "}
-                                  {
-                                    IntroStatesWithMeaning[
-                                      introduction.status as IntroStatesKey
-                                    ]
-                                  }
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            ) : (
-              <Text>No recent introductions found.</Text>
-            )}
-
-            <h2>Introductions Pending Your Approval</h2>
+          <h2>Intros in Your 7-Day Queue</h2>
+            <h3>Manage or Let Them Proceed</h3>
+            <p>
+              These intro requests are on hold in your queue. 
+              During this time, you can 
+              <Link href={`${BASE_API_URL}/dashboard/introductions/pendingQueue`}>
+                cancel or approve requests here.
+              </Link> If no action is taken, your contact will be emailed at the 
+              end of the hold period to confirm if they want to accept the introduction.
+            </p>
             {introsInYourQueue.length > 0 ? (
               <table
                 style={{
@@ -270,7 +143,7 @@ const IntroDigestHtml = ({
                                     fontSize: "18px",
                                   }}
                                 >
-                                  Prospect
+                                  Contact
                                 </th>
                                 <th
                                   style={{
@@ -357,19 +230,145 @@ const IntroDigestHtml = ({
                 </tbody>
               </table>
             ) : (
-              <Text>No pending introductions in your queue.</Text>
+              <Text>There are no pending introductions in your queue.</Text>
             )}
-          </Section>
 
-          {/* Call to Action */}
-          <Section>
-            <Text>
-              To manage introductions pending your approval, visit the dashboard
-              by clicking the link below:
-            </Text>
-            <Link href={`${BASE_API_URL}/dashboard/introductions/pendingQueue`}>
-              Manage your Pending Introductions Queue
-            </Link>
+            {/* Intros We Are Making For You */}
+            <h2>Introductions in Progress</h2>
+            <h3>Connections {"We're"} Requesting for You</h3>
+            <p>
+              {"We're"} working to connect you with people who align 
+              with your goals. Below, {"you'll"} find details about 
+              these introductions, including the facilitator who is 
+              helping you to meet the target contact.
+            </p>
+            {introsWeAreMakingForYou.length > 0 ? (
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  marginBottom: "15px",
+                }}
+              >
+                <tbody>
+                  {introsWeAreMakingForYou.map((introduction, index) => {
+                    const {
+                      contactProfiles,
+                      requestProfiles,
+                      facilitatorProfiles,
+                    } = getAllProfiles(
+                      introduction,
+                      emailToProfile,
+                      companyUrlToProfile,
+                    );
+
+                    return (
+                      <tr key={index}>
+                        <td valign={"top"}>
+                          <table
+                            style={{
+                              borderBottom: "1px solid #ddd",
+                              paddingBottom: "10px",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            <thead>
+                              <tr>
+                                <th
+                                  style={{
+                                    width: "50%",
+                                    textAlign: "left",
+                                    verticalAlign: "top",
+                                    fontSize: "18px",
+                                  }}
+                                >
+                                  Contact
+                                </th>
+                                <th
+                                  style={{
+                                    width: "50%",
+                                    textAlign: "left",
+                                    verticalAlign: "top",
+                                    fontSize: "18px",
+                                  }}
+                                >
+                                  Facilitator
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td valign={"top"}>
+                                  <ProfileBox
+                                    name={
+                                      contactProfiles.personProfile?.fullName ||
+                                      ""
+                                    }
+                                    jobTitle={
+                                      contactProfiles.personExp?.jobTitle || ""
+                                    }
+                                    companyName={
+                                      contactProfiles.personExp?.companyName ||
+                                      ""
+                                    }
+                                    industry={
+                                      contactProfiles.companyProfile
+                                        ?.industry || ""
+                                    }
+                                    linkedInUrl={
+                                      contactProfiles.personProfile
+                                        ?.linkedInUrl || ""
+                                    }
+                                  />
+                                </td>
+                                <td valign={"top"}>
+                                  <ProfileBox
+                                    name={
+                                      facilitatorProfiles.personProfile
+                                        ?.fullName ||
+                                      introduction.facilitator.name ||
+                                      ""
+                                    }
+                                    jobTitle={
+                                      facilitatorProfiles.personExp?.jobTitle ||
+                                      ""
+                                    }
+                                    companyName={
+                                      facilitatorProfiles.personExp
+                                        ?.companyName || ""
+                                    }
+                                    industry={
+                                      facilitatorProfiles.companyProfile
+                                        ?.industry || ""
+                                    }
+                                    linkedInUrl={
+                                      facilitatorProfiles.personProfile
+                                        ?.linkedInUrl || ""
+                                    }
+                                  />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colSpan={2}>
+                                  Status:{" "}
+                                  {
+                                    IntroStatesWithMeaning[
+                                      introduction.status as IntroStatesKey
+                                    ]
+                                  }
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            ) : (
+              <Text>No recent introductions found.</Text>
+            )}
           </Section>
         </Container>
       </Body>
