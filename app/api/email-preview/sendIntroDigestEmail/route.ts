@@ -13,7 +13,12 @@ export async function GET(request: NextRequest) {
 
   if (!userIdToWorkOn) {
     console.log("no user id given");
-    return "no user id given";
+    return new Response("no user id given", {
+      status: 400,
+      headers: {
+        "content-type": "text/html",
+      },
+    });
   }
 
   const session = (await auth()) as Session;
@@ -26,7 +31,12 @@ export async function GET(request: NextRequest) {
 
   if (!superUsers.includes(user.email!)) {
     console.log("sorry you are not allowed to use SignInWithCredentials");
-    return "sorry you are not allowed here!";
+    return new Response("sorry you are not allowed here!", {
+      status: 401,
+      headers: {
+        "content-type": "text/html",
+      },
+    });
   }
 
   const userToWorkOn = await prisma.user.findFirstOrThrow({
