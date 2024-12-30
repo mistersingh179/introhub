@@ -130,7 +130,13 @@ export const messageHandler = async (message: Message) => {
     console.log("going to 'Ack' (acknowledge) message, so we don't pull again");
     message.ack();
   } catch (err) {
-    console.log("in message handler unable to handle message: ", err, message);
+    console.log("in message handler unable to handle message: ", err);
+    try {
+      message.ack();
+      console.log("message has been acknowledged though!");
+    } catch (err) {
+      console.log("unable to ack message! ", err);
+    }
   }
 };
 
