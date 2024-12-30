@@ -37,7 +37,6 @@ const extractBody = (message: Schema$Message): string => {
 };
 
 export const messageHandler = async (message: Message) => {
-  console.log("In messageHandler with: ", message);
   try {
     const data = JSON.parse(message.data.toString());
     const { emailAddress, historyId } = data as {
@@ -131,7 +130,7 @@ export const messageHandler = async (message: Message) => {
     console.log("going to 'Ack' (acknowledge) message, so we don't pull again");
     message.ack();
   } catch (err) {
-    console.log("unable to handle message: ", err, message);
+    console.log("in message handler unable to handle message: ", err, message);
   }
 };
 
