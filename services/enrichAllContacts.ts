@@ -9,7 +9,14 @@ const enrichAllContacts: EnrichAllContacts = async () => {
       select c.*
       from "Contact" c
                left join "PersonProfile" pp on pp.email = c.email
-      where pp.email is null;`;
+               inner join public."User" U on U.id = c."userId"
+               inner join public."Account" A on U.id = A."userId" and A.provider = 'google'
+      where pp.email is null
+        and U."agreedToAutoProspecting" = true
+        and U."tokenIssue" = false
+        and U."icpDescription" is not null
+        and U."missingPersonalInfo" is false
+        and A.scope like '%mail.google.com%';`;
   const contactsWithoutPersonProfile = await prisma.$queryRaw<Contact[]>(sql);
   for (const contact of contactsWithoutPersonProfile) {
     const jobObj = await ApolloQueue.add(

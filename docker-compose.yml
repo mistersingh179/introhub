@@ -1,5 +1,5 @@
 version: '3'
-services:
+#services:
 #  db:
 #    image: postgres:15.1-alpine3.17
 #    ports:
@@ -18,13 +18,13 @@ services:
 #      - POSTGRES_PASSWORD=wonderland
 #      - POSTGRES_USER=alice
 #      - POSTGRES_DB=ih_shadow
-  redis:
-#    image: redis:7.2-alpine
-    image: redis@sha256:1b503bb77079ba644371969e06e1a6a1670bb34c2251107c0fc3a21ef9fdaeca
-    ports:
-      - 63790:6379
-    volumes:
-      - ./redisdata:/data:rw
+#  redis:
+##    image: redis:7.2-alpine
+#    image: redis@sha256:6725a7dc7a44a6486b9d0a5172b10ccaf0c2ea600df87c0b93450d0e7769297f
+#    ports:
+#      - 63790:6379
+#    volumes:
+#      - ./redisdata:/data:rw
 #  taskforce-connector:
 #    build: https://github.com/taskforcesh/taskforce-connector.git#master
 #    environment:
