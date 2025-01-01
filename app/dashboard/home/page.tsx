@@ -56,9 +56,9 @@ export default async function Home() {
         </>
       </ShowChildren>
 
-      <AutoProspectingDialog
-        agreedToAutoProspecting={user!.agreedToAutoProspecting}
-      />
+      {/*<AutoProspectingDialog*/}
+      {/*  agreedToAutoProspecting={user!.agreedToAutoProspecting}*/}
+      {/*/>*/}
 
       {!user.agreedToAutoProspecting && (
         <Alert variant="destructive">

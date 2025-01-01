@@ -93,15 +93,19 @@ const IntroDigestHtml = ({
         >
           <h1>IntroHub Digest</h1>
           <Section>
-          <h2>Intros in Your 7-Day Queue</h2>
+            <h2>Intros in Your 7-Day Queue</h2>
             <h3>Manage or Let Them Proceed</h3>
             <p>
-              These intro requests are on hold in your queue. 
-              During this time, you can 
-              <Link href={`${BASE_API_URL}/dashboard/introductions/pendingQueue`}>
+              These intro requests are on hold in your queue. During this time,
+              you can{" "}
+              <Link
+                href={`${BASE_API_URL}/dashboard/introductions/pendingQueue`}
+              >
                 cancel or approve requests here.
-              </Link> If no action is taken, your contact will be emailed at the 
-              end of the hold period to confirm if they want to accept the introduction.
+              </Link>{" "}
+              If no action is taken, your contact will be emailed at the end of
+              the hold period to confirm if they want to accept the
+              introduction.
             </p>
             {introsInYourQueue.length > 0 ? (
               <table
@@ -237,10 +241,10 @@ const IntroDigestHtml = ({
             <h2>Introductions in Progress</h2>
             <h3>Connections {"We're"} Requesting for You</h3>
             <p>
-              {"We're"} working to connect you with people who align 
-              with your goals. Below, {"you'll"} find details about 
-              these introductions, including the facilitator who is 
-              helping you to meet the target contact.
+              {"We're"} working to connect you with people who align with your
+              goals. Below, {"you'll"} find details about these introductions,
+              including the facilitator who is helping you to meet the target
+              contact.
             </p>
             {introsWeAreMakingForYou.length > 0 ? (
               <table
