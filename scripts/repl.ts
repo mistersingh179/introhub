@@ -12,24 +12,24 @@ const { PubSub } = require("@google-cloud/pubsub");
 prisma.$on("query", (e) => {});
 
 (async () => {
-  const users = await prisma.user.findMany({
-    where: {
-      agreedToAutoProspecting: true,
-      accounts: {
-        some: {
-          scope: { contains: fullScope },
+  const now = new Date();
+  const allOldPendingApprovalIntros: IntroWithContactFacilitatorAndRequester[] =
+    await prisma.introduction.findMany({
+      where: {
+        createdAt: {
+          lt: subDays(now, 7),
+          gt: new Date(2024, 11, 1)
         },
+        status: IntroStates["pending approval"],
       },
-    },
-  });
-  const foo: string[] = []
-  for (const user of users) {
-    const result = await sendIntroDigestEmail(user, false);
-    if(result){
-      foo.push(user.email!)
-    }
-  }
-  console.log(foo);
+      include: {
+        contact: true,
+        facilitator: true,
+        requester: true,
+      },
+    });
+  console.log("allOldPendingApprovalIntros: ", allOldPendingApprovalIntros.length)
+
 
 })();
 
