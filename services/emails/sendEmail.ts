@@ -72,6 +72,7 @@ const sendEmail: SendEmail = async (input) => {
       },
     });
     if (intro.status === postEmailActionData.successState) {
+      console.log("send email is bailing as intro status already of success: ", intro.id, intro.status)
       return;
     }
   }

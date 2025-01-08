@@ -16,3 +16,11 @@ const accquireLock: AccquireLock = async (key, milliSeconds) => {
 };
 
 export default accquireLock;
+
+if (require.main === module) {
+  (async () => {
+    console.log("in accquireLock");
+    const foo = await accquireLock("hi", 2000);
+    console.log("foo: ", foo);
+  })();
+}

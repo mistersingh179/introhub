@@ -11,7 +11,7 @@ prisma.$on("query", (e) => {});
 (async () => {
   // const redlock = new Redlock([redisClient], {
   //   retryCount: 10,          // Retry up to 10 times
-  //   retryDelay: 1000,        // Wait 1 second between retries
+  //   retryDelay: 10,        // Wait 1 second between retries
   //   retryJitter: 10,         // Add jitter of up to 10ms
   // });
   //
