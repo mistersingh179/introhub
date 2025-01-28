@@ -21,6 +21,11 @@ const getPersonDescription = async (
   // console.log("llm got permission reply body: ", personJsonObject);
 
   const personJsonObject = await getPersonJsonObject(personProfile);
+  if(!personJsonObject){
+    return null;
+  }
+
+  delete personJsonObject['seniority']
   console.dir(personJsonObject, { depth: 10 });
 
   const chatTemplate = ChatPromptTemplate.fromMessages([
@@ -99,10 +104,12 @@ if (require.main === module) {
   (async () => {
     const personProfile = await prisma.personProfile.findFirstOrThrow({
       where: {
-        // email: "stanley.wu@hashkey.com",
+        email: "stanley.wu@hashkey.com",
+        // email: "mark@fb.com",
         // email: "sam@google.com",
         // email: "bryan@defer.run",
-        email: "mistersingh179@gmail.com",
+        // email: "mistersingh179@gmail.com",
+        // email: "colton@nubela.co",
       },
     });
 
