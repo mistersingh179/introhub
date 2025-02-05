@@ -1,12 +1,18 @@
-import {Contact, Group, User} from "@prisma/client";
+import { Contact, Group, User } from "@prisma/client";
 import prisma from "@/prismaClient";
 import getMatchingProspectsFromPinecone from "@/services/llm/getMatchingProspectsFromPinecone";
 import getMatchingProspectsFromLlm from "@/services/llm/getMatchingProspectsFromLlm";
 import fetchContactsFromProvidedEmails from "@/services/contactFinder/fetchContactsFromProvidedEmails";
-import {PlatformGroupName} from "@/app/utils/constants";
+import { PlatformGroupName } from "@/app/utils/constants";
 
-const fetchContactUsingIcp = async (user: User, group: Group): Promise<Contact | null> => {
+const fetchContactUsingIcp = async (
+  user: User,
+  group: Group,
+): Promise<Contact | null> => {
+  console.log("in fetchContactUsingIcp with: ", user.email, group.name);
+
   if (!user.icpDescription) {
+    console.log("returning form fetchContactUsingIcp as no icpDescription");
     return null;
   }
 
@@ -17,7 +23,11 @@ const fetchContactUsingIcp = async (user: User, group: Group): Promise<Contact |
     1000,
   );
   if (pineconeMatchedEmails.length === 0) {
-    console.log("no pine cone matched emails when using: ", user.icpDescription, group)
+    console.log(
+      "no pine cone matched emails when using: ",
+      user.icpDescription,
+      group,
+    );
     return null;
   }
 
@@ -25,10 +35,14 @@ const fetchContactUsingIcp = async (user: User, group: Group): Promise<Contact |
   const contactsAvailable = await fetchContactsFromProvidedEmails(
     user,
     pineconeMatchedEmails,
-    group
+    group,
   );
   if (contactsAvailable.length === 0) {
-    console.log("no contacts available when using: ", pineconeMatchedEmails, group)
+    console.log(
+      "no contacts available when using: ",
+      pineconeMatchedEmails,
+      group,
+    );
     return null;
   }
 
@@ -76,9 +90,9 @@ if (require.main === module) {
   (async () => {
     const platfromGroup = await prisma.group.findFirstOrThrow({
       where: {
-        name: PlatformGroupName
-      }
-    })
+        name: PlatformGroupName,
+      },
+    });
     const user = await prisma.user.findFirstOrThrow({
       where: {
         email: "sandeep@introhub.net",

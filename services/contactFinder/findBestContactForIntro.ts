@@ -8,19 +8,21 @@ const findBestContactForIntro = async (
   user: User,
   group: Group,
 ): Promise<Contact | null> => {
-  console.log("in findBestProspectForIntro for user: ", user.email);
+  console.log("in findBestProspectForIntro for user: ", user.email, group.name);
 
   const fetchContactFunctions = [fetchContactUsingIcp];
 
   for (const fetchContact of fetchContactFunctions) {
     const contact = await fetchContact(user, group);
     if (contact) {
-      console.log("found best prospect for: ", user.email, contact);
+      console.log("found best prospect for: ", user.email, group.name, contact);
       return contact;
+    }else{
+      console.log("got no contact for: ", user.email, group.name)
     }
   }
 
-  console.log("unable to find any prospect for user: ", user.email);
+  console.log("unable to find any prospect for user: ", user.email, group.name);
   return null;
 };
 export default findBestContactForIntro;

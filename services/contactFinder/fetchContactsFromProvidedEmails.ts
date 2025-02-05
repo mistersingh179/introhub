@@ -15,6 +15,13 @@ const fetchContactsFromProvidedEmails = async (
   emails: string[],
   group: Group,
 ): Promise<Contact[]> => {
+  console.log(
+    "in fetchContactsFromProvidedEmails with: ",
+    user.email,
+    emails.length,
+    group.name,
+  );
+
   const contactEmailsOfThisUser = await getContactEmailsOfThisUser(user);
   const contactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts =
     await getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts(user);
@@ -59,7 +66,7 @@ const fetchContactsFromProvidedEmails = async (
         memberships: {
           some: {
             group: {
-              id: group.id
+              id: group.id,
             },
             approved: true,
           },
@@ -70,7 +77,14 @@ const fetchContactsFromProvidedEmails = async (
     },
   });
 
-  console.log("contactsAvailable: ", contactsAvailable.length);
+  console.log(
+    "in fetchContactsFromProvidedEmails returning back: ",
+    user.email,
+    group.name,
+    emails.length,
+    contactsAvailable.length,
+    contactsAvailable,
+  );
   return contactsAvailable;
 };
 
@@ -80,9 +94,9 @@ if (require.main === module) {
   (async () => {
     const platfromGroup = await prisma.group.findFirstOrThrow({
       where: {
-        name: PlatformGroupName
-      }
-    })
+        name: PlatformGroupName,
+      },
+    });
     const user = await prisma.user.findFirstOrThrow({
       where: {
         email: "sandeep@introhub.net",
@@ -94,7 +108,11 @@ if (require.main === module) {
       })
     ).map((c) => c.email);
 
-    const ans = await fetchContactsFromProvidedEmails(user, emails, platfromGroup);
+    const ans = await fetchContactsFromProvidedEmails(
+      user,
+      emails,
+      platfromGroup,
+    );
     console.log(ans);
   })();
 }

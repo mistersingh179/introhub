@@ -24,6 +24,13 @@ const findAndGenerateIntro = async (
     // });
     return null;
   }
+  console.log(
+    "found contact: ",
+    user.email,
+    group.name,
+    prospect.email,
+    prospect.id,
+  );
 
   const emailVerified = await isProspectEmailVerified(prospect);
   if (!emailVerified) {
@@ -31,7 +38,13 @@ const findAndGenerateIntro = async (
   }
 
   const intro = await generateAnIntroduction(user, prospect);
-  console.log("auto generated intro: ", user.email, prospect.email, intro.id);
+  console.log(
+    "auto generated intro: ",
+    user.email,
+    group.name,
+    prospect.email,
+    intro.id,
+  );
 
   return intro;
 };
@@ -50,16 +63,19 @@ const processUserForAutoProspecting = async (
       memberships: {
         some: {
           userId: user.id,
-          approved: true
+          approved: true,
         },
       },
     },
   });
+  console.log("myApprovedGroups: ", myApprovedGroups);
 
   const introsGenerated: Introduction[] = [];
   for (const group of myApprovedGroups) {
+    console.log("running auto prospecting for: ", user.email, group.name);
     try {
       const result = await findAndGenerateIntro(user, group);
+      console.log("intro generated: ", user.email, group.name, result);
       if (result) {
         introsGenerated.push(result);
       } else {
@@ -76,12 +92,18 @@ const processUserForAutoProspecting = async (
     } catch (err) {
       console.log(
         "got error while calling findAndGenerateIntro. will continue with next group.",
-        user,
-        group,
+        user.email,
+        group.name,
       );
     }
   }
 
+  console.log(
+    "intros generated: ",
+    user.email,
+    introsGenerated.length,
+    introsGenerated,
+  );
   return introsGenerated;
 };
 
@@ -91,7 +113,7 @@ if (require.main === module) {
   (async () => {
     const user = await prisma.user.findFirstOrThrow({
       where: {
-        email: "sandeep@introhub.net",
+        email: "rod@introhub.net",
       },
     });
     const ans = await processUserForAutoProspecting(user);
