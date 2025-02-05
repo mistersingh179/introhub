@@ -33,7 +33,7 @@ const getMatchingProspectsFromPinecone = async (
     .filter((item) => item[1] >= minScore)
     .map((item) => String(item[0].id));
 
-  console.log("vectored matched emails: ", emails);
+  console.log("vectored matched emails: ", emails.length);
   return emails;
 };
 

@@ -21,7 +21,7 @@ const getFacilitatorIdsWhoAlreadyMadeIntros = async (): Promise<string[]> => {
     },
   });
   const facilitatorIds = intros.map((i) => i.facilitatorId);
-  console.log("getFacilitatorIdsUsedRecently: ", facilitatorIds);
+  console.log("getFacilitatorIdsUsedRecently: ", facilitatorIds.length);
   return facilitatorIds;
 };
 

@@ -14,7 +14,7 @@ const getContactEmailsTouchedByUser = async (user: User): Promise<string[]> => {
   const contactEmails = [
     ...new Set(introsRequestedByUser.map((i) => i.contact.email)),
   ];
-  console.log("getContactIdsTouchedByUser: ", user.email, contactEmails);
+  console.log("getContactIdsTouchedByUser: ", user.email, contactEmails.length);
   return contactEmails;
 };
 

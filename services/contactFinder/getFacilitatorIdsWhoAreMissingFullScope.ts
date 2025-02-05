@@ -18,7 +18,7 @@ const getFacilitatorIdsWhoAreMissingFullScope = async (): Promise<string[]> => {
     },
   });
   const facilitatorIds = facilitators.map((i) => i.id);
-  console.log("getFacilitatorIdsWhoAreMissingFullScope: ", facilitatorIds);
+  console.log("getFacilitatorIdsWhoAreMissingFullScope: ", facilitatorIds.length);
   return facilitatorIds;
 };
 

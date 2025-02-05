@@ -10,7 +10,7 @@ const getContactEmailsOfThisUser = async (
     }
   })
   const contactEmails = [...new Set(contacts.map((c) => c.email))];
-  console.log("getContactEmailsOfThisUser: ", user.email, contactEmails);
+  console.log("getContactEmailsOfThisUser: ", user.email, contactEmails.length);
   return contactEmails;
 };
 

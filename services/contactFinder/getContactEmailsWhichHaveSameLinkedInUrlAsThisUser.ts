@@ -17,7 +17,7 @@ const getContactEmailsWhichHaveSameLinkedInUrlAsThisUser = async (
   const contacts = await prisma.$queryRaw<Contact[]>(sql);
 
   const contactEmails = [...new Set(contacts.map((c) => c.email))];
-  console.log("getContactEmailsWhichHaveSameLinkedInUrlAsThisUser: ", user.email, contactEmails);
+  console.log("getContactEmailsWhichHaveSameLinkedInUrlAsThisUser: ", user.email, contactEmails.length);
   return contactEmails;
 };
 

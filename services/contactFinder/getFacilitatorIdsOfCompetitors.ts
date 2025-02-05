@@ -12,7 +12,7 @@ const getFacilitatorIdsOfCompetitors = async (
   });
 
   const otherUsersIds = competitorsInitiated.map((u) => u.receiverId);
-  console.log("getFacilitatorIdsOfCompetitors: ", otherUsersIds);
+  console.log("getFacilitatorIdsOfCompetitors: ", otherUsersIds.length);
   return otherUsersIds;
 };
 

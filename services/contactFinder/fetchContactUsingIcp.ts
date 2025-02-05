@@ -40,7 +40,7 @@ const fetchContactUsingIcp = async (
   if (contactsAvailable.length === 0) {
     console.log(
       "no contacts available when using: ",
-      pineconeMatchedEmails,
+      pineconeMatchedEmails.length,
       group,
     );
     return null;
