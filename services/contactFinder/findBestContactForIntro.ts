@@ -10,7 +10,7 @@ const findBestContactForIntro = async (
 ): Promise<Contact | null> => {
   console.log("in findBestProspectForIntro for user: ", user.email);
 
-  const fetchContactFunctions = [fetchWantedContact, fetchContactUsingIcp];
+  const fetchContactFunctions = [fetchContactUsingIcp];
 
   for (const fetchContact of fetchContactFunctions) {
     const contact = await fetchContact(user, group);

@@ -1,28 +1,27 @@
-import {Contact, Group, User} from "@prisma/client";
+import { Contact, Group, User } from "@prisma/client";
 import prisma from "@/prismaClient";
-import getContactIdsTouchedByUser from "@/services/contactFinder/getContactIdsTouchedByUser";
-import getContactIdsTouchedRecently from "@/services/contactFinder/getContactIdsTouchedRecently";
+import getContactEmailsTouchedByUser from "@/services/contactFinder/getContactEmailsTouchedByUser";
+import getContactEmailsTouchedRecently from "@/services/contactFinder/getContactEmailsTouchedRecently";
 import getFacilitatorIdsWhoAlreadyMadeIntros from "@/services/contactFinder/getFacilitatorIdsWhoAlreadyMadeIntros";
-import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
+import getContactEmailsOfThisUser from "@/services/contactFinder/getContactEmailsOfThisUser";
 import getFacilitatorIdsWhoAreMissingFullScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingFullScope";
-import getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts";
-import getContactIdsWhichHaveSameLinkedInUrlAsThisUser from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlAsThisUser";
+import getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts from "@/services/contactFinder/getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts";
+import getContactEmailsWhichHaveSameLinkedInUrlAsThisUser from "@/services/contactFinder/getContactEmailsWhichHaveSameLinkedInUrlAsThisUser";
 import getFacilitatorIdsOfCompetitors from "@/services/contactFinder/getFacilitatorIdsOfCompetitors";
-import {PlatformGroupName} from "@/app/utils/constants";
+import { PlatformGroupName } from "@/app/utils/constants";
 
 const fetchContactsFromProvidedEmails = async (
   user: User,
   emails: string[],
   group: Group,
 ): Promise<Contact[]> => {
-  const contactIdsOfOthersUsersKnownToThisUser =
-    await getContactIdsOfOthersUsersKnownToThisUser(user);
-  const contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts =
-    await getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts(user);
-  const contactIdsWhichHaveSameLinkedInUrlAsThisUser =
-    await getContactIdsWhichHaveSameLinkedInUrlAsThisUser(user);
-  const contactIdsTouchedByUser = await getContactIdsTouchedByUser(user);
-  const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
+  const contactEmailsOfThisUser = await getContactEmailsOfThisUser(user);
+  const contactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts =
+    await getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts(user);
+  const contactEmailsWhichHaveSameLinkedInUrlAsThisUser =
+    await getContactEmailsWhichHaveSameLinkedInUrlAsThisUser(user);
+  const contactEmailsTouchedByUser = await getContactEmailsTouchedByUser(user);
+  const contactEmailsTouchedRecently = await getContactEmailsTouchedRecently();
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
   const facilitatorIdsWhoAreMissingFullScope =
@@ -30,19 +29,21 @@ const fetchContactsFromProvidedEmails = async (
   const facilitatorIdsOfCompetitors =
     await getFacilitatorIdsOfCompetitors(user);
 
+  const emailsToNotTake = [
+    ...new Set([
+      ...contactEmailsTouchedRecently,
+      ...contactEmailsTouchedByUser,
+      ...contactEmailsOfThisUser,
+      ...contactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts,
+      ...contactEmailsWhichHaveSameLinkedInUrlAsThisUser,
+    ]),
+  ];
+
   const contactsAvailable = await prisma.contact.findMany({
     where: {
       email: {
         in: emails,
-      },
-      id: {
-        notIn: [
-          ...contactIdsTouchedRecently,
-          ...contactIdsTouchedByUser,
-          ...contactIdsOfOthersUsersKnownToThisUser,
-          ...contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts,
-          ...contactIdsWhichHaveSameLinkedInUrlAsThisUser,
-        ],
+        notIn: emailsToNotTake,
       },
       userId: {
         notIn: [
@@ -57,10 +58,12 @@ const fetchContactsFromProvidedEmails = async (
         tokenIssue: false,
         memberships: {
           some: {
-            group,
-            approved: true
+            group: {
+              id: group.id
+            },
+            approved: true,
           },
-        }
+        },
       },
       available: true,
       emailCheckPassed: true,

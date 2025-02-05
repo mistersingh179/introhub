@@ -3,7 +3,7 @@ import prisma from "@/prismaClient";
 import fetchWantedContact from "@/services/contactFinder/fetchWantedContact";
 import { subDays } from "date-fns";
 
-const getContactIdsTouchedRecently = async (): Promise<string[]> => {
+const getContactEmailsTouchedRecently = async (): Promise<string[]> => {
   const now = new Date();
 
   const introsMadeRecently = await prisma.introduction.findMany({
@@ -12,13 +12,18 @@ const getContactIdsTouchedRecently = async (): Promise<string[]> => {
         gt: subDays(now, 7),
       },
     },
+    include: {
+      contact: true,
+    },
   });
-  const contactIds = introsMadeRecently.map((i) => i.contactId);
+  const contactEmails = [
+    ...new Set(introsMadeRecently.map((i) => i.contact.email)),
+  ];
 
-  return contactIds;
+  return contactEmails;
 };
 
-export default getContactIdsTouchedRecently;
+export default getContactEmailsTouchedRecently;
 
 if (require.main === module) {
   (async () => {
@@ -27,7 +32,7 @@ if (require.main === module) {
         email: "sandeep@introhub.net",
       },
     });
-    const ans = await getContactIdsTouchedRecently();
+    const ans = await getContactEmailsTouchedRecently();
     console.log(ans);
   })();
 }

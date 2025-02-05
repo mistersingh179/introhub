@@ -2,18 +2,23 @@ import { User } from "@prisma/client";
 import prisma from "@/prismaClient";
 import fetchWantedContact from "@/services/contactFinder/fetchWantedContact";
 
-const getContactIdsTouchedByUser = async (user: User): Promise<string[]> => {
+const getContactEmailsTouchedByUser = async (user: User): Promise<string[]> => {
   const introsRequestedByUser = await prisma.introduction.findMany({
     where: {
       requesterId: user.id,
     },
+    include: {
+      contact: true,
+    },
   });
-  const contactIds = introsRequestedByUser.map((i) => i.contactId);
-  console.log("getContactIdsTouchedByUser: ", user.email, contactIds);
-  return contactIds;
+  const contactEmails = [
+    ...new Set(introsRequestedByUser.map((i) => i.contact.email)),
+  ];
+  console.log("getContactIdsTouchedByUser: ", user.email, contactEmails);
+  return contactEmails;
 };
 
-export default getContactIdsTouchedByUser;
+export default getContactEmailsTouchedByUser;
 
 if (require.main === module) {
   (async () => {
@@ -22,7 +27,7 @@ if (require.main === module) {
         email: "sandeep@introhub.net",
       },
     });
-    const ans = await getContactIdsTouchedByUser(user);
+    const ans = await getContactEmailsTouchedByUser(user);
     console.log(ans);
   })();
 }

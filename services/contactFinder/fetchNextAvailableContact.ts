@@ -1,9 +1,9 @@
 import { Contact, User } from "@prisma/client";
 import prisma from "@/prismaClient";
-import getContactIdsTouchedByUser from "@/services/contactFinder/getContactIdsTouchedByUser";
-import getContactIdsTouchedRecently from "@/services/contactFinder/getContactIdsTouchedRecently";
+import getContactEmailsTouchedByUser from "@/services/contactFinder/getContactEmailsTouchedByUser";
+import getContactEmailsTouchedRecently from "@/services/contactFinder/getContactEmailsTouchedRecently";
 import getFacilitatorIdsWhoAlreadyMadeIntros from "@/services/contactFinder/getFacilitatorIdsWhoAlreadyMadeIntros";
-import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
+import getContactEmailsOfThisUser from "@/services/contactFinder/getContactEmailsOfThisUser";
 import getFacilitatorIdsWhoAreMissingFullScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingFullScope";
 
 const fetchNextAvailableContact = async (
@@ -11,10 +11,10 @@ const fetchNextAvailableContact = async (
 ): Promise<Contact | null> => {
   console.log("in fetchNextAvailableContact with: ", user.email);
 
-  const contactIdsOfOthersUsersKnownToThisUser =
-    await getContactIdsOfOthersUsersKnownToThisUser(user);
-  const contactIdsTouchedByUser = await getContactIdsTouchedByUser(user);
-  const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
+  const contactEmailsOfOthersUsersKnownToThisUser =
+    await getContactEmailsOfThisUser(user);
+  const contactEmailsTouchedByUser = await getContactEmailsTouchedByUser(user);
+  const contactEmailsTouchedRecently = await getContactEmailsTouchedRecently();
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
   const facilitatorIdsWhoAreMissingFullScope =
@@ -22,11 +22,11 @@ const fetchNextAvailableContact = async (
 
   const nextAvailableContact = await prisma.contact.findFirst({
     where: {
-      id: {
+      email: {
         notIn: [
-          ...contactIdsTouchedRecently,
-          ...contactIdsTouchedByUser,
-          ...contactIdsOfOthersUsersKnownToThisUser,
+          ...contactEmailsTouchedRecently,
+          ...contactEmailsTouchedByUser,
+          ...contactEmailsOfOthersUsersKnownToThisUser,
         ],
       },
       userId: {

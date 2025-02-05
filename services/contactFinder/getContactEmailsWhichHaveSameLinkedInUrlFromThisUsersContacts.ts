@@ -1,7 +1,7 @@
 import { Contact, Prisma, User } from "@prisma/client";
 import prisma from "@/prismaClient";
 
-const getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts = async (
+const getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts = async (
   user: User,
 ): Promise<string[]> => {
   const sql = Prisma.sql`
@@ -15,12 +15,12 @@ const getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts = async (
 
   const contacts = await prisma.$queryRaw<Contact[]>(sql);
 
-  const contactIds = contacts.map((i) => i.id);
-  console.log("getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts: ", user.email, contactIds);
-  return contactIds;
+  const contactEmails = contacts.map((c) => c.email);
+  console.log("getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts: ", user.email, contactEmails);
+  return contactEmails;
 };
 
-export default getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts;
+export default getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts;
 
 if (require.main === module) {
   (async () => {
@@ -29,7 +29,7 @@ if (require.main === module) {
         email: "sandeep@introhub.net",
       },
     });
-    const ans = await getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts(user);
+    const ans = await getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts(user);
     console.log(ans);
   })();
 }

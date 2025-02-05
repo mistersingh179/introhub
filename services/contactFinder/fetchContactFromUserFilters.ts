@@ -1,26 +1,26 @@
 import { Contact, User } from "@prisma/client";
 import prisma from "@/prismaClient";
-import getContactIdsTouchedByUser from "@/services/contactFinder/getContactIdsTouchedByUser";
-import getContactIdsTouchedRecently from "@/services/contactFinder/getContactIdsTouchedRecently";
+import getContactEmailsTouchedByUser from "@/services/contactFinder/getContactEmailsTouchedByUser";
+import getContactEmailsTouchedRecently from "@/services/contactFinder/getContactEmailsTouchedRecently";
 import getFacilitatorIdsWhoAlreadyMadeIntros from "@/services/contactFinder/getFacilitatorIdsWhoAlreadyMadeIntros";
 import getFiltersFromSearchParams from "@/services/getFiltersFromSearchParams";
 import getProspectsBasedOnFilters, {
   PaginatedValues,
 } from "@/services/getProspectsBasedOnFilters";
-import getContactIdsOfOthersUsersKnownToThisUser from "@/services/contactFinder/getContactIdsOfOthersUsersKnownToThisUser";
+import getContactEmailsOfThisUser from "@/services/contactFinder/getContactEmailsOfThisUser";
 import getFacilitatorIdsWhoAreMissingFullScope from "@/services/contactFinder/getFacilitatorIdsWhoAreMissingFullScope";
-import getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts
-  from "@/services/contactFinder/getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts";
+import getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts
+  from "@/services/contactFinder/getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts";
 
 const fetchContactFromUserFilters = async (
   user: User,
 ): Promise<Contact | null> => {
-  const contactIdsOfOthersUsersKnownToThisUser =
-    await getContactIdsOfOthersUsersKnownToThisUser(user);
-  const contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts =
-    await getContactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts(user);
-  const contactIdsTouchedByUser = await getContactIdsTouchedByUser(user);
-  const contactIdsTouchedRecently = await getContactIdsTouchedRecently();
+  const contactEmailsOfThisUser =
+    await getContactEmailsOfThisUser(user);
+  const contactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts =
+    await getContactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts(user);
+  const contactEmailsTouchedByUser = await getContactEmailsTouchedByUser(user);
+  const contactEmailsTouchedRecently = await getContactEmailsTouchedRecently();
   const facilitatorIdsUsedRecently =
     await getFacilitatorIdsWhoAlreadyMadeIntros();
   const facilitatorIdsWhoAreMissingFullScope =
@@ -49,16 +49,22 @@ const fetchContactFromUserFilters = async (
 
     const contactIdsFromUserFilter = prospects.map((p) => p.id);
 
+    const emailsToNotTake = [
+      ...new Set([
+        ...contactEmailsTouchedRecently,
+        ...contactEmailsTouchedByUser,
+        ...contactEmailsOfThisUser,
+        ...contactEmailsWhichHaveSameLinkedInUrlFromThisUsersContacts,
+      ]),
+    ];
+
     const contactFromFilter = await prisma.contact.findFirst({
       where: {
+        email: {
+          notIn: emailsToNotTake
+        },
         id: {
           in: contactIdsFromUserFilter,
-          notIn: [
-            ...contactIdsTouchedRecently,
-            ...contactIdsTouchedByUser,
-            ...contactIdsOfOthersUsersKnownToThisUser,
-            ...contactIdsWhichHaveSameLinkedInUrlFromThisUsersContacts,
-          ],
         },
         userId: {
           notIn: [
