@@ -2,6 +2,7 @@ import { PersonProfile } from "@prisma/client";
 import getPersonDescription from "@/services/llm/getPersonDescription";
 import prisma from "@/prismaClient";
 import addPersonProfileToPineCone from "@/services/llm/addPersonProfileToPineCone";
+import addContactToPineCone from "@/services/llm/addContactToPineCone";
 
 const addLlmDescriptionOnPersonProfile = async (
   personProfile: PersonProfile,
@@ -19,6 +20,16 @@ const addLlmDescriptionOnPersonProfile = async (
     });
 
     await addPersonProfileToPineCone(personProfile);
+
+    const contacts = await prisma.contact.findMany({
+      where: {
+        email: personProfile.email
+      }
+    });
+    for(const contact of contacts){
+      await addContactToPineCone(contact)
+    }
+
   }
 };
 

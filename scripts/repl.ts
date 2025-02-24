@@ -1,7 +1,7 @@
 import prisma from "../prismaClient";
-import Redlock from "redlock";
-import redisClient from "@/lib/redisClient";
-import sleep from "@/lib/sleep";
+import { Pinecone as PineconeClient } from "@pinecone-database/pinecone/dist/pinecone";
+import { OpenAIEmbeddings } from "@langchain/openai";
+import { PineconeStore } from "@langchain/pinecone";
 
 const { PubSub } = require("@google-cloud/pubsub");
 
@@ -9,23 +9,8 @@ const { PubSub } = require("@google-cloud/pubsub");
 prisma.$on("query", (e) => {});
 
 (async () => {
-  // const redlock = new Redlock([redisClient], {
-  //   retryCount: 10,          // Retry up to 10 times
-  //   retryDelay: 1000,        // Wait 1 second between retries
-  //   retryJitter: 10,         // Add jitter of up to 10ms
-  // });
-  //
-  // try {
-  //   await redlock.using(["foo"], 5000, async (signal: AbortSignal) => {
-  //     console.log("Starting task after acquiring lock...");
-  //     await sleep(4000); // Simulate task
-  //     console.log("Finished task, releasing lock...");
-  //   });
-  // } catch (err) {
-  //   console.error("Failed to acquire lock:", err);
-  // } finally {
-  //   process.exit(0);
-  // }
+  console.log("in repl!")
+
 })();
 
 export {};
