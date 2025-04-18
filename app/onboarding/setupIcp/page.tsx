@@ -3,8 +3,11 @@ import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import Image from "next/image";
+import Link from "next/link";
 import variousProspectsImage from "@/app/onboarding/setupIcp/various-prospects.png";
 import UpdateIcpForm from "@/app/dashboard/icp/UpdateIcpForm";
+import { Button } from "@/components/ui/button";
+import OnboardingLayout from "@/app/onboarding/OnboardingLayout";
 
 type SearchParams = {
   groupName: string;
@@ -22,13 +25,14 @@ const setupIcp = async ({ searchParams }: { searchParams: SearchParams }) => {
   });
 
   return (
-    <>
-      <div className={"flex flex-col lg:flex-row flex-grow"}>
-        <div
-          className={
-            "hidden sm:flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 p-4 lg:basis-1/2"
-          }
-        >
+    <OnboardingLayout
+      currentStep={1}
+      totalSteps={5}
+      title="Who are you looking to connect with?"
+      description="Define your Ideal Customer Profile to help us find the right connections"
+    >
+      <div className="flex h-full">
+        <div className="hidden sm:flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 p-4 w-1/2">
           <div className="flex flex-col gap-4 justify-center items-center p-4 2xl:px-10">
             <Image
               className={"w-1/2"}
@@ -44,11 +48,7 @@ const setupIcp = async ({ searchParams }: { searchParams: SearchParams }) => {
             </h4>
           </div>
         </div>
-        <div
-          className={
-            "flex flex-col gap-4 justify-center items-center p-4 lg:basis-1/2"
-          }
-        >
+        <div className="flex flex-col gap-4 justify-center items-center p-4 w-full sm:w-1/2">
           <div className="flex flex-col gap-4 justify-center items-center p-4 2xl:px-10">
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-8">
               Who are you looking to connect with?
@@ -57,7 +57,7 @@ const setupIcp = async ({ searchParams }: { searchParams: SearchParams }) => {
           </div>
         </div>
       </div>
-    </>
+    </OnboardingLayout>
   );
 };
 

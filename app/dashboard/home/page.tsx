@@ -17,6 +17,9 @@ import relaxingImage from "@/app/dashboard/home/illustration-coastal-relaxation-
 import Image from "next/image";
 import MissingPermissionsDialog from "@/app/dashboard/MissingPermissionsDialog";
 import checkUserPermissions from "@/services/checkUserPermissions";
+import ProfileCompletionAlert from "./ProfileCompletionAlert";
+import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
+import getProfiles from "@/services/getProfiles";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -36,11 +39,37 @@ export default async function Home() {
     data: { tokenIssue: !weHavePermissions },
   });
 
+  // Get profile data for completion check
+  const email = user.email!;
+  const { emailToProfile, companyUrlToProfile } =
+    await getEmailAndCompanyUrlProfiles([email]);
+  const profiles = getProfiles(email, emailToProfile, companyUrlToProfile);
+
+  // Check if profile is complete enough for user to participate
+  const hasCompleteProfile = 
+    profiles.personProfile?.linkedInUrl && 
+    profiles.personExp.jobTitle && 
+    profiles.personExp.companyLinkedInUrl;
+
+  // Update missing personal info flag
+  if (user.missingPersonalInfo !== !hasCompleteProfile) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { missingPersonalInfo: !hasCompleteProfile },
+    });
+  }
+
   return (
     <div className="flex flex-col gap-8 min-h-0">
       <div className="flex flex-row items-center gap-2">
         <h1 className="text-2xl mt-6">Home</h1>
       </div>
+
+      {/* Profile Completion Alert */}
+      <ProfileCompletionAlert 
+        personProfile={profiles.personProfile} 
+        personExperience={profiles.personExp} 
+      />
 
       <ShowChildren
         showIt={
@@ -105,10 +134,10 @@ export default async function Home() {
           </AlertTitle>
           <AlertDescription className={"ml-8"}>
             Please check your{" "}
-            <Link href={"/dashboard/profile"} className={"underline"}>
+            <Link href={"/dashboard/profile?tab=edit"} className={"underline"}>
               {"Profile"}
             </Link>
-            . We are missing important information.
+            . We are missing important information that prevents you from fully participating in IntroHub.
           </AlertDescription>
         </Alert>
       )}
@@ -126,7 +155,7 @@ export default async function Home() {
       {/*      Relax and Await Introductions*/}
       {/*    </AlertTitle>*/}
       {/*    <AlertDescription className="ml-8">*/}
-      {/*      We’ll auto-prospect based on your ICP. Look out for intro emails, as*/}
+      {/*      We'll auto-prospect based on your ICP. Look out for intro emails, as*/}
       {/*      {"you'll"} be {"cc'd"} when a target consents. Update your{" "}*/}
       {/*      <Link href="/dashboard/icp" className="underline">*/}
       {/*        ICP here*/}
@@ -151,7 +180,7 @@ export default async function Home() {
       {/*    <AlertCircle className="h-8 w-8" />*/}
       {/*    <AlertTitle className="ml-8">Auto-Prospecting Unavailable</AlertTitle>*/}
       {/*    <AlertDescription className="ml-8">*/}
-      {/*      We’ll continue attempting auto-prospecting for you daily. Meanwhile,*/}
+      {/*      We'll continue attempting auto-prospecting for you daily. Meanwhile,*/}
       {/*      consider broadening your ICP description or{" "}*/}
       {/*      <Link href={"/dashboard/prospects"} className="underline">*/}
       {/*        starring*/}

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import SampleProspectsMatchingIcp from "@/app/dashboard/icp/SampleProspectsMatchingIcp";
 import Link from "next/link";
 import SampleProspectsMatchingIcpFallback from "@/app/dashboard/icp/SampleProspectsMatchingIcpFallback";
+import OnboardingLayout from "@/app/onboarding/OnboardingLayout";
 
 const matchingSampleProspects = async () => {
   const session = (await auth()) as Session;
@@ -22,10 +23,15 @@ const matchingSampleProspects = async () => {
   });
 
   return (
-    <>
-      <div className="flex flex-col lg:flex-row flex-grow">
+    <OnboardingLayout
+      currentStep={2}
+      totalSteps={5}
+      title="Do these look like your ideal matches?"
+      description="We've matched your description to our network. If these look like the right people, you're ready to proceed."
+    >
+      <div className="flex h-full">
         {/* Left Section */}
-        <div className="hidden sm:flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 lg:basis-1/2">
+        <div className="hidden sm:flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 p-4 w-1/2">
           <div className="flex flex-col gap-4 justify-center items-center p-4 2xl:px-10">
             <Image
               src={matchingSampleProspectsImage}
@@ -43,7 +49,7 @@ const matchingSampleProspects = async () => {
         </div>
 
         {/* Right Section */}
-        <div className="flex flex-col gap-4 justify-center items-center lg:basis-1/2">
+        <div className="flex flex-col gap-4 justify-center items-center p-4 w-full sm:w-1/2">
           <div className="flex flex-col gap-4 justify-center items-center p-4 2xl:px-10">
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-8">
               Do these look like your ideal matches?
@@ -54,18 +60,18 @@ const matchingSampleProspects = async () => {
               can update your ICP and try again.
             </p>
 
-            <div className="w-full max-h-[690px] overflow-y-scroll">
+            <div className="w-full max-h-[50vh] overflow-y-auto">
               <Suspense fallback={<SampleProspectsMatchingIcpFallback />}>
                 <SampleProspectsMatchingIcp />
               </Suspense>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-10 w-full">
-              <Button asChild className="flex-1 py-6">
+            <div className="flex flex-col sm:flex-row gap-10 w-full mt-6">
+              <Button asChild variant="outline" className="flex-1 py-6">
                 <Link href="/onboarding/setupIcp">Not Quite - Refine ICP</Link>
               </Button>
               <Button asChild variant="branded" className="flex-1 py-6">
-                <Link href="/onboarding/finishOnboarding">
+                <Link href="/onboarding/profileSetup">
                   Yes, These are My Matches
                 </Link>
               </Button>
@@ -73,7 +79,7 @@ const matchingSampleProspects = async () => {
           </div>
         </div>
       </div>
-    </>
+    </OnboardingLayout>
   );
 };
 

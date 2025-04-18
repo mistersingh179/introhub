@@ -247,6 +247,17 @@ model PersonProfile {
   workFunctions     PersonProfileWorkFunction[]
   departments       PersonProfileDepartment[]
   llmDescription    String?
+  
+  // New fields for user-edited data
+  userEditedFullName     String?
+  userEditedLinkedInUrl  String?
+  userEditedHeadline     String?
+  userEditedCity         String?
+  userEditedCountry      String?
+  userEditedState        String?
+  userEditedSeniority    String?
+  isUserEdited           Boolean           @default(false)
+  lastUserEditAt         DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -267,6 +278,14 @@ model PersonExperience {
   companyLinkedInUrl String
   jobTitle           String?
   jobDescription     String?
+  
+  // New fields for user-edited data
+  userEditedCompanyName        String?
+  userEditedCompanyLinkedInUrl String?
+  userEditedJobTitle           String?
+  userEditedJobDescription     String?
+  isUserEdited                 Boolean  @default(false)
+  lastUserEditAt               DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -11,8 +11,19 @@ import ShowChildren from "@/components/ShowChildren";
 import { Badge } from "@/components/ui/badge";
 import ProfileStatusUpdateForm from "@/app/dashboard/profile/ProfileStatusUpdateForm";
 import Link from "next/link";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import EditableProfileForm from "./EditableProfileForm";
+import EditableExperienceForm from "./EditableExperienceForm";
+import { Edit, Plus } from "lucide-react";
+import ProfileCompletionIndicator from "@/app/components/ProfileCompletionIndicator";
+import ProfileTabs from "./ProfileTabs";
 
-export default async function Profile() {
+export default async function Profile({ 
+  searchParams 
+}: { 
+  searchParams: { tab?: string } 
+}) {
   const session = (await auth()) as Session;
   const user = await prisma.user.findFirstOrThrow({
     where: {
@@ -42,98 +53,45 @@ export default async function Profile() {
   const googleAccount = user.accounts?.find((a) => a.provider === "google");
   const scopes = googleAccount?.scope?.split(" ") ?? [];
 
+  // Check if any profile data is missing for better user guidance
+  const hasCompleteProfile = 
+    profiles.personProfile?.linkedInUrl && 
+    profiles.personExp.jobTitle && 
+    profiles.personExp.companyLinkedInUrl;
+
+  // Determine the default tab from URL parameter
+  const defaultTab = (['view', 'edit', 'experience'].includes(searchParams.tab || '')) 
+    ? searchParams.tab 
+    : 'view';
+
   return (
     <>
-      <div className={"flex flex-row justify-start items-center gap-4"}>
+      <div className={"flex flex-row justify-between items-center gap-4"}>
         <h1 className={"text-2xl my-4"}>Profile</h1>
+        {!hasCompleteProfile && (
+          <Badge variant="destructive" className="px-3 py-1">
+            Profile Incomplete - Please update your profile information
+          </Badge>
+        )}
       </div>
-      <div className={"flex flex-col gap-4"}>
-        <ProfileImageForm user={user} />
-        <div className={"flex flex-row"}>
-          <div className={"min-w-48 self-center"}>Status :</div>
-          <div className={"flex flex-row gap-4 items-center"}>
-            {user.agreedToAutoProspecting && (
-              <>
-                <div>IntroHub is currently ON</div>
-                <ProfileStatusUpdateForm setAgreedTo={false} />
-              </>
-            )}
-            {!user.agreedToAutoProspecting && (
-              <>
-                <div>IntroHub is currently OFF</div>
-                <ProfileStatusUpdateForm setAgreedTo={true} />
-              </>
-            )}
-          </div>
-        </div>
-        <div className={"flex flex-row"}>
-          <div className={"min-w-48"}>Name :</div>
-          <div>{user.name}</div>
-        </div>
-        <div className={"flex flex-row"}>
-          <div className={"min-w-48"}>Job Title :</div>
-          {profiles.personExp.jobTitle && (
-            <div>{profiles.personExp.jobTitle}</div>
-          )}
-          {!profiles.personExp.jobTitle && (
-            <Badge variant={"destructive"}>Missing</Badge>
-          )}
-        </div>
-        <div className={"flex flex-row items-center"}>
-          <div className={"min-w-48 "}>Personal LinkedIn Url :</div>
-          <div>
-            {profiles.personProfile?.linkedInUrl && (
-              <LinkWithExternalIcon href={profiles.personProfile.linkedInUrl} />
-            )}
-            {!profiles.personProfile?.linkedInUrl && (
-              <Badge variant={"destructive"}>Missing</Badge>
-            )}
-          </div>
-        </div>
-        <div className={"flex flex-row items-center"}>
-          <div className={"min-w-48"}>Company LinkedIn Url :</div>
-          {profiles.companyProfile.linkedInUrl && (
-            <LinkWithExternalIcon href={profiles.companyProfile.linkedInUrl} />
-          )}
-          {!profiles.companyProfile.linkedInUrl && (
-            <Badge variant={"destructive"}>Missing</Badge>
-          )}
-        </div>
-        <div className={"flex flex-row items-center"}>
-          <div className={"min-w-48"}>Contacts :</div>
-          <div>{contactsCount}</div>
-        </div>
-        <div className={"flex flex-row items-center"}>
-          <div className={"min-w-48 "}>Emails :</div>
-          <div>{emailsCount}</div>
-        </div>
-        <div className={"flex flex-row items-center"}>
-          <div className={"min-w-48"}>User Id :</div>
-          <div>{user.id}</div>
-        </div>
-        <div className={"flex flex-row items-center"}>
-          <div className={"min-w-48 flex flex-row items-center"}>
-            Google Scope : <RefreshScopesForm />{" "}
-          </div>
-          <div>
-            <ShowChildren showIt={scopes.length > 0}>
-              <ul className={"list-disc ml-4"}>
-                {scopes.map((x) => (
-                  <li key={x}>{x}</li>
-                ))}
-              </ul>
-            </ShowChildren>
-            <ShowChildren showIt={scopes.length == 0}>None</ShowChildren>
-          </div>
-        </div>
-        <p className="leading-7 [&:not(:first-child)]:mt-6">
-          To change anything in your profile please email{" "}
-          <Link href={"mailto:rod@introhub.net?Subject=Update+Profile+Request"} className={'underline'} target={"_blank"}>
-            rod@introhub.net
-          </Link>{" "}
-          as we need to verify it before we can change it.
-        </p>
+
+      {/* Profile Completion Indicator */}
+      <div className="mb-6">
+        <ProfileCompletionIndicator 
+          personProfile={profiles.personProfile}
+          personExperience={profiles.personExp}
+          showEditButton={false}
+        />
       </div>
+
+      <ProfileTabs 
+        defaultTab={defaultTab}
+        user={user}
+        profiles={profiles}
+        emailsCount={emailsCount}
+        contactsCount={contactsCount}
+        scopes={scopes}
+      />
     </>
   );
 }

@@ -1,0 +1,6 @@
+# This file is manually created.
+# It is used by Prisma Migrate.
+# Please do not modify it directly.
+
+migration_name = "20250417183516_add_user_edited_profile_fields"
+checksum = "88f0ec7f55f8dbcd2a7a953c92d5c1ce77f5db40ef32a2b5cfb37ce71217a9ca" 
