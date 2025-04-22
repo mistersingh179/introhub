@@ -60,7 +60,7 @@ export default async function Profile({
     profiles.personExp.companyLinkedInUrl;
 
   // Determine the default tab from URL parameter
-  const defaultTab = (['view', 'edit', 'experience'].includes(searchParams.tab || '')) 
+  const defaultTab = searchParams.tab && ['view', 'edit', 'experience'].includes(searchParams.tab) 
     ? searchParams.tab 
     : 'view';
 
