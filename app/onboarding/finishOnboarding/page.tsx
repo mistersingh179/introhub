@@ -4,7 +4,7 @@ import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import Image from "next/image";
 import Link from "next/link";
-import healthyNetworkingImage from "@/app/onboarding/finishOnboarding/healthy-networking.png";
+import healthyNetworkingImage from "@/app/onboarding/finishOnboarding/48.svg";
 import AcceptAutoProspectingForm from "@/app/onboarding/finishOnboarding/AcceptAutoProspectingForm";
 import OnboardingLayout from "@/app/onboarding/OnboardingLayout";
 import { Button } from "@/components/ui/button";
@@ -30,11 +30,11 @@ const finishOnboarding = async () => {
       <div className="flex h-full">
         <div className="hidden sm:flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 p-4 w-1/2">
           <div className="flex flex-col gap-4 justify-center items-center p-4 2xl:px-10">
-            <Image className={'w-1/3'} src={healthyNetworkingImage} alt={"healthy networking"}></Image>
+            <Image className={'w-2/3'} src={healthyNetworkingImage} alt={"healthy networking"}></Image>
             <h1 className="scroll-m-20 text-4xl font-normal tracking-tight lg:text-5xl">
               Healthy Networking
             </h1>
-            <h4 className="scroll-m-20 text-xl font-normal tracking-tight">
+            <h4 className="scroll-m-20 text-xl font-normal tracking-tight w-4/5 text-center">
               Intro requests to the same contacts are limited to once every 90
               days. This ensures {"you're"} not asking the same person over and
               over again.

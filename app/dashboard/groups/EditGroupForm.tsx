@@ -93,6 +93,7 @@ export default function CreateGroupForm(props: CreateGroupFormProps) {
             <img
               src={buildS3ImageUrlFromKey(group.imageName)}
               className={"w-48"}
+              alt={`${group.name} group image`}
             />
           )}
           <Input

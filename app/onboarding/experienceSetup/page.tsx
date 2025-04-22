@@ -6,6 +6,8 @@ import getProfiles from "@/services/getProfiles";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import OnboardingLayout from "@/app/onboarding/OnboardingLayout";
 import EditableExperienceForm from "@/app/dashboard/profile/EditableExperienceForm";
+import experienceSetupImage from "@/app/onboarding/experienceSetup/27.svg";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Briefcase } from "lucide-react";
@@ -33,20 +35,22 @@ export default async function ExperienceSetup() {
     <OnboardingLayout
       currentStep={4}
       totalSteps={5}
-      title="Your Work Experience"
+      title="Tell Us About Your Work"
       description="Tell us about your current role to help us find relevant connections."
     >
       <div className="flex h-full">
         <div className="hidden sm:flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 p-4 w-1/2">
           <div className="flex flex-col gap-4 justify-center items-center p-4 2xl:px-10">
-            <div className="w-48 h-48 rounded-full bg-primary/10 flex items-center justify-center">
-              <Briefcase className="w-32 h-32 text-primary/40" />
-            </div>
+          <Image
+              src={experienceSetupImage}
+              alt="sample prospects"
+              className={"w-1/2"}
+            />
             <h1 className="scroll-m-20 text-4xl font-normal tracking-tight lg:text-5xl text-center">
               Your Professional Experience
             </h1>
-            <h4 className="scroll-m-20 text-xl font-normal tracking-tight text-center">
-              Help us understand your role and company to find the right connections
+            <h4 className="scroll-m-20 text-xl font-normal tracking-tight text-center w-4/5">
+              We'll use this info to match you with relevant connections.
             </h4>
           </div>
         </div>
@@ -54,7 +58,7 @@ export default async function ExperienceSetup() {
         <div className="flex flex-col gap-4 justify-center items-stretch p-4 w-full sm:w-1/2">
           <div className="flex flex-col gap-4 p-4 w-full 2xl:px-10">
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-8">
-              Your Work Experience
+              Tell Us About Your Work
             </h1>
             <div className="w-full">
               {profiles.personExp.id ? (

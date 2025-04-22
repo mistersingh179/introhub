@@ -4,7 +4,7 @@ import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import Image from "next/image";
 import Link from "next/link";
-import variousProspectsImage from "@/app/onboarding/setupIcp/various-prospects.png";
+import variousProspectsImage from "@/app/onboarding/setupIcp/5.svg";
 import UpdateIcpForm from "@/app/dashboard/icp/UpdateIcpForm";
 import { Button } from "@/components/ui/button";
 import OnboardingLayout from "@/app/onboarding/OnboardingLayout";
@@ -42,7 +42,7 @@ const setupIcp = async ({ searchParams }: { searchParams: SearchParams }) => {
             <h1 className="scroll-m-20 text-4xl font-normal tracking-tight lg:text-5xl">
               Networking on autopilot
             </h1>
-            <h4 className="scroll-m-20 text-xl font-normal tracking-tight">
+            <h4 className="scroll-m-20 text-xl font-normal tracking-tight w-4/5 text-center">
               IntroHub automatically finds your ideal customers or partners and
               introduces you to them.
             </h4>

@@ -96,7 +96,7 @@ const SampleProspectsMatchingIcp = async (
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>API Configuration Missing</AlertTitle>
           <AlertDescription>
-            We're showing sample prospects as we're unable to generate personalized matches.
+            We&apos;re showing sample prospects as we&apos;re unable to generate personalized matches.
             (Development environment may need API keys configured)
           </AlertDescription>
         </Alert>

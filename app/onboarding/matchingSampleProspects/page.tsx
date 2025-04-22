@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { Session } from "next-auth";
 import prisma from "@/prismaClient";
 import Image from "next/image";
-import matchingSampleProspectsImage from "@/app/onboarding/matchingSampleProspects/matching-prospects.png";
+import matchingSampleProspectsImage from "@/app/onboarding/matchingSampleProspects/44.svg";
 import { Button } from "@/components/ui/button";
 import SampleProspectsMatchingIcp from "@/app/dashboard/icp/SampleProspectsMatchingIcp";
 import Link from "next/link";
@@ -36,12 +36,12 @@ const matchingSampleProspects = async () => {
             <Image
               src={matchingSampleProspectsImage}
               alt="sample prospects"
-              className={"w-1/3"}
+              className={"w-1/2"}
             />
             <h1 className="scroll-m-20 text-4xl font-normal tracking-tight lg:text-5xl">
-              Content-Based
+              Consent-Based
             </h1>
-            <h4 className="scroll-m-20 text-xl font-normal tracking-tight">
+            <h4 className="scroll-m-20 text-xl font-normal tracking-tight w-4/5 text-center">
               We only connect you with people {"who've"} agreed to meet you,
               ensuring stronger and more meaningful introductions.
             </h4>

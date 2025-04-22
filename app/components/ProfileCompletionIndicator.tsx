@@ -116,7 +116,7 @@ export default function ProfileCompletionIndicator({
               <TooltipContent>
                 <p className="w-64">{item.tooltip}</p>
                 {!item.isComplete && (
-                  <p className="mt-1 text-sm text-muted-foreground">Click "Edit Profile" to complete this field.</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Click &quot;Edit Profile&quot; to complete this field.</p>
                 )}
               </TooltipContent>
             </Tooltip>

@@ -6,6 +6,7 @@ import getProfiles from "@/services/getProfiles";
 import getEmailAndCompanyUrlProfiles from "@/services/getEmailAndCompanyUrlProfiles";
 import OnboardingLayout from "@/app/onboarding/OnboardingLayout";
 import EditableProfileForm from "@/app/dashboard/profile/EditableProfileForm";
+import profileSetupImage from "@/app/onboarding/profileSetup/20-2.svg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -40,13 +41,15 @@ export default async function ProfileSetup() {
       <div className="flex h-full">
         <div className="hidden sm:flex flex-col gap-4 justify-center items-center bg-gray-50 dark:bg-slate-900 p-4 w-1/2">
           <div className="flex flex-col gap-4 justify-center items-center p-4 2xl:px-10">
-            <div className="w-48 h-48 rounded-full bg-primary/10 flex items-center justify-center">
-              <UserCircle className="w-32 h-32 text-primary/40" />
-            </div>
+            <Image
+              src={profileSetupImage}
+              alt="sample prospects"
+              className={"w-2/3"}
+            />
             <h1 className="scroll-m-20 text-4xl font-normal tracking-tight lg:text-5xl text-center">
               Your Professional Identity
             </h1>
-            <h4 className="scroll-m-20 text-xl font-normal tracking-tight text-center">
+            <h4 className="scroll-m-20 text-xl font-normal tracking-tight text-center w-4/5">
               Help us understand who you are to make better connections
             </h4>
           </div>
