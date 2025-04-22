@@ -50,7 +50,7 @@ export default async function ExperienceSetup() {
               Your Professional Experience
             </h1>
             <h4 className="scroll-m-20 text-xl font-normal tracking-tight text-center w-4/5">
-              We'll use this info to match you with relevant connections.
+              We&apos;ll use this info to match you with relevant connections.
             </h4>
           </div>
         </div>
