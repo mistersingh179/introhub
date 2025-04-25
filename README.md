@@ -1,5 +1,9 @@
 # Readme
 
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
 ## Commands
 - `docker compose up`
 - `taskforce -n "Local Docker Redis" -p 63790 -t xxxxx`
