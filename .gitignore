@@ -12,6 +12,11 @@ redisdata
 .env.second.production
 .env.production
 
+# Include template files
+!.env.template
+!.env.production.template
+!.env.second.production.template
+
 # dependencies
 /node_modules
 /.pnp

@@ -1,7 +1,8 @@
 {
   "name": "intro-hub",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "license": "MIT",
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "zrok": "zrok share reserved 5tzkzunqep9l",
